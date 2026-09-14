@@ -532,7 +532,9 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
       }
-      recalcular_metricas_mensuales: { Args: never; Returns: number }
+      recalcular_metricas_mensuales:
+        | { Args: never; Returns: number }
+        | { Args: { p_mes?: string }; Returns: number }
       redimir_cupon: {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
