@@ -519,6 +519,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admins_vacio: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -531,6 +532,7 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
       }
+      recalcular_metricas_mensuales: { Args: never; Returns: number }
       redimir_cupon: {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
