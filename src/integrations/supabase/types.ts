@@ -520,6 +520,7 @@ export type Database = {
     }
     Functions: {
       admins_vacio: { Args: never; Returns: boolean }
+      existe_admin: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
