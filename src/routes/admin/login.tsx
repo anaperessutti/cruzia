@@ -42,7 +42,7 @@ function AdminLogin() {
       setError("Email o contraseña incorrectos.");
       return;
     }
-    navigate({ to: "/", replace: true });
+    navigate({ to: "/admin/panel", replace: true });
   }
 
   return (
