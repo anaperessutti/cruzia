@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminConfirmadoRoute = AdminConfirmadoRouteImport.update({
+  id: '/admin/confirmado',
+  path: '/admin/confirmado',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -31,30 +37,34 @@ const AdminSetupRoute = AdminSetupRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/setup': typeof AdminSetupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/setup': typeof AdminSetupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/setup': typeof AdminSetupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin/login' | '/admin/setup'
+  fullPaths: '/' | '/admin/confirmado' | '/admin/login' | '/admin/setup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin/login' | '/admin/setup'
-  id: '__root__' | '/' | '/admin/login' | '/admin/setup'
+  to: '/' | '/admin/confirmado' | '/admin/login' | '/admin/setup'
+  id: '__root__' | '/' | '/admin/confirmado' | '/admin/login' | '/admin/setup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminSetupRoute: typeof AdminSetupRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/confirmado': {
+      id: '/admin/confirmado'
+      path: '/admin/confirmado'
+      fullPath: '/admin/confirmado'
+      preLoaderRoute: typeof AdminConfirmadoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminSetupRoute: AdminSetupRoute,
 }
