@@ -42,21 +42,23 @@ function AdminSetup() {
   useEffect(() => {
     let activo = true;
     (async () => {
-      const { count, error: errCount } = await supabase
-        .from("admins")
-        .select("id", { count: "exact", head: true });
+      // Si venimos del link de confirmación de email, terminamos el alta allí.
+      if (typeof window !== "undefined" && /access_token|type=signup|code=/.test(window.location.hash + window.location.search)) {
+        navigate({ to: "/admin/confirmado", replace: true });
+        return;
+      }
+      const { data, error: errRpc } = await supabase.rpc("existe_admin");
       if (!activo) return;
-      if (errCount) {
-        // Sin sesión no se puede leer la tabla: asumimos que el setup sigue disponible
+      if (errRpc) {
         setEstado("disponible");
         return;
       }
-      setEstado((count ?? 0) > 0 ? "completada" : "disponible");
+      setEstado(data ? "completada" : "disponible");
     })();
     return () => {
       activo = false;
     };
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (estado !== "completada") return;
@@ -73,7 +75,7 @@ function AdminSetup() {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/admin/setup` },
+        options: { emailRedirectTo: `${window.location.origin}/admin/confirmado` },
       });
       if (signUpError && !/already registered/i.test(signUpError.message)) {
         throw signUpError;
