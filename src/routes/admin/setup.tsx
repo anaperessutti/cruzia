@@ -58,7 +58,7 @@ function AdminSetup() {
     return () => {
       activo = false;
     };
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (estado !== "completada") return;
@@ -75,7 +75,7 @@ function AdminSetup() {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/admin/setup` },
+        options: { emailRedirectTo: `${window.location.origin}/admin/confirmado` },
       });
       if (signUpError && !/already registered/i.test(signUpError.message)) {
         throw signUpError;
