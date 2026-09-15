@@ -95,8 +95,8 @@ function Page() {
           </div>
           <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
-              { icon: Users, titulo: "Cuidando a nuestra comunidad", texto: "Cuidando a nuestra comunidad" },
-              { icon: Hand, titulo: "Acciones con resultados visibles", texto: "Acciones con resultados visibles" },
+              { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
+              { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados visibles" },
               { icon: Sparkles, titulo: "En red", texto: "Vecinos y comercios tirando para el mismo lado" },
             ].map((item) => (
               <div key={item.titulo} className="rounded-3xl bg-card p-5">
