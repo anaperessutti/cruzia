@@ -17,6 +17,7 @@ async function getFasesSolidarias(): Promise<FaseSolidaria[]> {
   const { data, error } = await supabase
     .from("huella_solidaria_fases")
     .select("*")
+    .eq("publicado", true)
     .order("fecha", { ascending: false });
   if (error) throw error;
   return data ?? [];

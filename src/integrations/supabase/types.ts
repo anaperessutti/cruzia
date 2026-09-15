@@ -314,6 +314,7 @@ export type Database = {
           fecha: string
           fotos: string[]
           id: string
+          publicado: boolean
           tipo: Database["public"]["Enums"]["fase_tipo"]
           titulo: string
           updated_at: string
@@ -324,6 +325,7 @@ export type Database = {
           fecha?: string
           fotos?: string[]
           id?: string
+          publicado?: boolean
           tipo?: Database["public"]["Enums"]["fase_tipo"]
           titulo: string
           updated_at?: string
@@ -334,6 +336,7 @@ export type Database = {
           fecha?: string
           fotos?: string[]
           id?: string
+          publicado?: boolean
           tipo?: Database["public"]["Enums"]["fase_tipo"]
           titulo?: string
           updated_at?: string
