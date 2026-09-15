@@ -1,0 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { InfoPage } from "@/components/public/info-page";
+export const Route = createFileRoute("/privacidad")({ head: () => ({ meta: [{ title: "Política de Privacidad | OLA!" }, { name: "description", content: "Política de privacidad de OLA!." }, { property: "og:title", content: "Política de Privacidad | OLA!" }, { property: "og:description", content: "Información sobre privacidad en OLA!." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
+function Page() { return <InfoPage eyebrow="Información legal" title="Política de Privacidad" intro="Estamos preparando el texto legal definitivo de OLA!."><section className="mx-auto max-w-3xl px-4 py-16 sm:px-6"><p className="leading-7 text-muted-foreground">Esta página se encuentra en preparación y será actualizada antes del lanzamiento público.</p></section></InfoPage>; }

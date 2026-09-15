@@ -1,0 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowRight, Store } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { InfoPage } from "@/components/public/info-page";
+
+export const Route = createFileRoute("/subite-a-la-ola")({ head: () => ({ meta: [{ title: "Subite a la Ola | Comercios" }, { name: "description", content: "Sumá tu comercio a OLA! y conectá con personas de todo el Partido de la Costa." }, { property: "og:title", content: "Subite a la Ola | Comercios" }, { property: "og:description", content: "Tu comercio puede ser parte de la comunidad OLA!." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: Page });
+function Page() { return <InfoPage eyebrow="Comercios de La Costa" title="Hacé que más personas descubran tu negocio." intro="Sumate a una red local de beneficios y experiencias pensada para conectar tu propuesta con quienes eligen La Costa."><section className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1fr_auto] md:items-center lg:px-8"><div><Store className="size-8 text-secondary" /><h2 className="mt-4 font-display text-3xl font-extrabold text-primary">¿Querés ser parte?</h2><p className="mt-3 max-w-xl leading-7 text-muted-foreground">Escribinos y te contamos cómo sumar tu comercio a OLA!.</p></div><Button asChild size="lg"><a href="mailto:auna.comunidad@gmail.com?subject=Quiero%20subirme%20a%20OLA!">Quiero sumarme <ArrowRight /></a></Button></section></InfoPage>; }

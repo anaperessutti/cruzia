@@ -1,0 +1,7 @@
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { Gift } from "lucide-react";
+import { InfoPage } from "@/components/public/info-page";
+import { usePublicDirectory } from "@/components/public/public-directory-provider";
+
+export const Route = createFileRoute("/gift-box")({ head: () => ({ meta: [{ title: "Gift Box | OLA!" }, { name: "description", content: "Regalá experiencias del Partido de la Costa con Gift Box de OLA!." }, { property: "og:title", content: "Gift Box | OLA!" }, { property: "og:description", content: "Una caja llena de experiencias locales." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: Page });
+function Page() { const { data, isLoading } = usePublicDirectory(); if (isLoading) return <main className="min-h-[60vh] bg-muted" />; if (!data.giftBoxVisible) return <Navigate to="/" replace />; return <InfoPage eyebrow="Regalá La Costa" title="Una caja. Muchas experiencias." intro="Gift Box reúne sabores, momentos y bienestar local en un regalo inolvidable."><section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8"><Gift className="mx-auto size-10 text-secondary" /><h2 className="mt-4 font-display text-3xl font-bold text-primary">Próximamente</h2><p className="mt-2 text-muted-foreground">Estamos preparando una selección muy especial.</p></section></InfoPage>; }
