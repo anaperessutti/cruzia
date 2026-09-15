@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarClock, Clock, Crown, Instagram, MapPin, MessageCircle, QrCode, Ticket } from "lucide-react";
 
+import { CuponCard } from "@/components/public/cupon-card";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
