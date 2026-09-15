@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
 import { CuponCard } from "@/components/public/cupon-card";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
+import { registrarInteraccionComercio } from "@/lib/cupones";
+import { getDeviceId } from "@/lib/device-id";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
