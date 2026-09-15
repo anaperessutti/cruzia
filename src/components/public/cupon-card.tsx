@@ -98,7 +98,7 @@ export function CuponCard({
   );
 
   const whatsappHref = `https://wa.me/${(comercio.whatsapp ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(
-    `Hola ${comercio.nombre}, vi su promo ${cupon.titulo} en la cuponera y quiero reservar/consultar.`,
+    `Hola ${comercio.nombre}, vi su promo ${cupon.titulo} en AUNA y quiero reservar/consultar.`,
   )}`;
 
   const bloqueado = estado != null && !estado.permitido && estado.motivo === "COOLDOWN_ACTIVO";
