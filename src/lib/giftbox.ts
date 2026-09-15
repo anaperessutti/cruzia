@@ -9,7 +9,7 @@ export const CATEGORIAS: { id: GiftboxCategoria; titulo: string; detalle: string
   { id: "Noche", titulo: "Noche", detalle: "Salidas, música y brindis frente al mar." },
   { id: "Sabor", titulo: "Sabor", detalle: "Mesas largas, cocina local y dulces." },
   { id: "Relax", titulo: "Relax", detalle: "Spa, masajes y pausas para respirar." },
-  { id: "Diversión" as GiftboxCategoria, titulo: "Diversión", detalle: "Surf, dunas y aventuras costeras." },
+  { id: "Diversión", titulo: "Diversión", detalle: "Surf, dunas y aventuras costeras." },
 ];
 
 export async function getGiftboxItems(): Promise<GiftboxItem[]> {
