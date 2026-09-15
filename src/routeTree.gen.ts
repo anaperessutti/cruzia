@@ -16,7 +16,6 @@ import { Route as CuponesRouteImport } from './routes/cupones'
 import { Route as GiftBoxRouteImport } from './routes/gift-box'
 import { Route as HuellaSolidariaRouteImport } from './routes/huella-solidaria'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
-import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
 import { Route as SubiteALaOlaRouteImport } from './routes/subite-a-la-ola'
 import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
@@ -58,11 +57,6 @@ const HuellaSolidariaRoute = HuellaSolidariaRouteImport.update({
 const PrivacidadRoute = PrivacidadRouteImport.update({
   id: '/privacidad',
   path: '/privacidad',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuienesSomosRoute = QuienesSomosRouteImport.update({
-  id: '/quienes-somos',
-  path: '/quienes-somos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubiteALaOlaRoute = SubiteALaOlaRouteImport.update({
@@ -109,7 +103,6 @@ export interface FileRoutesByFullPath {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/quienes-somos': typeof QuienesSomosRoute
   '/subite-a-la-ola': typeof SubiteALaOlaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
@@ -126,7 +119,6 @@ export interface FileRoutesByTo {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/quienes-somos': typeof QuienesSomosRoute
   '/subite-a-la-ola': typeof SubiteALaOlaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
@@ -144,7 +136,6 @@ export interface FileRoutesById {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/quienes-somos': typeof QuienesSomosRoute
   '/subite-a-la-ola': typeof SubiteALaOlaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
@@ -163,7 +154,6 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/quienes-somos'
     | '/subite-a-la-ola'
     | '/terminos-promociones'
     | '/admin/confirmado'
@@ -180,7 +170,6 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/quienes-somos'
     | '/subite-a-la-ola'
     | '/terminos-promociones'
     | '/admin/confirmado'
@@ -197,7 +186,6 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/quienes-somos'
     | '/subite-a-la-ola'
     | '/terminos-promociones'
     | '/admin/confirmado'
@@ -215,7 +203,6 @@ export interface RootRouteChildren {
   GiftBoxRoute: typeof GiftBoxRoute
   HuellaSolidariaRoute: typeof HuellaSolidariaRoute
   PrivacidadRoute: typeof PrivacidadRoute
-  QuienesSomosRoute: typeof QuienesSomosRoute
   SubiteALaOlaRoute: typeof SubiteALaOlaRoute
   TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
@@ -274,13 +261,6 @@ declare module '@tanstack/react-router' {
       path: '/privacidad'
       fullPath: '/privacidad'
       preLoaderRoute: typeof PrivacidadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quienes-somos': {
-      id: '/quienes-somos'
-      path: '/quienes-somos'
-      fullPath: '/quienes-somos'
-      preLoaderRoute: typeof QuienesSomosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subite-a-la-ola': {
@@ -343,7 +323,6 @@ const rootRouteChildren: RootRouteChildren = {
   GiftBoxRoute: GiftBoxRoute,
   HuellaSolidariaRoute: HuellaSolidariaRoute,
   PrivacidadRoute: PrivacidadRoute,
-  QuienesSomosRoute: QuienesSomosRoute,
   SubiteALaOlaRoute: SubiteALaOlaRoute,
   TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
