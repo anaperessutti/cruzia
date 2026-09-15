@@ -187,7 +187,8 @@ function AdminPanel() {
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
-                Total del período: <strong>{totalMes}</strong> activaciones
+                Total del período: <strong>{totalMes}</strong> activaciones ·{" "}
+                <strong>{totalInteracciones}</strong> interacciones
               </span>
             </div>
 
