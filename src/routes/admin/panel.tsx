@@ -140,6 +140,7 @@ function AdminPanel() {
   }
 
   const totalMes = (metricas ?? []).reduce((acc, m) => acc + m.totalRedenciones, 0);
+  const totalInteracciones = (metricas ?? []).reduce((acc, m) => acc + m.totalInteracciones, 0);
 
   return (
     <main className="min-h-screen bg-background">
@@ -187,7 +188,8 @@ function AdminPanel() {
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
-                Total del período: <strong>{totalMes}</strong> activaciones
+                Total del período: <strong>{totalMes}</strong> activaciones ·{" "}
+                <strong>{totalInteracciones}</strong> interacciones
               </span>
             </div>
 
@@ -210,6 +212,7 @@ function AdminPanel() {
                       <TableHead>Plan</TableHead>
                       <TableHead>Localidad</TableHead>
                       <TableHead className="text-right">Activaciones</TableHead>
+                      <TableHead className="text-right">Interacciones</TableHead>
                       <TableHead>Promo más usada</TableHead>
                       <TableHead className="text-right">Reporte</TableHead>
                     </TableRow>
@@ -223,6 +226,7 @@ function AdminPanel() {
                         </TableCell>
                         <TableCell>{m.localidad ?? "—"}</TableCell>
                         <TableCell className="text-right">{m.totalRedenciones}</TableCell>
+                        <TableCell className="text-right">{m.totalInteracciones}</TableCell>
                         <TableCell>{m.cuponTop ?? "—"}</TableCell>
                         <TableCell className="text-right">
                           <Button

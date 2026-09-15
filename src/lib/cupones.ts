@@ -89,3 +89,11 @@ export function mensajeMotivo(estado: EstadoCupon): string {
       return "No pudimos activar el cupón. Probá de nuevo en un momento.";
   }
 }
+
+export async function registrarInteraccionComercio(comercioId: string, deviceId: string | null) {
+  // Métrica pura: sin validación, cooldown ni bloqueo. Cada apertura de ficha se registra.
+  await supabase.from("interacciones_comercio").insert({
+    comercio_id: comercioId,
+    device_id: deviceId,
+  });
+}

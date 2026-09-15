@@ -9,6 +9,7 @@ export type MetricaComercio = {
   rubro: string | null;
   mes: string;
   totalRedenciones: number;
+  totalInteracciones: number;
   cuponTop: string | null;
 };
 
@@ -47,37 +48,64 @@ type MetricaRow = {
   comercio_id: string;
   mes: string;
   total_redenciones: number;
-  comercios: {
-    nombre: string;
-    planes: { nombre: string; prioridad_orden: number } | null;
-    localidades: { nombre: string } | null;
-    rubros: { nombre: string } | null;
-  } | null;
+  total_interacciones: number;
   cupon_top: { titulo: string } | null;
 };
 
+type ComercioRow = {
+  id: string;
+  nombre: string;
+  planes: { nombre: string; prioridad_orden: number } | null;
+  localidades: { nombre: string } | null;
+  rubros: { nombre: string } | null;
+};
+
+/** Lista TODOS los comercios activos del período, con 0 cuando no hubo actividad. */
 export async function getMetricasMes(mes: string): Promise<MetricaComercio[]> {
-  const { data, error } = await supabase
-    .from("metricas_mensuales")
-    .select(
-      "comercio_id, mes, total_redenciones, comercios(nombre, planes(nombre, prioridad_orden), localidades(nombre), rubros(nombre)), cupon_top:cupones!metricas_mensuales_cupon_top_id_fkey(titulo)",
-    )
-    .eq("mes", mes)
-    .order("total_redenciones", { ascending: false });
+  const [comerciosRes, metricasRes] = await Promise.all([
+    supabase
+      .from("comercios")
+      .select("id, nombre, planes(nombre, prioridad_orden), localidades(nombre), rubros(nombre)")
+      .eq("activo", true)
+      .order("nombre"),
+    supabase
+      .from("metricas_mensuales")
+      .select(
+        "comercio_id, mes, total_redenciones, total_interacciones, cupon_top:cupones!metricas_mensuales_cupon_top_id_fkey(titulo)",
+      )
+      .eq("mes", mes),
+  ]);
 
-  if (error) throw error;
+  if (comerciosRes.error) throw comerciosRes.error;
+  if (metricasRes.error) throw metricasRes.error;
 
-  return ((data ?? []) as unknown as MetricaRow[]).map((row) => ({
-    comercioId: row.comercio_id,
-    comercio: row.comercios?.nombre ?? "Comercio",
-    plan: row.comercios?.planes?.nombre ?? "Básico",
-    prioridadPlan: row.comercios?.planes?.prioridad_orden ?? 3,
-    localidad: row.comercios?.localidades?.nombre ?? null,
-    rubro: row.comercios?.rubros?.nombre ?? null,
-    mes: row.mes,
-    totalRedenciones: row.total_redenciones,
-    cuponTop: row.cupon_top?.titulo ?? null,
-  }));
+  const porComercio = new Map<string, MetricaRow>();
+  for (const row of (metricasRes.data ?? []) as unknown as MetricaRow[]) {
+    porComercio.set(row.comercio_id, row);
+  }
+
+  return ((comerciosRes.data ?? []) as unknown as ComercioRow[])
+    .map((c) => {
+      const m = porComercio.get(c.id);
+      return {
+        comercioId: c.id,
+        comercio: c.nombre,
+        plan: c.planes?.nombre ?? "Básico",
+        prioridadPlan: c.planes?.prioridad_orden ?? 3,
+        localidad: c.localidades?.nombre ?? null,
+        rubro: c.rubros?.nombre ?? null,
+        mes,
+        totalRedenciones: m?.total_redenciones ?? 0,
+        totalInteracciones: m?.total_interacciones ?? 0,
+        cuponTop: m?.cupon_top?.titulo ?? null,
+      } satisfies MetricaComercio;
+    })
+    .sort(
+      (a, b) =>
+        b.totalRedenciones - a.totalRedenciones ||
+        b.totalInteracciones - a.totalInteracciones ||
+        a.comercio.localeCompare(b.comercio, "es"),
+    );
 }
 
 export async function recalcularMetricas(mes: string): Promise<number> {

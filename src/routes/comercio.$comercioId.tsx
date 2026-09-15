@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
 import { CuponCard } from "@/components/public/cupon-card";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
+import { registrarInteraccionComercio } from "@/lib/cupones";
+import { getDeviceId } from "@/lib/device-id";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +25,15 @@ export const Route = createFileRoute("/comercio/$comercioId")({
 function FichaComercio() {
   const { comercioId } = Route.useParams();
   const { data, isLoading } = usePublicDirectory();
+  const registrado = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (registrado.current === comercioId) return;
+    registrado.current = comercioId;
+    void registrarInteraccionComercio(comercioId, getDeviceId()).catch(() => {
+      /* métrica silenciosa: nunca debe afectar la navegación */
+    });
+  }, [comercioId]);
 
   const comercio = data.comercios.find((item) => item.id === comercioId);
   const plan = comercio ? data.planes.find((item) => item.id === comercio.plan_id) : undefined;

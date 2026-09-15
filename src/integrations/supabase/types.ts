@@ -340,6 +340,35 @@ export type Database = {
         }
         Relationships: []
       }
+      interacciones_comercio: {
+        Row: {
+          comercio_id: string
+          device_id: string | null
+          fecha: string
+          id: string
+        }
+        Insert: {
+          comercio_id: string
+          device_id?: string | null
+          fecha?: string
+          id?: string
+        }
+        Update: {
+          comercio_id?: string
+          device_id?: string | null
+          fecha?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interacciones_comercio_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads_comercios: {
         Row: {
           fecha: string
@@ -392,6 +421,7 @@ export type Database = {
           cupon_top_id: string | null
           id: string
           mes: string
+          total_interacciones: number
           total_redenciones: number
           updated_at: string
         }
@@ -401,6 +431,7 @@ export type Database = {
           cupon_top_id?: string | null
           id?: string
           mes: string
+          total_interacciones?: number
           total_redenciones?: number
           updated_at?: string
         }
@@ -410,6 +441,7 @@ export type Database = {
           cupon_top_id?: string | null
           id?: string
           mes?: string
+          total_interacciones?: number
           total_redenciones?: number
           updated_at?: string
         }
