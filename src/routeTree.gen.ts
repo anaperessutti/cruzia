@@ -10,6 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as ContactoRouteImport } from './routes/contacto'
+import { Route as CuponesRouteImport } from './routes/cupones'
+import { Route as GiftBoxRouteImport } from './routes/gift-box'
+import { Route as HuellaSolidariaRouteImport } from './routes/huella-solidaria'
+import { Route as PrivacidadRouteImport } from './routes/privacidad'
+import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
+import { Route as SubiteALaOlaRouteImport } from './routes/subite-a-la-ola'
+import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
@@ -18,6 +27,51 @@ import { Route as AdminSetupRouteImport } from './routes/admin/setup'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriasRoute = CategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactoRoute = ContactoRouteImport.update({
+  id: '/contacto',
+  path: '/contacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuponesRoute = CuponesRouteImport.update({
+  id: '/cupones',
+  path: '/cupones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GiftBoxRoute = GiftBoxRouteImport.update({
+  id: '/gift-box',
+  path: '/gift-box',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HuellaSolidariaRoute = HuellaSolidariaRouteImport.update({
+  id: '/huella-solidaria',
+  path: '/huella-solidaria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadRoute = PrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuienesSomosRoute = QuienesSomosRouteImport.update({
+  id: '/quienes-somos',
+  path: '/quienes-somos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubiteALaOlaRoute = SubiteALaOlaRouteImport.update({
+  id: '/subite-a-la-ola',
+  path: '/subite-a-la-ola',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TerminosPromocionesRoute = TerminosPromocionesRouteImport.update({
+  id: '/terminos-promociones',
+  path: '/terminos-promociones',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminConfirmadoRoute = AdminConfirmadoRouteImport.update({
@@ -43,6 +97,15 @@ const AdminSetupRoute = AdminSetupRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
+  '/contacto': typeof ContactoRoute
+  '/cupones': typeof CuponesRoute
+  '/gift-box': typeof GiftBoxRoute
+  '/huella-solidaria': typeof HuellaSolidariaRoute
+  '/privacidad': typeof PrivacidadRoute
+  '/quienes-somos': typeof QuienesSomosRoute
+  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
@@ -50,6 +113,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
+  '/contacto': typeof ContactoRoute
+  '/cupones': typeof CuponesRoute
+  '/gift-box': typeof GiftBoxRoute
+  '/huella-solidaria': typeof HuellaSolidariaRoute
+  '/privacidad': typeof PrivacidadRoute
+  '/quienes-somos': typeof QuienesSomosRoute
+  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
@@ -58,6 +130,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
+  '/contacto': typeof ContactoRoute
+  '/cupones': typeof CuponesRoute
+  '/gift-box': typeof GiftBoxRoute
+  '/huella-solidaria': typeof HuellaSolidariaRoute
+  '/privacidad': typeof PrivacidadRoute
+  '/quienes-somos': typeof QuienesSomosRoute
+  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
@@ -66,13 +147,48 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin/confirmado' | '/admin/login' | '/admin/panel' | '/admin/setup'
+    | '/'
+    | '/categorias'
+    | '/contacto'
+    | '/cupones'
+    | '/gift-box'
+    | '/huella-solidaria'
+    | '/privacidad'
+    | '/quienes-somos'
+    | '/subite-a-la-ola'
+    | '/terminos-promociones'
+    | '/admin/confirmado'
+    | '/admin/login'
+    | '/admin/panel'
+    | '/admin/setup'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/admin/confirmado' | '/admin/login' | '/admin/panel' | '/admin/setup'
+    | '/'
+    | '/categorias'
+    | '/contacto'
+    | '/cupones'
+    | '/gift-box'
+    | '/huella-solidaria'
+    | '/privacidad'
+    | '/quienes-somos'
+    | '/subite-a-la-ola'
+    | '/terminos-promociones'
+    | '/admin/confirmado'
+    | '/admin/login'
+    | '/admin/panel'
+    | '/admin/setup'
   id:
     | '__root__'
     | '/'
+    | '/categorias'
+    | '/contacto'
+    | '/cupones'
+    | '/gift-box'
+    | '/huella-solidaria'
+    | '/privacidad'
+    | '/quienes-somos'
+    | '/subite-a-la-ola'
+    | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/login'
     | '/admin/panel'
@@ -81,6 +197,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriasRoute: typeof CategoriasRoute
+  ContactoRoute: typeof ContactoRoute
+  CuponesRoute: typeof CuponesRoute
+  GiftBoxRoute: typeof GiftBoxRoute
+  HuellaSolidariaRoute: typeof HuellaSolidariaRoute
+  PrivacidadRoute: typeof PrivacidadRoute
+  QuienesSomosRoute: typeof QuienesSomosRoute
+  SubiteALaOlaRoute: typeof SubiteALaOlaRoute
+  TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
@@ -94,6 +219,69 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias': {
+      id: '/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof CategoriasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacto': {
+      id: '/contacto'
+      path: '/contacto'
+      fullPath: '/contacto'
+      preLoaderRoute: typeof ContactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cupones': {
+      id: '/cupones'
+      path: '/cupones'
+      fullPath: '/cupones'
+      preLoaderRoute: typeof CuponesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gift-box': {
+      id: '/gift-box'
+      path: '/gift-box'
+      fullPath: '/gift-box'
+      preLoaderRoute: typeof GiftBoxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/huella-solidaria': {
+      id: '/huella-solidaria'
+      path: '/huella-solidaria'
+      fullPath: '/huella-solidaria'
+      preLoaderRoute: typeof HuellaSolidariaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidad': {
+      id: '/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PrivacidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quienes-somos': {
+      id: '/quienes-somos'
+      path: '/quienes-somos'
+      fullPath: '/quienes-somos'
+      preLoaderRoute: typeof QuienesSomosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subite-a-la-ola': {
+      id: '/subite-a-la-ola'
+      path: '/subite-a-la-ola'
+      fullPath: '/subite-a-la-ola'
+      preLoaderRoute: typeof SubiteALaOlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terminos-promociones': {
+      id: '/terminos-promociones'
+      path: '/terminos-promociones'
+      fullPath: '/terminos-promociones'
+      preLoaderRoute: typeof TerminosPromocionesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/confirmado': {
@@ -129,6 +317,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriasRoute: CategoriasRoute,
+  ContactoRoute: ContactoRoute,
+  CuponesRoute: CuponesRoute,
+  GiftBoxRoute: GiftBoxRoute,
+  HuellaSolidariaRoute: HuellaSolidariaRoute,
+  PrivacidadRoute: PrivacidadRoute,
+  QuienesSomosRoute: QuienesSomosRoute,
+  SubiteALaOlaRoute: SubiteALaOlaRoute,
+  TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
