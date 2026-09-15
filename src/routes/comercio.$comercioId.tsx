@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, Clock, Crown, Instagram, MapPin, MessageCircle, QrCode, Ticket } from "lucide-react";
+import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
 import { CuponCard } from "@/components/public/cupon-card";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
