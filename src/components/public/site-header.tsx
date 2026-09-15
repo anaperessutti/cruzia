@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Menu } from "lucide-react";
+import { Fragment } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -11,7 +12,6 @@ const links = [
   { to: "/" as const, label: "Inicio" },
   { to: "/cupones" as const, label: "⭐ Cupones" },
   { to: "/categorias" as const, label: "Categorías de Rubros" },
-  { to: "/quienes-somos" as const, label: "¿Quiénes Somos?" },
   { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
   { to: "/subite-a-la-ola" as const, label: "Subite a la Ola" },
   { to: "/contacto" as const, label: "Contacto" },
@@ -31,8 +31,15 @@ export function SiteHeader() {
             <SheetContent className="flex w-[88%] flex-col border-l-0 bg-primary text-primary-foreground sm:max-w-md">
               <SheetHeader className="border-b border-primary-foreground/15 pb-6 text-left"><SheetTitle><BrandMark inverse /></SheetTitle><SheetDescription className="text-primary-foreground/65">Todo lo bueno de La Costa, más cerca.</SheetDescription></SheetHeader>
               <nav className="flex flex-1 flex-col justify-center gap-1" aria-label="Navegación principal">
-                {links.map((item, index) => <SheetClose asChild key={item.to}><Link to={item.to} activeProps={{ className: "bg-primary-foreground text-primary" }} className="flex items-center justify-between rounded-md px-4 py-3 font-display text-xl font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/10"><span>{item.label}</span><span className="text-xs opacity-50">0{index + 1}</span></Link></SheetClose>)}
-                {data.giftBoxVisible ? <SheetClose asChild><Link to="/gift-box" className="rounded-md px-4 py-3 font-display text-xl font-semibold text-primary-foreground hover:bg-primary-foreground/10">Gift Box</Link></SheetClose> : null}
+                {links.map((item, index) => {
+                  const numerados = data.giftBoxVisible && index > 2 ? index + 2 : index + 1;
+                  return (
+                    <Fragment key={item.to}>
+                      <SheetClose asChild><Link to={item.to} activeProps={{ className: "bg-primary-foreground text-primary" }} className="flex items-center justify-between rounded-md px-4 py-3 font-display text-xl font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/10"><span>{item.label}</span><span className="text-xs opacity-50">{String(numerados).padStart(2, "0")}</span></Link></SheetClose>
+                      {index === 2 && data.giftBoxVisible ? <SheetClose asChild><Link to="/gift-box" activeProps={{ className: "bg-primary-foreground text-primary" }} className="flex items-center justify-between rounded-md px-4 py-3 font-display text-xl font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/10"><span>Gift Box</span><span className="text-xs opacity-50">04</span></Link></SheetClose> : null}
+                    </Fragment>
+                  );
+                })}
               </nav>
               <a href="https://www.instagram.com/somos_auna/" target="_blank" rel="noreferrer" className="flex items-center gap-2 border-t border-primary-foreground/15 pt-5 text-sm font-semibold"><Instagram className="size-4" /> @somos_auna</a>
             </SheetContent>
