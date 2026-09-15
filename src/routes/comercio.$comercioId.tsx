@@ -18,9 +18,6 @@ export const Route = createFileRoute("/comercio/$comercioId")({
   component: FichaComercio,
 });
 
-function formatFecha(value: string) {
-  return new Date(value).toLocaleDateString("es-AR", { day: "2-digit", month: "long" });
-}
 
 function FichaComercio() {
   const { comercioId } = Route.useParams();
