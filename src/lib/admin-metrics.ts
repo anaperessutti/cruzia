@@ -9,6 +9,7 @@ export type MetricaComercio = {
   rubro: string | null;
   mes: string;
   totalRedenciones: number;
+  totalInteracciones: number;
   cuponTop: string | null;
 };
 
