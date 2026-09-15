@@ -140,6 +140,7 @@ function AdminPanel() {
   }
 
   const totalMes = (metricas ?? []).reduce((acc, m) => acc + m.totalRedenciones, 0);
+  const totalInteracciones = (metricas ?? []).reduce((acc, m) => acc + m.totalInteracciones, 0);
 
   return (
     <main className="min-h-screen bg-background">
