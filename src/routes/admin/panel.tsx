@@ -210,6 +210,7 @@ function AdminPanel() {
                       <TableHead>Plan</TableHead>
                       <TableHead>Localidad</TableHead>
                       <TableHead className="text-right">Activaciones</TableHead>
+                      <TableHead className="text-right">Interacciones</TableHead>
                       <TableHead>Promo más usada</TableHead>
                       <TableHead className="text-right">Reporte</TableHead>
                     </TableRow>
