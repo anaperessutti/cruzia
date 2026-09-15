@@ -110,56 +110,41 @@ function Page() {
       </section>
 
       {/* Timeline */}
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <h2 className="font-display text-3xl font-extrabold text-primary">Nuestro próximo aporte</h2>
-        <p className="mt-2 max-w-2xl leading-7 text-muted-foreground">La causa que estamos empujando ahora mismo, y todo lo que dejamos atrás en el camino.</p>
-
-        <div className="mt-8 rounded-3xl border-2 border-secondary/40 bg-card p-6 shadow-premium sm:p-8">
-          {isLoading ? (
-            <p className="text-sm text-muted-foreground">Cargando…</p>
-          ) : actual ? (
+      {!isLoading && (actual || historial.length > 0) ? (
+        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          {actual ? (
             <>
-              <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
-                <Sparkles className="size-3.5" /> En marcha
-              </span>
-              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">{actual.titulo}</h3>
-              <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> {formatearFecha(actual.fecha)}</p>
-              {actual.descripcion ? <p className="mt-4 leading-7 text-foreground/80">{actual.descripcion}</p> : null}
-              <Fotos fase={actual} />
+              <h2 className="font-display text-2xl font-extrabold text-primary">Nuestro próximo aporte</h2>
+              <div className="mt-8 rounded-3xl border-2 border-secondary/40 bg-card p-6 shadow-premium sm:p-8">
+                <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
+                  <Sparkles className="size-3.5" /> En marcha
+                </span>
+                <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">{actual.titulo}</h3>
+                <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> {formatearFecha(actual.fecha)}</p>
+                {actual.descripcion ? <p className="mt-4 leading-7 text-foreground/80">{actual.descripcion}</p> : null}
+                <Fotos fase={actual} />
+              </div>
             </>
-          ) : (
-            <>
-              <span className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-bold uppercase text-muted-foreground">Ejemplo</span>
-              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary/70">Club deportivo “Las Quintas”</h3>
-              <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> Mes y año del proyecto</p>
-              <p className="mt-4 leading-7 text-foreground/80">
-                Estamos recaudando fondos durante este año para equipar el club deportivo/comedor de [Localidad]
-              </p>
-            </>
-          )}
-        </div>
+          ) : null}
 
-        <div className="mt-14">
-          <h3 className="font-display text-xl font-bold text-primary">Proyectos que acompañamos</h3>
           {historial.length > 0 ? (
-            <ol className="mt-6 space-y-8 border-l-2 border-border pl-6">
-              {historial.map((fase) => (
-                <li key={fase.id} className="relative">
-                  <span className="absolute -left-[31px] top-2 size-3 rounded-full bg-accent ring-4 ring-background" />
-                  <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
-                  <h4 className="mt-1 font-display text-xl font-bold text-primary">{fase.titulo}</h4>
-                  {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
-                  <Fotos fase={fase} />
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <div className="mt-6 rounded-3xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-              Los proyectos acompañados aparecerán acá.
+            <div className={actual ? "mt-14" : ""}>
+              <h2 className="font-display text-2xl font-extrabold text-primary">Proyectos que acompañamos</h2>
+              <ol className="mt-6 space-y-8 border-l-2 border-border pl-6">
+                {historial.map((fase) => (
+                  <li key={fase.id} className="relative">
+                    <span className="absolute -left-[31px] top-2 size-3 rounded-full bg-accent ring-4 ring-background" />
+                    <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
+                    <h4 className="mt-1 font-display text-xl font-bold text-primary">{fase.titulo}</h4>
+                    {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
+                    <Fotos fase={fase} />
+                  </li>
+                ))}
+              </ol>
             </div>
-          )}
-        </div>
-      </section>
+          ) : null}
+        </section>
+      ) : null}
 
       {/* Postulación */}
       <section className="bg-primary text-primary-foreground">
