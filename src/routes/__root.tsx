@@ -122,7 +122,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isAdmin ? <Outlet /> : <PublicDirectoryProvider><SiteHeader /><Outlet /><SiteFooter /></PublicDirectoryProvider>}
+      {isAdmin ? <Outlet /> : <PublicDirectoryProvider><div className="flex min-h-screen flex-col"><SiteHeader /><div className="flex-1"><Outlet /></div><SiteFooter /></div></PublicDirectoryProvider>}
     </QueryClientProvider>
   );
 }

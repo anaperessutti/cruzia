@@ -1,8 +1,8 @@
 # Roadmap
 
-- [ ] Crear sistema visual y marco público global sin afectar `/admin/*`
-- [ ] Conectar navegación, búsqueda, Gift Box condicional y footer
-- [ ] Implementar carrusel Premium independiente de ubicación
-- [ ] Implementar filtros sticky con geolocalización, multiselección, rubro y cupones
-- [ ] Crear todas las rutas públicas con metadata propia
-- [ ] Verificar navegación, filtros, móvil, escritorio y rutas admin
+- [x] Crear sistema visual y marco público global sin afectar `/admin/*`
+- [x] Conectar navegación, búsqueda, Gift Box condicional y footer
+- [x] Implementar carrusel Premium independiente de ubicación
+- [x] Implementar filtros sticky con geolocalización, multiselección, rubro y cupones
+- [x] Crear todas las rutas públicas con metadata propia
+- [x] Verificar navegación, filtros, móvil, escritorio y rutas admin
