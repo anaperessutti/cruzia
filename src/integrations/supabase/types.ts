@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      clicks_whatsapp: {
+        Row: {
+          comercio_id: string
+          created_at: string
+          cupon_id: string
+          device_id: string
+          id: string
+        }
+        Insert: {
+          comercio_id: string
+          created_at?: string
+          cupon_id: string
+          device_id: string
+          id?: string
+        }
+        Update: {
+          comercio_id?: string
+          created_at?: string
+          cupon_id?: string
+          device_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clicks_whatsapp_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clicks_whatsapp_cupon_id_fkey"
+            columns: ["cupon_id"]
+            isOneToOne: false
+            referencedRelation: "cupones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comercios: {
         Row: {
           activo: boolean
@@ -519,7 +558,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activar_cupon_presencial: {
+        Args: { p_cupon_id: string; p_device_id: string; p_qr_codigo: string }
+        Returns: Json
+      }
       admins_vacio: { Args: never; Returns: boolean }
+      estado_cupon_device: {
+        Args: { p_cupon_id: string; p_device_id: string }
+        Returns: Json
+      }
       existe_admin: { Args: never; Returns: boolean }
       has_role: {
         Args: {

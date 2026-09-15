@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, Clock, Crown, Instagram, MapPin, MessageCircle, QrCode, Ticket } from "lucide-react";
+import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
+import { CuponCard } from "@/components/public/cupon-card";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,6 @@ export const Route = createFileRoute("/comercio/$comercioId")({
   component: FichaComercio,
 });
 
-function formatFecha(value: string) {
-  return new Date(value).toLocaleDateString("es-AR", { day: "2-digit", month: "long" });
-}
 
 function FichaComercio() {
   const { comercioId } = Route.useParams();
@@ -68,23 +66,12 @@ function FichaComercio() {
           <p className="text-xs font-bold uppercase text-secondary">Módulo de promoción</p>
           <div className="mt-3 grid gap-4">
             {cupones.map((cupon) => (
-              <article key={cupon.id} className="rounded-md border-2 border-secondary bg-card p-6 shadow-premium">
-                <h2 className="font-display text-2xl font-bold text-primary">{cupon.titulo}</h2>
-                {cupon.descripcion ? <p className="mt-2 text-sm text-muted-foreground">{cupon.descripcion}</p> : null}
-                <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground"><CalendarClock className="size-4" /> Vigente del {formatFecha(cupon.vigencia_inicio)} al {formatFecha(cupon.vigencia_fin)}</p>
-                {cupon.modalidad === "whatsapp" && (plan?.puede_reservar_whatsapp ?? false) ? (
-                  <Button asChild className="mt-5 w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:w-auto">
-                    <a href={`https://wa.me/${(comercio.whatsapp ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(`Hola! Quiero reservar la promo "${cupon.titulo}" de OLA!`)}`} target="_blank" rel="noreferrer">
-                      <MessageCircle className="mr-1.5 size-4" /> Reservar por WhatsApp
-                    </a>
-                  </Button>
-                ) : (
-                  <div className="mt-5">
-                    <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 sm:w-auto"><QrCode className="mr-1.5 size-4" /> Activar</Button>
-                    <p className="mt-2 text-xs text-muted-foreground">Al activar se abrirá la cámara de tu teléfono para escanear el QR del local.</p>
-                  </div>
-                )}
-              </article>
+              <CuponCard
+                key={cupon.id}
+                comercio={comercio}
+                cupon={cupon}
+                puedeWhatsapp={plan?.puede_reservar_whatsapp ?? false}
+              />
             ))}
           </div>
         </section>
