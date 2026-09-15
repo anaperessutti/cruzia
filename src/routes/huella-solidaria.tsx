@@ -87,20 +87,17 @@ function Page() {
           <div>
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
             <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-[1.08] text-primary sm:text-5xl">
-              Antes que una app de beneficios, somos vecinas y vecinos de La Costa.
+              Detrás de cada pantalla hay un vecino.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
-              Creemos que una comunidad se sostiene con gestos concretos: una mano en el momento justo, un espacio que vuelve a abrir, una familia que encuentra respuesta. Por eso cada ola que empujamos deja algo atrás que no se borra con la marea.
-            </p>
-            <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
-              Huella Solidaria es el lugar donde acompañamos causas de nuestras localidades junto a los comercios de la red. Sin protagonismos, sin letra chica: gente ayudando a gente, cerca de casa.
+              En AUNA creemos que el éxito comercial no sirve si no empuja a la comunidad. Por eso, cada año destinamos un porcentaje de nuestros ingresos a transformar realidades en el Partido de la Costa.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
-              { icon: Users, titulo: "Cerca", texto: "Causas de nuestras propias localidades." },
-              { icon: Hand, titulo: "Concreto", texto: "Acciones con resultado visible, no promesas." },
-              { icon: Sparkles, titulo: "Compartido", texto: "Comercios y vecinos empujando lo mismo." },
+              { icon: Users, titulo: "Cuidando a nuestra comunidad", texto: "Cuidando a nuestra comunidad" },
+              { icon: Hand, titulo: "Acciones con resultados visibles", texto: "Acciones con resultados visibles" },
+              { icon: Sparkles, titulo: "En red", texto: "Vecinos y comercios tirando para el mismo lado" },
             ].map((item) => (
               <div key={item.titulo} className="rounded-3xl bg-card p-5">
                 <item.icon className="size-5 text-secondary" />
@@ -133,9 +130,9 @@ function Page() {
           ) : (
             <>
               <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase text-accent-foreground">Preparando</span>
-              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">Estamos eligiendo la próxima causa</h3>
+              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">Nuestro próximo aporte</h3>
               <p className="mt-4 leading-7 text-foreground/80">
-                Estamos escuchando propuestas de la comunidad para definir a quién acompañamos. Si tenés una causa cerca, contanos más abajo: puede ser la próxima.
+                Estamos recaudando fondos durante este año para equipar el club deportivo/comedor de [Localidad]
               </p>
             </>
           )}
@@ -164,19 +161,19 @@ function Page() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
             <p className="text-xs font-bold uppercase text-accent">Postulá una causa</p>
-            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">¿Conocés a alguien que necesita una mano?</h2>
+            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">¿Conocés un comedor, un club de barrio o una causa que necesite un empujón?</h2>
             <p className="mt-5 max-w-lg leading-7 text-primary-foreground/75">
-              Puede ser una familia, un comedor, una escuela, un refugio o un proyecto del barrio. Contanos con tus palabras: no hace falta que sea perfecto, solo que sea real.
+              El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>
           </div>
           <form onSubmit={onSubmit} className="rounded-3xl bg-card p-6 text-foreground sm:p-8">
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="hs-nombre">Tu nombre</Label>
+                <Label htmlFor="hs-nombre">Tu Nombre</Label>
                 <Input id="hs-nombre" required value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} placeholder="Nombre y apellido" />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="hs-causa">Causa</Label>
+                <Label htmlFor="hs-causa">Nombre de la Causa</Label>
                 <Input id="hs-causa" required value={form.causa} onChange={(e) => setForm({ ...form, causa: e.target.value })} placeholder="Ej: Merendero Las Gaviotas" />
               </div>
               <div className="grid gap-2">
@@ -194,7 +191,7 @@ function Page() {
                 </datalist>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="hs-desc">Contanos la historia</Label>
+                <Label htmlFor="hs-desc">Contanos brevemente qué necesitan</Label>
                 <Textarea id="hs-desc" rows={5} value={form.descripcion} onChange={(e) => setForm({ ...form, descripcion: e.target.value })} placeholder="¿Qué está pasando y cómo se puede ayudar?" />
               </div>
               {estado === "error" ? <p className="text-sm font-semibold text-destructive">No pudimos enviar tu postulación. Probá de nuevo en un momento.</p> : null}
