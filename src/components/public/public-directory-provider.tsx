@@ -111,12 +111,17 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const filteredComercios = useMemo(() => {
     const cuponCommerceIds = new Set(data.cupones.map((cupon) => cupon.comercio_id));
     const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
-    return data.comercios
+    const base = data.comercios
       .filter((item) => filters.localidadIds.length === 0 || (item.localidad_id && filters.localidadIds.includes(item.localidad_id)))
       .filter((item) => !filters.rubroId || item.rubro_id === filters.rubroId)
       .filter((item) => !filters.soloCupon || cuponCommerceIds.has(item.id))
-      .filter((item) => planById.get(item.plan_id)?.aparece_en_grilla ?? false)
-      .sort((a, b) => (planById.get(a.plan_id)?.prioridad_orden ?? 99) - (planById.get(b.plan_id)?.prioridad_orden ?? 99));
+      .filter((item) => planById.get(item.plan_id)?.aparece_en_grilla ?? false);
+
+    // Con "Solo con Cupón" activo se respeta prioridad_orden de la tabla planes.
+    // En la vista general los planes se mezclan: orden simple por fecha de alta.
+    return filters.soloCupon
+      ? base.slice().sort((a, b) => (planById.get(a.plan_id)?.prioridad_orden ?? 99) - (planById.get(b.plan_id)?.prioridad_orden ?? 99))
+      : base.slice().sort((a, b) => a.created_at.localeCompare(b.created_at));
   }, [data, filters]);
 
   const setLocalidadIds = useCallback((localidadIds: string[]) => {
