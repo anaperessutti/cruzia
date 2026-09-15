@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -48,6 +50,47 @@ function AdminPanel() {
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [exportando, setExportando] = useState<string | null>(null);
+  const [giftBoxVisible, setGiftBoxVisible] = useState<boolean | null>(null);
+  const [guardandoGiftBox, setGuardandoGiftBox] = useState(false);
+
+  useEffect(() => {
+    if (verificando || error) return;
+    let activo = true;
+    (async () => {
+      const { data } = await supabase
+        .from("configuracion_global")
+        .select("gift_box_visible")
+        .limit(1)
+        .maybeSingle();
+      if (activo) setGiftBoxVisible(data?.gift_box_visible ?? false);
+    })();
+    return () => {
+      activo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verificando, error]);
+
+  async function onToggleGiftBox(valor: boolean) {
+    setGuardandoGiftBox(true);
+    setAviso(null);
+    const { data: fila } = await supabase.from("configuracion_global").select("id").limit(1).maybeSingle();
+    if (!fila) {
+      setError("No encontramos la configuración general.");
+      setGuardandoGiftBox(false);
+      return;
+    }
+    const { error: errUpd } = await supabase
+      .from("configuracion_global")
+      .update({ gift_box_visible: valor })
+      .eq("id", fila.id);
+    if (errUpd) {
+      setError("No pudimos guardar el cambio de Gift Box.");
+    } else {
+      setGiftBoxVisible(valor);
+      setAviso(valor ? "Gift Box ahora es visible en la app." : "Gift Box quedó oculta en la app.");
+    }
+    setGuardandoGiftBox(false);
+  }
 
   useEffect(() => {
     let activo = true;
@@ -162,6 +205,29 @@ function AdminPanel() {
       </header>
 
       <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Gift Box</CardTitle>
+            <CardDescription>
+              Mientras esté oculta, la sección no aparece en el menú ni en la app, y quien entre por
+              la dirección directa vuelve al inicio.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <Switch
+                id="gift-box-visible"
+                checked={giftBoxVisible ?? false}
+                disabled={giftBoxVisible === null || guardandoGiftBox}
+                onCheckedChange={(v) => void onToggleGiftBox(v)}
+              />
+              <Label htmlFor="gift-box-visible">
+                {giftBoxVisible ? "Visible para el público" : "Oculta"}
+              </Label>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>

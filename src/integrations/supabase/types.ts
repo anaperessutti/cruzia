@@ -624,7 +624,7 @@ export type Database = {
     Enums: {
       app_role: "super_admin" | "admin"
       fase_tipo: "actual" | "historial"
-      giftbox_categoria: "Noche" | "Sabor" | "Relax"
+      giftbox_categoria: "Noche" | "Sabor" | "Relax" | "Diversión"
       giftbox_estado: "pendiente" | "confirmado" | "entregado" | "cancelado"
       giftbox_formato: "digital" | "fisico"
       modalidad_cupon: "presencial" | "whatsapp"
@@ -757,7 +757,7 @@ export const Constants = {
     Enums: {
       app_role: ["super_admin", "admin"],
       fase_tipo: ["actual", "historial"],
-      giftbox_categoria: ["Noche", "Sabor", "Relax"],
+      giftbox_categoria: ["Noche", "Sabor", "Relax", "Diversión"],
       giftbox_estado: ["pendiente", "confirmado", "entregado", "cancelado"],
       giftbox_formato: ["digital", "fisico"],
       modalidad_cupon: ["presencial", "whatsapp"],
