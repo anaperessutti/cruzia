@@ -224,6 +224,7 @@ function AdminPanel() {
                         </TableCell>
                         <TableCell>{m.localidad ?? "—"}</TableCell>
                         <TableCell className="text-right">{m.totalRedenciones}</TableCell>
+                        <TableCell className="text-right">{m.totalInteracciones}</TableCell>
                         <TableCell>{m.cuponTop ?? "—"}</TableCell>
                         <TableCell className="text-right">
                           <Button
