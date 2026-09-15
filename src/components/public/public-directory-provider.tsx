@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { publicDirectoryOptions, type Comercio, type PublicDirectoryData } from "@/lib/public-data";
 
@@ -71,15 +71,19 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
       .sort((a, b) => (planById.get(a.plan_id)?.prioridad_orden ?? 99) - (planById.get(b.plan_id)?.prioridad_orden ?? 99));
   }, [data, filters]);
 
+  const setLocalidadIds = useCallback((localidadIds: string[]) => setFilters((current) => ({ ...current, localidadIds })), []);
+  const setRubroId = useCallback((rubroId: string) => setFilters((current) => ({ ...current, rubroId })), []);
+  const setSoloCupon = useCallback((soloCupon: boolean) => setFilters((current) => current.soloCupon === soloCupon ? current : ({ ...current, soloCupon })), []);
+
   const value = useMemo<PublicDirectoryContextValue>(() => ({
     data,
     filteredComercios,
     filters,
     isLoading: query.isLoading,
-    setLocalidadIds: (localidadIds) => setFilters((current) => ({ ...current, localidadIds })),
-    setRubroId: (rubroId) => setFilters((current) => ({ ...current, rubroId })),
-    setSoloCupon: (soloCupon) => setFilters((current) => ({ ...current, soloCupon })),
-  }), [data, filteredComercios, filters, query.isLoading]);
+    setLocalidadIds,
+    setRubroId,
+    setSoloCupon,
+  }), [data, filteredComercios, filters, query.isLoading, setLocalidadIds, setRubroId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }
