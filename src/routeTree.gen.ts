@@ -23,6 +23,7 @@ import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
+import { Route as ComercioComercioIdRouteImport } from './routes/comercio.$comercioId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const AdminSetupRoute = AdminSetupRouteImport.update({
   path: '/admin/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComercioComercioIdRoute = ComercioComercioIdRouteImport.update({
+  id: '/comercio/$comercioId',
+  path: '/comercio/$comercioId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/comercio/$comercioId': typeof ComercioComercioIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/comercio/$comercioId': typeof ComercioComercioIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
+  '/comercio/$comercioId': typeof ComercioComercioIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
+    | '/comercio/$comercioId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
+    | '/comercio/$comercioId'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
+    | '/comercio/$comercioId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
+  ComercioComercioIdRoute: typeof ComercioComercioIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comercio/$comercioId': {
+      id: '/comercio/$comercioId'
+      path: '/comercio/$comercioId'
+      fullPath: '/comercio/$comercioId'
+      preLoaderRoute: typeof ComercioComercioIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
+  ComercioComercioIdRoute: ComercioComercioIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
