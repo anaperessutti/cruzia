@@ -1,0 +1,1 @@
+ALTER TYPE public.giftbox_categoria ADD VALUE IF NOT EXISTS 'Diversión';
