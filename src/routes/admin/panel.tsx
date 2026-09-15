@@ -207,6 +207,29 @@ function AdminPanel() {
       <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
         <Card>
           <CardHeader>
+            <CardTitle>Gift Box</CardTitle>
+            <CardDescription>
+              Mientras esté oculta, la sección no aparece en el menú ni en la app, y quien entre por
+              la dirección directa vuelve al inicio.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <Switch
+                id="gift-box-visible"
+                checked={giftBoxVisible ?? false}
+                disabled={giftBoxVisible === null || guardandoGiftBox}
+                onCheckedChange={(v) => void onToggleGiftBox(v)}
+              />
+              <Label htmlFor="gift-box-visible">
+                {giftBoxVisible ? "Visible para el público" : "Oculta"}
+              </Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>
             <CardDescription>
               Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de OLA!,
