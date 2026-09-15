@@ -90,14 +90,14 @@ function Page() {
               Detrás de cada pantalla hay un vecino.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
-              En AUNA creemos que el éxito comercial no sirve si no empuja a la comunidad. Por eso, cada año destinamos un porcentaje de nuestros ingresos a transformar realidades en el Partido de la Costa.
+              En AUNA creemos que el éxito comercial no sirve si no empuja a la comunidad. Por eso, cada año destinamos un porcentaje de nuestros ingresos a acompañar proyectos e instituciones del Partido de la Costa. Es nuestra forma de devolver la confianza recibida y asegurarnos de que el crecimiento de la plataforma impulse también la vida cotidiana de nuestros barrios.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
               { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
-              { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados visibles" },
-              { icon: Sparkles, titulo: "En red", texto: "Vecinos y comercios tirando para el mismo lado" },
+              { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
+              { icon: Sparkles, titulo: "En red", texto: "Vecinos de la costa tirando para el mismo lado" },
             ].map((item) => (
               <div key={item.titulo} className="rounded-3xl bg-card p-5">
                 <item.icon className="size-5 text-secondary" />
@@ -111,7 +111,7 @@ function Page() {
 
       {/* Timeline */}
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <h2 className="font-display text-3xl font-extrabold text-primary">Nuestra Próxima Ola</h2>
+        <h2 className="font-display text-3xl font-extrabold text-primary">Nuestro próximo aporte</h2>
         <p className="mt-2 max-w-2xl leading-7 text-muted-foreground">La causa que estamos empujando ahora mismo, y todo lo que dejamos atrás en el camino.</p>
 
         <div className="mt-8 rounded-3xl border-2 border-secondary/40 bg-card p-6 shadow-premium sm:p-8">
@@ -129,8 +129,9 @@ function Page() {
             </>
           ) : (
             <>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase text-accent-foreground">Preparando</span>
-              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">Nuestro próximo aporte</h3>
+              <span className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-bold uppercase text-muted-foreground">Ejemplo</span>
+              <h3 className="mt-4 font-display text-2xl font-extrabold text-primary/70">Club deportivo “Las Quintas”</h3>
+              <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> Mes y año del proyecto</p>
               <p className="mt-4 leading-7 text-foreground/80">
                 Estamos recaudando fondos durante este año para equipar el club deportivo/comedor de [Localidad]
               </p>
@@ -138,9 +139,9 @@ function Page() {
           )}
         </div>
 
-        {historial.length > 0 ? (
-          <div className="mt-14">
-            <h3 className="font-display text-xl font-bold text-primary">Las olas que ya dejaron huella</h3>
+        <div className="mt-14">
+          <h3 className="font-display text-xl font-bold text-primary">Proyectos que acompañamos</h3>
+          {historial.length > 0 ? (
             <ol className="mt-6 space-y-8 border-l-2 border-border pl-6">
               {historial.map((fase) => (
                 <li key={fase.id} className="relative">
@@ -152,8 +153,12 @@ function Page() {
                 </li>
               ))}
             </ol>
-          </div>
-        ) : null}
+          ) : (
+            <div className="mt-6 rounded-3xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+              Los proyectos acompañados aparecerán acá.
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Postulación */}
@@ -161,7 +166,7 @@ function Page() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
             <p className="text-xs font-bold uppercase text-accent">Postulá una causa</p>
-            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">¿Conocés un comedor, un club de barrio o una causa que necesite un empujón?</h2>
+            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
             <p className="mt-5 max-w-lg leading-7 text-primary-foreground/75">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>
