@@ -25,6 +25,15 @@ export const Route = createFileRoute("/comercio/$comercioId")({
 function FichaComercio() {
   const { comercioId } = Route.useParams();
   const { data, isLoading } = usePublicDirectory();
+  const registrado = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (registrado.current === comercioId) return;
+    registrado.current = comercioId;
+    void registrarInteraccionComercio(comercioId, getDeviceId()).catch(() => {
+      /* métrica silenciosa: nunca debe afectar la navegación */
+    });
+  }, [comercioId]);
 
   const comercio = data.comercios.find((item) => item.id === comercioId);
   const plan = comercio ? data.planes.find((item) => item.id === comercio.plan_id) : undefined;
