@@ -50,6 +50,47 @@ function AdminPanel() {
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [exportando, setExportando] = useState<string | null>(null);
+  const [giftBoxVisible, setGiftBoxVisible] = useState<boolean | null>(null);
+  const [guardandoGiftBox, setGuardandoGiftBox] = useState(false);
+
+  useEffect(() => {
+    if (verificando || error) return;
+    let activo = true;
+    (async () => {
+      const { data } = await supabase
+        .from("configuracion_global")
+        .select("gift_box_visible")
+        .limit(1)
+        .maybeSingle();
+      if (activo) setGiftBoxVisible(data?.gift_box_visible ?? false);
+    })();
+    return () => {
+      activo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [verificando, error]);
+
+  async function onToggleGiftBox(valor: boolean) {
+    setGuardandoGiftBox(true);
+    setAviso(null);
+    const { data: fila } = await supabase.from("configuracion_global").select("id").limit(1).maybeSingle();
+    if (!fila) {
+      setError("No encontramos la configuración general.");
+      setGuardandoGiftBox(false);
+      return;
+    }
+    const { error: errUpd } = await supabase
+      .from("configuracion_global")
+      .update({ gift_box_visible: valor })
+      .eq("id", fila.id);
+    if (errUpd) {
+      setError("No pudimos guardar el cambio de Gift Box.");
+    } else {
+      setGiftBoxVisible(valor);
+      setAviso(valor ? "Gift Box ahora es visible en la app." : "Gift Box quedó oculta en la app.");
+    }
+    setGuardandoGiftBox(false);
+  }
 
   useEffect(() => {
     let activo = true;
