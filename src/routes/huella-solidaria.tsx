@@ -87,7 +87,7 @@ function Page() {
           <div>
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
             <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-[1.08] text-primary sm:text-5xl">
-              Detrás de cada pantalla hay un vecino.
+              Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
               En AUNA creemos que el éxito comercial no sirve si no empuja a la comunidad. Por eso, cada año destinamos un porcentaje de nuestros ingresos a acompañar proyectos e instituciones del Partido de la Costa. Es nuestra forma de devolver la confianza recibida y asegurarnos de que el crecimiento de la plataforma impulse también la vida cotidiana de nuestros barrios.
@@ -97,7 +97,7 @@ function Page() {
             {[
               { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
-              { icon: Sparkles, titulo: "En red", texto: "Vecinos de la costa tirando para el mismo lado" },
+              { icon: Sparkles, titulo: "Compartido", texto: "Vecinos y comercios trabajando juntos." },
             ].map((item) => (
               <div key={item.titulo} className="rounded-3xl bg-card p-5">
                 <item.icon className="size-5 text-secondary" />
