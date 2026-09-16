@@ -597,7 +597,6 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string; p_qr_codigo: string }
         Returns: Json
       }
-      admins_vacio: { Args: never; Returns: boolean }
       estado_cupon_device: {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
