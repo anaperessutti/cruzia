@@ -116,6 +116,22 @@ function EditorComercio() {
     setForm((f) => ({ ...f, [campo]: valor }));
   }
 
+  /** Guarda la galería en la base al instante (si la ficha ya existe), para que se vea en la app pública. */
+  async function aplicarGaleria(galeria: string[], mensaje: string) {
+    const siguiente = { ...form, galeria };
+    setForm(siguiente);
+    if (esNuevo) {
+      setAviso("Listo. Acordate de guardar la ficha para publicarla.");
+      return;
+    }
+    try {
+      await guardarComercio(comercioId, { ...siguiente, nombre: siguiente.nombre.trim() });
+      setAviso(mensaje);
+    } catch {
+      setError("Subimos la foto pero no pudimos guardarla en la ficha. Probá guardar la ficha.");
+    }
+  }
+
   async function onSubirFotos(files: FileList | null) {
     if (!files || files.length === 0) return;
     setSubiendo(true);
@@ -125,8 +141,7 @@ function EditorComercio() {
       for (const file of Array.from(files)) {
         urls.push(await subirImagen(file, "comercios"));
       }
-      setForm((f) => ({ ...f, galeria: [...f.galeria, ...urls] }));
-      setAviso("Fotos subidas. Acordate de guardar la ficha.");
+      await aplicarGaleria([...form.galeria, ...urls], "Fotos subidas y publicadas.");
     } catch {
       setError("No pudimos subir alguna de las fotos.");
     } finally {
@@ -135,16 +150,14 @@ function EditorComercio() {
     }
   }
 
-  function moverFoto(indice: number, delta: number) {
-    setForm((f) => {
-      const g = [...f.galeria];
-      const destino = indice + delta;
-      if (destino < 0 || destino >= g.length) return f;
-      const actual = g[indice]!;
-      g[indice] = g[destino]!;
-      g[destino] = actual;
-      return { ...f, galeria: g };
-    });
+  async function moverFoto(indice: number, delta: number) {
+    const g = [...form.galeria];
+    const destino = indice + delta;
+    if (destino < 0 || destino >= g.length) return;
+    const actual = g[indice]!;
+    g[indice] = g[destino]!;
+    g[destino] = actual;
+    await aplicarGaleria(g, "Orden de las fotos actualizado.");
   }
 
   async function onGuardar() {
@@ -378,20 +391,20 @@ function EditorComercio() {
                         {i === 0 ? "Portada" : `Foto ${i + 1}`}
                       </span>
                       <span className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => moverFoto(i, -1)}>
+                        <Button size="sm" variant="ghost" onClick={() => void moverFoto(i, -1)}>
                           ↑
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => moverFoto(i, 1)}>
+                        <Button size="sm" variant="ghost" onClick={() => void moverFoto(i, 1)}>
                           ↓
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() =>
-                            setForm((f) => ({
-                              ...f,
-                              galeria: f.galeria.filter((_, idx) => idx !== i),
-                            }))
+                            void aplicarGaleria(
+                              form.galeria.filter((_, idx) => idx !== i),
+                              "Foto eliminada.",
+                            )
                           }
                         >
                           ✕
