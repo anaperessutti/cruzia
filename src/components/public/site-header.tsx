@@ -13,7 +13,7 @@ const links = [
   { to: "/cupones" as const, label: "⭐ Cupones" },
   { to: "/categorias" as const, label: "Categorías de Rubros" },
   { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
-  { to: "/subite-a-la-ola" as const, label: "Subite a la Ola" },
+  { to: "/sumate-a-auna" as const, label: "Sumate a AUNA" },
   { to: "/contacto" as const, label: "Contacto" },
 ];
 
