@@ -93,7 +93,7 @@ function Page() {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
             return (
               <article key={plan.id} className={`flex flex-col rounded-3xl border border-border bg-card p-6${plan.aparece_en_hero_banner ? " shadow-premium border-secondary/40" : ""}`}>
-                <Icono className="size-6 text-accent-foreground" />
+                <Icono className={`size-6 ${plan.aparece_en_hero_banner ? "text-secondary" : "text-accent-foreground"}`} />
                 <p className="mt-4 text-xs font-bold uppercase text-muted-foreground">Plan {plan.nombre}</p>
                 <h3 className="mt-1 font-display text-2xl font-extrabold text-primary">{titulo}</h3>
                 <ul className="mt-5 flex-1 space-y-3">
@@ -104,7 +104,7 @@ function Page() {
                     </li>
                   ))}
                 </ul>
-                <Button asChild size="lg" className="mt-6 bg-accent text-accent-foreground hover:bg-accent/80 hover:shadow-premium transition-shadow"><a href="#sumarme">Me interesa</a></Button>
+                <Button asChild size="lg" className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 hover:brightness-90 hover:shadow-premium transition-all"><a href="#sumarme">Me interesa</a></Button>
               </article>
             );
           })}
