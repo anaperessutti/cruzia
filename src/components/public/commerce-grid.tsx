@@ -20,10 +20,11 @@ export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: st
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {filteredComercios.map((item) => {
           const plan = planById.get(item.plan_id);
-          // Un solo nivel destacado para todos los planes con módulo de promoción
-          // (Pro y Premium comparten exactamente el mismo tratamiento en la grilla).
-          const destacado = plan?.tiene_modulo_promocion ?? false;
           const tieneCupon = couponIds.has(item.id);
+          // Un solo nivel destacado para todos los planes con módulo de promoción
+          // (Pro y Premium comparten exactamente el mismo tratamiento en la grilla),
+          // y SOLO mientras tengan al menos un cupón activo y vigente.
+          const destacado = (plan?.tiene_modulo_promocion ?? false) && tieneCupon;
           return (
             <article
               key={item.id}

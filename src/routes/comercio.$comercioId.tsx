@@ -73,6 +73,16 @@ function FichaComercio() {
         </div>
       </section>
 
+      {conPromocion && cupones.length === 0 ? (
+        <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+          <p className="text-xs font-bold uppercase text-secondary">Módulo de promoción</p>
+          <div className="mt-3 rounded-md border border-dashed border-border bg-muted/40 p-6 text-center">
+            <p className="font-display text-lg font-bold text-primary">Sin promociones activas por el momento.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Volvé pronto: este comercio publica cupones cada tanto.</p>
+          </div>
+        </section>
+      ) : null}
+
       {conPromocion && cupones.length > 0 ? (
         <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
           <p className="text-xs font-bold uppercase text-secondary">Módulo de promoción</p>
