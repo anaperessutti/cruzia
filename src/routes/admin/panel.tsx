@@ -193,7 +193,13 @@ function AdminPanel() {
             <p className="font-display text-2xl font-bold">OLA! · Panel</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" asChild>
+              <Link to="/admin/comercios">Comercios</Link>
+            </Button>
+            <Button variant="secondary" size="sm" asChild>
+              <Link to="/admin/cupones">Promociones</Link>
+            </Button>
             <Button variant="secondary" size="sm" asChild>
               <Link to="/">Ver la app</Link>
             </Button>
