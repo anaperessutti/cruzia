@@ -16,7 +16,7 @@ import { Route as CuponesRouteImport } from './routes/cupones'
 import { Route as GiftBoxRouteImport } from './routes/gift-box'
 import { Route as HuellaSolidariaRouteImport } from './routes/huella-solidaria'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
-import { Route as SubiteALaOlaRouteImport } from './routes/subite-a-la-ola'
+import { Route as SumateAAunaRouteImport } from './routes/sumate-a-auna'
 import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
@@ -59,9 +59,9 @@ const PrivacidadRoute = PrivacidadRouteImport.update({
   path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SubiteALaOlaRoute = SubiteALaOlaRouteImport.update({
-  id: '/subite-a-la-ola',
-  path: '/subite-a-la-ola',
+const SumateAAunaRoute = SumateAAunaRouteImport.update({
+  id: '/sumate-a-auna',
+  path: '/sumate-a-auna',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerminosPromocionesRoute = TerminosPromocionesRouteImport.update({
@@ -103,7 +103,7 @@ export interface FileRoutesByFullPath {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/sumate-a-auna': typeof SumateAAunaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
@@ -119,7 +119,7 @@ export interface FileRoutesByTo {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/sumate-a-auna': typeof SumateAAunaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
@@ -136,7 +136,7 @@ export interface FileRoutesById {
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
-  '/subite-a-la-ola': typeof SubiteALaOlaRoute
+  '/sumate-a-auna': typeof SumateAAunaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/login': typeof AdminLoginRoute
@@ -154,7 +154,7 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/subite-a-la-ola'
+    | '/sumate-a-auna'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/login'
@@ -170,7 +170,7 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/subite-a-la-ola'
+    | '/sumate-a-auna'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/login'
@@ -186,7 +186,7 @@ export interface FileRouteTypes {
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
-    | '/subite-a-la-ola'
+    | '/sumate-a-auna'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/login'
@@ -203,7 +203,7 @@ export interface RootRouteChildren {
   GiftBoxRoute: typeof GiftBoxRoute
   HuellaSolidariaRoute: typeof HuellaSolidariaRoute
   PrivacidadRoute: typeof PrivacidadRoute
-  SubiteALaOlaRoute: typeof SubiteALaOlaRoute
+  SumateAAunaRoute: typeof SumateAAunaRoute
   TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -263,11 +263,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/subite-a-la-ola': {
-      id: '/subite-a-la-ola'
-      path: '/subite-a-la-ola'
-      fullPath: '/subite-a-la-ola'
-      preLoaderRoute: typeof SubiteALaOlaRouteImport
+    '/sumate-a-auna': {
+      id: '/sumate-a-auna'
+      path: '/sumate-a-auna'
+      fullPath: '/sumate-a-auna'
+      preLoaderRoute: typeof SumateAAunaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terminos-promociones': {
@@ -323,7 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   GiftBoxRoute: GiftBoxRoute,
   HuellaSolidariaRoute: HuellaSolidariaRoute,
   PrivacidadRoute: PrivacidadRoute,
-  SubiteALaOlaRoute: SubiteALaOlaRoute,
+  SumateAAunaRoute: SumateAAunaRoute,
   TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminLoginRoute: AdminLoginRoute,
