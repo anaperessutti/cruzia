@@ -92,7 +92,7 @@ function Page() {
           {planes.map((plan) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
             return (
-              <article key={plan.id} className="flex flex-col rounded-3xl border border-border bg-card p-6">
+              <article key={plan.id} className={`flex flex-col rounded-3xl border border-border bg-card p-6${plan.aparece_en_hero_banner ? " shadow-premium border-secondary/40" : ""}`}>
                 <Icono className="size-6 text-accent-foreground" />
                 <p className="mt-4 text-xs font-bold uppercase text-muted-foreground">Plan {plan.nombre}</p>
                 <h3 className="mt-1 font-display text-2xl font-extrabold text-primary">{titulo}</h3>
@@ -104,7 +104,7 @@ function Page() {
                     </li>
                   ))}
                 </ul>
-                <Button asChild variant="outline" className="mt-6"><a href="#sumarme">Me interesa</a></Button>
+                <Button asChild size="lg" className="mt-6 bg-accent text-accent-foreground hover:bg-accent/80 hover:shadow-premium transition-shadow"><a href="#sumarme">Me interesa</a></Button>
               </article>
             );
           })}
@@ -152,7 +152,7 @@ function Page() {
                 </div>
                 {estado === "error" ? <p className="text-sm font-semibold text-destructive">No pudimos enviar tus datos. Probá de nuevo en un momento.</p> : null}
                 <Button type="submit" size="lg" disabled={estado === "enviando"}>
-                  {estado === "enviando" ? "Enviando…" : "Enviar y abrir WhatsApp"}
+                  {estado === "enviando" ? "Enviando…" : "Enviar"}
                 </Button>
               </div>
             </form>
