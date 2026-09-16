@@ -76,15 +76,14 @@ function Page() {
       <section className="bg-primary text-primary-foreground">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
           <p className="text-xs font-bold uppercase text-accent">Hablemos</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl">Estamos cerca.</h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Contanos quién sos y te llevamos por el camino más corto.</p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl">Estamos a un clic de distancia.</h1>
         </div>
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2">
           {([
-            { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a OLA!" },
+            { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a AUNA" },
             { key: "usuario" as const, icon: User, titulo: "Soy un Usuario", texto: "Tengo una consulta o una sugerencia." },
           ]).map((opcion) => (
             <button
@@ -143,7 +142,7 @@ function Page() {
               <Input id="ct-wa" required inputMode="tel" value={comercio.whatsapp} onChange={(e) => setComercio({ ...comercio, whatsapp: e.target.value })} placeholder="Ej: 2246 55-1234" />
             </div>
             {estado === "error" ? <p className="text-sm font-semibold text-destructive">No pudimos enviar tus datos. Probá de nuevo en un momento.</p> : null}
-            <Button type="submit" size="lg" disabled={estado === "enviando"}>{estado === "enviando" ? "Enviando…" : "Enviar y abrir WhatsApp"}</Button>
+            <Button type="submit" size="lg" disabled={estado === "enviando"}>{estado === "enviando" ? "Enviando…" : "Enviar"}</Button>
           </form>
         ) : null}
 
@@ -168,7 +167,7 @@ function Page() {
               <Label htmlFor="ct-msg">Tu mensaje</Label>
               <Textarea id="ct-msg" rows={5} required value={usuario.mensaje} onChange={(e) => setUsuario({ ...usuario, mensaje: e.target.value })} placeholder="Contanos en qué podemos ayudarte." />
             </div>
-            <Button type="submit" size="lg">Enviar consulta</Button>
+            <Button type="submit" size="lg">Enviar</Button>
           </form>
         ) : null}
 
