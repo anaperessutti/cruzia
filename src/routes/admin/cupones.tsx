@@ -30,7 +30,7 @@ import {
   type Modalidad,
 } from "@/lib/admin-cms";
 
-type Busqueda = { comercio?: string };
+type Busqueda = { comercio?: string | undefined };
 
 export const Route = createFileRoute("/admin/cupones")({
   ssr: false,
