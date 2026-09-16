@@ -391,20 +391,20 @@ function EditorComercio() {
                         {i === 0 ? "Portada" : `Foto ${i + 1}`}
                       </span>
                       <span className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => moverFoto(i, -1)}>
+                        <Button size="sm" variant="ghost" onClick={() => void moverFoto(i, -1)}>
                           ↑
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => moverFoto(i, 1)}>
+                        <Button size="sm" variant="ghost" onClick={() => void moverFoto(i, 1)}>
                           ↓
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() =>
-                            setForm((f) => ({
-                              ...f,
-                              galeria: f.galeria.filter((_, idx) => idx !== i),
-                            }))
+                            void aplicarGaleria(
+                              form.galeria.filter((_, idx) => idx !== i),
+                              "Foto eliminada.",
+                            )
                           }
                         >
                           ✕

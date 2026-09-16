@@ -44,5 +44,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
 export const publicDirectoryOptions = queryOptions({
   queryKey: ["public-directory"],
   queryFn: getPublicDirectory,
-  staleTime: 60_000,
+  // Sin caché: cualquier cambio hecho desde el panel se ve al recargar o al volver a la pestaña.
+  staleTime: 0,
+  refetchOnMount: "always",
+  refetchOnWindowFocus: true,
 });
