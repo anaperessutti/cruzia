@@ -349,7 +349,7 @@ function CuponesAdmin() {
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="flyer">Flyer</Label>
+              <Label htmlFor="flyer">Flyer (1200 × 800 px, 3:2, hasta 300 KB)</Label>
               <Input
                 id="flyer"
                 type="file"
