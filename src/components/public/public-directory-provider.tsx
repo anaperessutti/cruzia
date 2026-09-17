@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { coordsForLocalidad } from "@/lib/localidad-coords";
-import { publicDirectoryOptions, type Comercio, type PublicDirectoryData } from "@/lib/public-data";
+import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
 
 type Filters = {
   localidadIds: string[];
@@ -12,9 +12,17 @@ type Filters = {
 
 export type GeoStatus = "idle" | "solicitando" | "detectada" | "denegada" | "no-disponible";
 
+/** Una tarjeta de la grilla: o bien una promoción activa, o bien un comercio sin promociones. */
+export type TarjetaGrilla = {
+  key: string;
+  comercio: Comercio;
+  cupon: Cupon | null;
+};
+
 type PublicDirectoryContextValue = {
   data: PublicDirectoryData;
   filteredComercios: Comercio[];
+  tarjetas: TarjetaGrilla[];
   filters: Filters;
   isLoading: boolean;
   geoStatus: GeoStatus;
