@@ -194,7 +194,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setLocalidadIds,
     setRubroId,
     setSoloCupon,
-  }), [data, filteredComercios, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }
