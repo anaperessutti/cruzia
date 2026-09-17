@@ -37,7 +37,7 @@ function beneficiosPlan(plan: Plan) {
   ];
   if (plan.aparece_en_grilla) beneficios.push("Presencia en la grilla de comercios, filtrable por localidad y rubro");
   if (plan.tiene_modulo_promocion) beneficios.push("Insignia destacada en la grilla, módulo de promoción con tu descuento y su vigencia");
-  if (plan.max_cupones_activos > 0) beneficios.push(`Hasta ${plan.max_cupones_activos} cupones activos al mismo tiempo`);
+  if (plan.max_cupones_activos > 0) beneficios.push(`Hasta ${plan.max_cupones_activos} promociones activas por mes`);
   if (plan.aparece_en_hero_banner) beneficios.push("Lugar exclusivo en el Top Slider de la portada");
   beneficios.push("Posicionamiento SEO y campañas de Google ADS");
   beneficios.push("Reporte mensual de activaciones e interés en tu negocio");
