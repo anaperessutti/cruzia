@@ -132,6 +132,13 @@ export async function getCuposMes(comercioId: string): Promise<CuposMes> {
   return data as unknown as CuposMes;
 }
 
+/** True si este cupón ya consumió un cupo del mes calendario actual (reactivarlo es libre). */
+export async function cuponActivadoEsteMes(cuponId: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc("cupon_activado_este_mes", { p_cupon_id: cuponId });
+  if (error) throw error;
+  return Boolean(data);
+}
+
 export function esErrorLimiteMensual(e: unknown): boolean {
   return typeof (e as { message?: string })?.message === "string" &&
     (e as { message: string }).message.includes("LIMITE_MENSUAL_PROMOS");

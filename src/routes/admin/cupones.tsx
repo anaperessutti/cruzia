@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarCupon,
   enDiasISO,
+  cuponActivadoEsteMes,
   esErrorLimiteMensual,
   getComerciosAdmin,
   getCuponesAdmin,
@@ -128,12 +129,14 @@ function CuponesAdmin() {
   }
 
   /** Devuelve el mensaje de bloqueo si la promoción consumiría un cupo nuevo y ya no quedan. */
-  async function motivoLimiteMensual(comercioId: string, esNueva: boolean, activo: boolean) {
-    if (!activo || !esNueva) return null;
+  async function motivoLimiteMensual(comercioId: string, cuponId: string | null, activo: boolean) {
+    if (!activo) return null;
     try {
+      // Si ya se activó este mes, reactivarla no consume un cupo nuevo.
+      if (cuponId && (await cuponActivadoEsteMes(cuponId))) return null;
       const { usados, max } = await getCuposMes(comercioId);
       if (usados >= max) {
-        return `Ya alcanzaste el máximo de promociones nuevas de este mes según tu plan (${usados} de ${max}).`;
+        return `Ya alcanzaste el máximo de promociones de este mes según tu plan (${usados} de ${max}).`;
       }
     } catch {
       /* si no pudimos consultar, el trigger de la base sigue protegiendo el límite */
@@ -151,9 +154,11 @@ function CuponesAdmin() {
     setError(null);
     setAviso(null);
     try {
-      const actual = editando === "nuevo" ? null : (cupones ?? []).find((c) => c.id === editando);
-      const esNueva = !actual || actual.primera_activacion === null;
-      const bloqueo = await motivoLimiteMensual(form.comercio_id, esNueva, form.activo);
+      const bloqueo = await motivoLimiteMensual(
+        form.comercio_id,
+        editando === "nuevo" ? null : editando,
+        form.activo,
+      );
       if (bloqueo) {
         setError(bloqueo);
         return;
@@ -169,7 +174,7 @@ function CuponesAdmin() {
     } catch (e) {
       setError(
         esErrorLimiteMensual(e)
-          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          ? "Ya alcanzaste el máximo de promociones de este mes según el plan del comercio."
           : "No pudimos guardar la promoción.",
       );
     } finally {
@@ -191,7 +196,7 @@ function CuponesAdmin() {
   async function onToggleActivo(c: Cupon, valor: boolean) {
     setError(null);
     try {
-      const bloqueo = await motivoLimiteMensual(c.comercio_id, c.primera_activacion === null, valor);
+      const bloqueo = await motivoLimiteMensual(c.comercio_id, c.id, valor);
       if (bloqueo) {
         setError(bloqueo);
         return;
@@ -201,7 +206,7 @@ function CuponesAdmin() {
     } catch (e) {
       setError(
         esErrorLimiteMensual(e)
-          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          ? "Ya alcanzaste el máximo de promociones de este mes según el plan del comercio."
           : "No pudimos cambiar el estado de la promoción.",
       );
     }

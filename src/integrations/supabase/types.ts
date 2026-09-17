@@ -174,6 +174,42 @@ export type Database = {
         }
         Relationships: []
       }
+      cupon_activaciones: {
+        Row: {
+          comercio_id: string
+          cupon_id: string
+          fecha: string
+          id: string
+        }
+        Insert: {
+          comercio_id: string
+          cupon_id: string
+          fecha?: string
+          id?: string
+        }
+        Update: {
+          comercio_id?: string
+          cupon_id?: string
+          fecha?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cupon_activaciones_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cupon_activaciones_cupon_id_fkey"
+            columns: ["cupon_id"]
+            isOneToOne: false
+            referencedRelation: "cupones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cupones: {
         Row: {
           activo: boolean
@@ -600,6 +636,10 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string; p_qr_codigo: string }
         Returns: Json
       }
+      cupon_activado_este_mes: {
+        Args: { p_cupon_id: string }
+        Returns: boolean
+      }
       cupos_promos_mes: { Args: { p_comercio_id: string }; Returns: Json }
       estado_cupon_device: {
         Args: { p_cupon_id: string; p_device_id: string }
@@ -626,6 +666,7 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
       }
+      reset_mensual_cupones: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "super_admin" | "admin"
