@@ -127,6 +127,20 @@ function CuponesAdmin() {
     }
   }
 
+  /** Devuelve el mensaje de bloqueo si la promoción consumiría un cupo nuevo y ya no quedan. */
+  async function motivoLimiteMensual(comercioId: string, esNueva: boolean, activo: boolean) {
+    if (!activo || !esNueva) return null;
+    try {
+      const { usados, max } = await getCuposMes(comercioId);
+      if (usados >= max) {
+        return `Ya alcanzaste el máximo de promociones nuevas de este mes según tu plan (${usados} de ${max}).`;
+      }
+    } catch {
+      /* si no pudimos consultar, el trigger de la base sigue protegiendo el límite */
+    }
+    return null;
+  }
+
   async function onGuardar() {
     if (!form) return;
     if (!form.comercio_id || !form.titulo.trim()) {
@@ -137,6 +151,13 @@ function CuponesAdmin() {
     setError(null);
     setAviso(null);
     try {
+      const actual = editando === "nuevo" ? null : (cupones ?? []).find((c) => c.id === editando);
+      const esNueva = !actual || actual.primera_activacion === null;
+      const bloqueo = await motivoLimiteMensual(form.comercio_id, esNueva, form.activo);
+      if (bloqueo) {
+        setError(bloqueo);
+        return;
+      }
       await guardarCupon(editando === "nuevo" ? null : editando, {
         ...form,
         titulo: form.titulo.trim(),
@@ -145,8 +166,12 @@ function CuponesAdmin() {
       setForm(null);
       await cargar();
       setAviso("Promoción guardada.");
-    } catch {
-      setError("No pudimos guardar la promoción.");
+    } catch (e) {
+      setError(
+        esErrorLimiteMensual(e)
+          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          : "No pudimos guardar la promoción.",
+      );
     } finally {
       setGuardando(false);
     }
