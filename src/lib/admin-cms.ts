@@ -123,6 +123,20 @@ export async function guardarCupon(id: string | null, form: CuponForm): Promise<
   return data.id;
 }
 
+export type CuposMes = { usados: number; max: number };
+
+/** Cupos de promociones NUEVAS disponibles este mes calendario según el plan del comercio. */
+export async function getCuposMes(comercioId: string): Promise<CuposMes> {
+  const { data, error } = await supabase.rpc("cupos_promos_mes", { p_comercio_id: comercioId });
+  if (error) throw error;
+  return data as unknown as CuposMes;
+}
+
+export function esErrorLimiteMensual(e: unknown): boolean {
+  return typeof (e as { message?: string })?.message === "string" &&
+    (e as { message: string }).message.includes("LIMITE_MENSUAL_PROMOS");
+}
+
 export async function eliminarCupon(id: string) {
   const { error } = await supabase.from("cupones").delete().eq("id", id);
   if (error) throw error;
