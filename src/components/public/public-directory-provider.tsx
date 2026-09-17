@@ -185,6 +185,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const value = useMemo<PublicDirectoryContextValue>(() => ({
     data,
     filteredComercios,
+    tarjetas,
     filters,
     isLoading: query.isLoading,
     geoStatus,
