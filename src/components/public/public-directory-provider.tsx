@@ -132,6 +132,43 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
       : base.slice().sort((a, b) => a.created_at.localeCompare(b.created_at));
   }, [data, filters]);
 
+  // Una tarjeta por promoción activa; los comercios sin promociones aparecen una sola vez.
+  const tarjetas = useMemo<TarjetaGrilla[]>(() => {
+    const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
+    const cuponesPorComercio = new Map<string, Cupon[]>();
+    for (const cupon of data.cupones) {
+      const lista = cuponesPorComercio.get(cupon.comercio_id);
+      if (lista) lista.push(cupon);
+      else cuponesPorComercio.set(cupon.comercio_id, [cupon]);
+    }
+
+    const items: TarjetaGrilla[] = [];
+    for (const comercio of filteredComercios) {
+      const cupones = cuponesPorComercio.get(comercio.id) ?? [];
+      if (cupones.length === 0) {
+        if (!filters.soloCupon) items.push({ key: comercio.id, comercio, cupon: null });
+        continue;
+      }
+      for (const cupon of cupones) items.push({ key: cupon.id, comercio, cupon });
+    }
+
+    // Mezcla estable: nunca agrupamos a propósito por comercio_id.
+    const barajado = (key: string) => {
+      let h = 0;
+      for (let i = 0; i < key.length; i += 1) h = (h * 31 + key.charCodeAt(i)) % 100003;
+      return h;
+    };
+    return items.sort((a, b) => {
+      if (filters.soloCupon) {
+        const diff =
+          (planById.get(a.comercio.plan_id)?.prioridad_orden ?? 99) -
+          (planById.get(b.comercio.plan_id)?.prioridad_orden ?? 99);
+        if (diff !== 0) return diff;
+      }
+      return barajado(a.key) - barajado(b.key);
+    });
+  }, [data.cupones, data.planes, filteredComercios, filters.soloCupon]);
+
   const setLocalidadIds = useCallback((localidadIds: string[]) => {
     manualSelectionRef.current = true;
     setFilters((current) => ({ ...current, localidadIds }));
