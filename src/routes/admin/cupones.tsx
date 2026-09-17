@@ -189,11 +189,21 @@ function CuponesAdmin() {
   }
 
   async function onToggleActivo(c: Cupon, valor: boolean) {
+    setError(null);
     try {
+      const bloqueo = await motivoLimiteMensual(c.comercio_id, c.primera_activacion === null, valor);
+      if (bloqueo) {
+        setError(bloqueo);
+        return;
+      }
       await guardarCupon(c.id, { ...formDesde(c), activo: valor });
       await cargar();
-    } catch {
-      setError("No pudimos cambiar el estado de la promoción.");
+    } catch (e) {
+      setError(
+        esErrorLimiteMensual(e)
+          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          : "No pudimos cambiar el estado de la promoción.",
+      );
     }
   }
 
