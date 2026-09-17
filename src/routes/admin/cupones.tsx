@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarCupon,
   enDiasISO,
+  cuponActivadoEsteMes,
   esErrorLimiteMensual,
   getComerciosAdmin,
   getCuponesAdmin,
@@ -153,9 +154,11 @@ function CuponesAdmin() {
     setError(null);
     setAviso(null);
     try {
-      const actual = editando === "nuevo" ? null : (cupones ?? []).find((c) => c.id === editando);
-      const esNueva = !actual || actual.primera_activacion === null;
-      const bloqueo = await motivoLimiteMensual(form.comercio_id, esNueva, form.activo);
+      const bloqueo = await motivoLimiteMensual(
+        form.comercio_id,
+        editando === "nuevo" ? null : editando,
+        form.activo,
+      );
       if (bloqueo) {
         setError(bloqueo);
         return;
@@ -193,7 +196,7 @@ function CuponesAdmin() {
   async function onToggleActivo(c: Cupon, valor: boolean) {
     setError(null);
     try {
-      const bloqueo = await motivoLimiteMensual(c.comercio_id, c.primera_activacion === null, valor);
+      const bloqueo = await motivoLimiteMensual(c.comercio_id, c.id, valor);
       if (bloqueo) {
         setError(bloqueo);
         return;
