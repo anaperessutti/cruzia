@@ -128,12 +128,14 @@ function CuponesAdmin() {
   }
 
   /** Devuelve el mensaje de bloqueo si la promoción consumiría un cupo nuevo y ya no quedan. */
-  async function motivoLimiteMensual(comercioId: string, esNueva: boolean, activo: boolean) {
-    if (!activo || !esNueva) return null;
+  async function motivoLimiteMensual(comercioId: string, cuponId: string | null, activo: boolean) {
+    if (!activo) return null;
     try {
+      // Si ya se activó este mes, reactivarla no consume un cupo nuevo.
+      if (cuponId && (await cuponActivadoEsteMes(cuponId))) return null;
       const { usados, max } = await getCuposMes(comercioId);
       if (usados >= max) {
-        return `Ya alcanzaste el máximo de promociones nuevas de este mes según tu plan (${usados} de ${max}).`;
+        return `Ya alcanzaste el máximo de promociones de este mes según tu plan (${usados} de ${max}).`;
       }
     } catch {
       /* si no pudimos consultar, el trigger de la base sigue protegiendo el límite */
