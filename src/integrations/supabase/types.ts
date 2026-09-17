@@ -184,6 +184,7 @@ export type Database = {
           flyer_url: string | null
           id: string
           modalidad: Database["public"]["Enums"]["modalidad_cupon"]
+          primera_activacion: string | null
           qr_codigo: string
           titulo: string
           updated_at: string
@@ -199,6 +200,7 @@ export type Database = {
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
+          primera_activacion?: string | null
           qr_codigo?: string
           titulo: string
           updated_at?: string
@@ -214,6 +216,7 @@ export type Database = {
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
+          primera_activacion?: string | null
           qr_codigo?: string
           titulo?: string
           updated_at?: string
@@ -597,6 +600,7 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string; p_qr_codigo: string }
         Returns: Json
       }
+      cupos_promos_mes: { Args: { p_comercio_id: string }; Returns: Json }
       estado_cupon_device: {
         Args: { p_cupon_id: string; p_device_id: string }
         Returns: Json
