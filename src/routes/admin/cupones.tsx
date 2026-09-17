@@ -174,7 +174,7 @@ function CuponesAdmin() {
     } catch (e) {
       setError(
         esErrorLimiteMensual(e)
-          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          ? "Ya alcanzaste el máximo de promociones de este mes según el plan del comercio."
           : "No pudimos guardar la promoción.",
       );
     } finally {
@@ -206,7 +206,7 @@ function CuponesAdmin() {
     } catch (e) {
       setError(
         esErrorLimiteMensual(e)
-          ? "Ya alcanzaste el máximo de promociones nuevas de este mes según el plan del comercio."
+          ? "Ya alcanzaste el máximo de promociones de este mes según el plan del comercio."
           : "No pudimos cambiar el estado de la promoción.",
       );
     }
