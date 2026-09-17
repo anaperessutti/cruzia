@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { coordsForLocalidad } from "@/lib/localidad-coords";
-import { publicDirectoryOptions, type Comercio, type PublicDirectoryData } from "@/lib/public-data";
+import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
 
 type Filters = {
   localidadIds: string[];
@@ -12,9 +12,17 @@ type Filters = {
 
 export type GeoStatus = "idle" | "solicitando" | "detectada" | "denegada" | "no-disponible";
 
+/** Una tarjeta de la grilla: o bien una promoción activa, o bien un comercio sin promociones. */
+export type TarjetaGrilla = {
+  key: string;
+  comercio: Comercio;
+  cupon: Cupon | null;
+};
+
 type PublicDirectoryContextValue = {
   data: PublicDirectoryData;
   filteredComercios: Comercio[];
+  tarjetas: TarjetaGrilla[];
   filters: Filters;
   isLoading: boolean;
   geoStatus: GeoStatus;
@@ -124,6 +132,43 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
       : base.slice().sort((a, b) => a.created_at.localeCompare(b.created_at));
   }, [data, filters]);
 
+  // Una tarjeta por promoción activa; los comercios sin promociones aparecen una sola vez.
+  const tarjetas = useMemo<TarjetaGrilla[]>(() => {
+    const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
+    const cuponesPorComercio = new Map<string, Cupon[]>();
+    for (const cupon of data.cupones) {
+      const lista = cuponesPorComercio.get(cupon.comercio_id);
+      if (lista) lista.push(cupon);
+      else cuponesPorComercio.set(cupon.comercio_id, [cupon]);
+    }
+
+    const items: TarjetaGrilla[] = [];
+    for (const comercio of filteredComercios) {
+      const cupones = cuponesPorComercio.get(comercio.id) ?? [];
+      if (cupones.length === 0) {
+        if (!filters.soloCupon) items.push({ key: comercio.id, comercio, cupon: null });
+        continue;
+      }
+      for (const cupon of cupones) items.push({ key: cupon.id, comercio, cupon });
+    }
+
+    // Mezcla estable: nunca agrupamos a propósito por comercio_id.
+    const barajado = (key: string) => {
+      let h = 0;
+      for (let i = 0; i < key.length; i += 1) h = (h * 31 + key.charCodeAt(i)) % 100003;
+      return h;
+    };
+    return items.sort((a, b) => {
+      if (filters.soloCupon) {
+        const diff =
+          (planById.get(a.comercio.plan_id)?.prioridad_orden ?? 99) -
+          (planById.get(b.comercio.plan_id)?.prioridad_orden ?? 99);
+        if (diff !== 0) return diff;
+      }
+      return barajado(a.key) - barajado(b.key);
+    });
+  }, [data.cupones, data.planes, filteredComercios, filters.soloCupon]);
+
   const setLocalidadIds = useCallback((localidadIds: string[]) => {
     manualSelectionRef.current = true;
     setFilters((current) => ({ ...current, localidadIds }));
@@ -140,6 +185,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const value = useMemo<PublicDirectoryContextValue>(() => ({
     data,
     filteredComercios,
+    tarjetas,
     filters,
     isLoading: query.isLoading,
     geoStatus,
@@ -148,7 +194,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setLocalidadIds,
     setRubroId,
     setSoloCupon,
-  }), [data, filteredComercios, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }

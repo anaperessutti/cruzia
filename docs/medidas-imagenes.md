@@ -9,7 +9,7 @@ pantallas de alta densidad (se suben al doble del tamaño visible).
 | **Hero Banner** (Top Slider de la portada, exclusivo Premium) | 1600 × 900 px | 16:9 | 400 KB | JPG (o WebP) |
 | **Portada de tarjeta** (primera foto de la galería, se ve en la grilla de comercios) | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Fotos de galería** (ficha del comercio) | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
-| **Flyer de cupón / promoción** | 1080 × 1350 px | 4:5 (vertical, estilo Instagram) | 400 KB | JPG (o PNG si tiene texto fino) |
+| **Flyer de cupón / promoción** (es la portada de la tarjeta en la grilla) | 1200 × 800 px | 3:2 | 300 KB | JPG (o PNG si tiene texto fino) |
 | **Logo del comercio** | 512 × 512 px | 1:1 | 150 KB | PNG con fondo transparente |
 | **Fotos de Huella Solidaria** | 1200 × 800 px | 3:2 | 300 KB | JPG |
 | **Imágenes de ítems de Gift Box** | 800 × 800 px | 1:1 | 200 KB | JPG |
