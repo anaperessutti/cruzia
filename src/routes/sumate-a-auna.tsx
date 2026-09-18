@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { enviarLeadComercio, linkWhatsappOla } from "@/lib/formularios";
+import { enviarLeadComercio, linkWhatsappAuna } from "@/lib/formularios";
 import type { Plan } from "@/lib/public-data";
 
 export const Route = createFileRoute("/sumate-a-auna")({
@@ -62,7 +62,7 @@ function Page() {
       whatsapp: form.whatsapp.trim(),
     };
     const mensaje = `Hola AUNA!, quiero sumar mi comercio a la app.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`;
-    const url = linkWhatsappOla(mensaje);
+    const url = linkWhatsappAuna(mensaje);
     try {
       await enviarLeadComercio(payload);
       setLinkWa(url);
