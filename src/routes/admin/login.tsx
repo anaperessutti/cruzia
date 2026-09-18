@@ -10,13 +10,13 @@ export const Route = createFileRoute("/admin/login")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Acceso administradoras | OLA!" },
+      { title: "Acceso administradoras | AUNA" },
       {
         name: "description",
-        content: "Ingreso al panel de administración de OLA!, cupones y beneficios del Partido de la Costa.",
+        content: "Ingreso al panel de administración de AUNA, cupones y beneficios del Partido de la Costa.",
       },
-      { property: "og:title", content: "Acceso administradoras | OLA!" },
-      { property: "og:description", content: "Ingreso al panel de administración de OLA!." },
+      { property: "og:title", content: "Acceso administradoras | AUNA" },
+      { property: "og:description", content: "Ingreso al panel de administración de AUNA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },

@@ -1,4 +1,4 @@
-# Nota para los formularios públicos (Gift Box, Huella Solidaria, Subite a la Ola)
+# Nota para los formularios públicos (Gift Box, Huella Solidaria, Sumate a AUNA)
 
 Las tablas `giftbox_pedidos`, `postulaciones_solidarias` y `leads_comercios` permiten
 **solo INSERT anónimo, nunca SELECT**. Es intencional, por seguridad.

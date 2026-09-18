@@ -13,9 +13,9 @@ import type { Plan } from "@/lib/public-data";
 export const Route = createFileRoute("/sumate-a-auna")({
   head: () => ({
     meta: [
-      { title: "Sumate a AUNA | Sumá tu comercio a OLA!" },
+      { title: "Sumate a AUNA | Sumá tu comercio a AUNA" },
       { name: "description", content: "Sumá tu comercio a AUNA y conectá con quienes eligen el Partido de la Costa. Conocé los planes Básico, Pro y Premium." },
-      { property: "og:title", content: "Sumate a AUNA | Sumá tu comercio a OLA!" },
+      { property: "og:title", content: "Sumate a AUNA | Sumá tu comercio a AUNA" },
       { property: "og:description", content: "Vidriera digital, cupones destacados y alto impacto para tu negocio en La Costa." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

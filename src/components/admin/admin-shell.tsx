@@ -49,7 +49,7 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
       <header className="border-b bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
           <div>
-            <p className="font-display text-2xl font-bold">OLA! · {titulo}</p>
+            <p className="font-display text-2xl font-bold">AUNA · {titulo}</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
           <nav className="flex flex-wrap gap-2">

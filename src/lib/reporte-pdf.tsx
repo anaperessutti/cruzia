@@ -113,14 +113,14 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
 
   return (
     <Document
-      title={`OLA! Reporte ${metrica.comercio} ${nombreMes(metrica.mes)}`}
-      author="OLA! — Comunidad AUNA"
+      title={`AUNA Reporte ${metrica.comercio} ${nombreMes(metrica.mes)}`}
+      author="AUNA — Comunidad del Partido de la Costa"
     >
       <Page size="A4" style={s.page}>
         <View style={[s.header, { backgroundColor: v.header }]}>
           <View style={s.selloFila}>
             <View>
-              <Text style={s.marca}>OLA!</Text>
+              <Text style={s.marca}>AUNA</Text>
               <Text style={s.marcaSub}>Cupones y beneficios del Partido de la Costa</Text>
             </View>
             <View>
@@ -177,7 +177,7 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         </View>
 
         <View style={s.footer} fixed>
-          <Text>OLA! · Generado el {generadoEl}</Text>
+          <Text>AUNA · Generado el {generadoEl}</Text>
           <Text>auna.comunidad@gmail.com · @somos_auna</Text>
         </View>
       </Page>
@@ -192,7 +192,7 @@ export function nombreArchivo(reporte: ReporteComercio): string {
     .replace(/[^a-zA-Z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .toLowerCase();
-  return `OLA-reporte-${slug}-${reporte.metrica.mes.slice(0, 7)}.pdf`;
+  return `AUNA-reporte-${slug}-${reporte.metrica.mes.slice(0, 7)}.pdf`;
 }
 
 export async function generarReportePdf(reporte: ReporteComercio): Promise<Blob> {
