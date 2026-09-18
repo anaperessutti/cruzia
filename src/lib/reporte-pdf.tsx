@@ -94,6 +94,7 @@ const s = StyleSheet.create({
   },
   destacadoLabel: { fontSize: 9, color: MARCA.gris },
   destacadoValor: { fontSize: 14, fontWeight: 700, marginTop: 4 },
+  nota: { fontSize: 9, color: MARCA.gris, marginTop: -2, marginBottom: 10 },
   vacio: { fontSize: 10, color: MARCA.gris, marginTop: 10 },
   footer: {
     position: "absolute",
@@ -149,7 +150,7 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
             </View>
             <View style={[s.tarjeta, { borderLeftColor: MARCA.celeste }]}>
               <Text style={s.tarjetaNum}>{metrica.totalInteracciones}</Text>
-              <Text style={s.tarjetaLabel}>Visitas a la ficha</Text>
+              <Text style={s.tarjetaLabel}>Interacciones</Text>
             </View>
             <View style={[s.tarjeta, { borderLeftColor: MARCA.azul }]}>
               <Text style={s.tarjetaNum}>{clicksWhatsapp}</Text>
@@ -162,7 +163,7 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
           </View>
 
           <Text style={s.seccion}>Detalle por promoción</Text>
-          <Text style={s.vacio}>
+          <Text style={s.nota}>
             Incluye todas las promociones del comercio, también las que no tuvieron activaciones en el período.
           </Text>
           {detalle.length === 0 ? (
@@ -191,7 +192,7 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         </View>
 
         <View style={s.footer} fixed>
-          <Text>AUNA · Generado el {generadoEl}</Text>
+          <Text>AUNA · Reporte de {nombreMes(metrica.mes)}</Text>
           <Text>auna.comunidad@gmail.com · @somos_auna</Text>
         </View>
       </Page>
