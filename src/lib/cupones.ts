@@ -9,14 +9,23 @@ export type EstadoCupon = {
   redencion_id?: string;
 };
 
-const CACHE_KEY = "ola_cupones_cache";
+const CACHE_KEY = "auna_cupones_cache";
+const LEGACY_CACHE_KEY = "ola_cupones_cache";
 
 type CacheEntry = { disponibleDesde: string | null; cooldownDias: number };
 
 function readCache(): Record<string, CacheEntry> {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(window.localStorage.getItem(CACHE_KEY) ?? "{}") as Record<string, CacheEntry>;
+    const current = window.localStorage.getItem(CACHE_KEY);
+    if (current) return JSON.parse(current) as Record<string, CacheEntry>;
+
+    const legacy = window.localStorage.getItem(LEGACY_CACHE_KEY);
+    if (!legacy) return {};
+
+    window.localStorage.setItem(CACHE_KEY, legacy);
+    window.localStorage.removeItem(LEGACY_CACHE_KEY);
+    return JSON.parse(legacy) as Record<string, CacheEntry>;
   } catch {
     return {};
   }
