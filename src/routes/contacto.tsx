@@ -8,14 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { EMAIL_OLA, enviarLeadComercio, linkWhatsappOla } from "@/lib/formularios";
+import { EMAIL_AUNA, enviarLeadComercio, linkWhatsappAuna } from "@/lib/formularios";
 
 export const Route = createFileRoute("/contacto")({
   head: () => ({
     meta: [
-      { title: "Contacto | OLA!" },
-      { name: "description", content: "Escribinos: sumá tu comercio a OLA! o mandanos tu consulta como usuario del Partido de la Costa." },
-      { property: "og:title", content: "Contacto | OLA!" },
+      { title: "Contacto | AUNA" },
+      { name: "description", content: "Escribinos: sumá tu comercio a AUNA o mandanos tu consulta como usuario del Partido de la Costa." },
+      { property: "og:title", content: "Contacto | AUNA" },
       { property: "og:description", content: "Estamos para escucharte." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -49,8 +49,8 @@ function Page() {
       localidad: comercio.localidad || null,
       whatsapp: comercio.whatsapp.trim(),
     };
-    const url = linkWhatsappOla(
-      `Hola OLA!, quiero sumar mi comercio.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`,
+    const url = linkWhatsappAuna(
+      `Hola AUNA, quiero sumar mi comercio.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`,
     );
     try {
       await enviarLeadComercio(payload);
@@ -65,7 +65,7 @@ function Page() {
   function onSubmitUsuario(event: FormEvent) {
     event.preventDefault();
     const cuerpo = `Nombre: ${usuario.nombre}\nEmail: ${usuario.email}\nLocalidad: ${usuario.localidad || "-"}\n\n${usuario.mensaje}`;
-    const url = `mailto:${EMAIL_OLA}?subject=${encodeURIComponent(`Consulta de ${usuario.nombre} desde OLA!`)}&body=${encodeURIComponent(cuerpo)}`;
+    const url = `mailto:${EMAIL_AUNA}?subject=${encodeURIComponent(`Consulta de ${usuario.nombre} desde AUNA`)}&body=${encodeURIComponent(cuerpo)}`;
     setLinkFinal(url);
     setEstado("ok");
     window.location.href = url;
@@ -111,7 +111,7 @@ function Page() {
             </p>
             <Button asChild size="lg" className="mt-6">
               <a href={linkFinal} target={perfil === "comercio" ? "_blank" : undefined} rel="noreferrer">
-                {perfil === "comercio" ? "Abrir WhatsApp de OLA!" : "Abrir mi correo"} <ArrowRight />
+                {perfil === "comercio" ? "Abrir WhatsApp de AUNA" : "Abrir mi correo"} <ArrowRight />
               </a>
             </Button>
           </div>
@@ -172,10 +172,10 @@ function Page() {
         ) : null}
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
-          <a href={`mailto:${EMAIL_OLA}`} className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
+          <a href={`mailto:${EMAIL_AUNA}`} className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
             <Mail className="text-secondary" />
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Email</p>
-            <p className="mt-1 font-display text-lg font-bold text-primary">{EMAIL_OLA}</p>
+            <p className="mt-1 font-display text-lg font-bold text-primary">{EMAIL_AUNA}</p>
           </a>
           <a href="https://www.instagram.com/somos_auna/" target="_blank" rel="noreferrer" className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
             <Instagram className="text-secondary" />

@@ -7,8 +7,8 @@ import { StickyFilters } from "@/components/public/sticky-filters";
 
 export const Route = createFileRoute("/categorias")({
   head: () => ({ meta: [
-    { title: "Categorías de comercios | OLA!" }, { name: "description", content: "Explorá gastronomía, alojamiento, playa, compras y servicios en La Costa." },
-    { property: "og:title", content: "Categorías de comercios | OLA!" }, { property: "og:description", content: "Todo lo que buscás en el Partido de la Costa, por categoría." },
+    { title: "Categorías de comercios | AUNA" }, { name: "description", content: "Explorá gastronomía, alojamiento, playa, compras y servicios en La Costa." },
+    { property: "og:title", content: "Categorías de comercios | AUNA" }, { property: "og:description", content: "Todo lo que buscás en el Partido de la Costa, por categoría." },
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: CategoriasPage,

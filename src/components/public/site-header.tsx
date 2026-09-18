@@ -25,7 +25,7 @@ export function SiteHeader() {
         <BrandMark />
         <div className="flex items-center gap-1">
           <SearchDialog />
-          <Button asChild variant="ghost" size="icon"><a href="https://www.instagram.com/somos_auna/" target="_blank" rel="noreferrer" aria-label="Instagram de OLA!"><Instagram /></a></Button>
+          <Button asChild variant="ghost" size="icon"><a href="https://www.instagram.com/somos_auna/" target="_blank" rel="noreferrer" aria-label="Instagram de AUNA"><Instagram /></a></Button>
           <Sheet>
             <SheetTrigger asChild><Button variant="ghost" size="icon" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
             <SheetContent className="flex w-[88%] flex-col border-l-0 bg-primary text-primary-foreground sm:max-w-md">

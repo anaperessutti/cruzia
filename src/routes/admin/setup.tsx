@@ -10,15 +10,15 @@ export const Route = createFileRoute("/admin/setup")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Configuración inicial | OLA!" },
+      { title: "Configuración inicial | AUNA" },
       {
         name: "description",
-        content: "Creá la primera cuenta de administradora de OLA!, la app de cupones del Partido de la Costa.",
+        content: "Creá la primera cuenta de administradora de AUNA, la app de cupones del Partido de la Costa.",
       },
-      { property: "og:title", content: "Configuración inicial | OLA!" },
+      { property: "og:title", content: "Configuración inicial | AUNA" },
       {
         property: "og:description",
-        content: "Creá la primera cuenta de administradora de OLA!.",
+        content: "Creá la primera cuenta de administradora de AUNA.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -118,7 +118,7 @@ function AdminSetup() {
           <CardDescription>
             {estado === "completada"
               ? "La configuración ya fue completada."
-              : "Creá la cuenta de administradora principal de OLA!."}
+              : "Creá la cuenta de administradora principal de AUNA."}
           </CardDescription>
         </CardHeader>
         <CardContent>

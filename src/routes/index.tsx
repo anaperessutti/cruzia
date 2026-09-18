@@ -7,9 +7,9 @@ import { StickyFilters } from "@/components/public/sticky-filters";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "OLA! | Cupones y beneficios en La Costa" },
-    { name: "description", content: "Descubrí comercios, cupones y experiencias en el Partido de la Costa con OLA!." },
-    { property: "og:title", content: "OLA! | Beneficios en La Costa" },
+    { title: "AUNA | Cupones y beneficios en La Costa" },
+    { name: "description", content: "Descubrí comercios, cupones y experiencias en el Partido de la Costa con AUNA." },
+    { property: "og:title", content: "AUNA | Beneficios en La Costa" },
     { property: "og:description", content: "Todo lo bueno del Partido de la Costa, más cerca." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },

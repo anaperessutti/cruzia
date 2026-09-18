@@ -13,7 +13,7 @@ export function SiteFooter() {
           <a className="flex items-center gap-2 hover:text-accent" href="mailto:auna.comunidad@gmail.com"><Mail className="size-4" /> auna.comunidad@gmail.com</a>
         </div>
       </div>
-      <div className="border-t border-primary-foreground/15"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"><span>© 2026 OLA! Partido de la Costa</span><div className="flex gap-5"><Link to="/privacidad" className="hover:text-primary-foreground">Privacidad</Link><Link to="/terminos-promociones" className="hover:text-primary-foreground">Términos de promociones</Link></div></div></div>
+      <div className="border-t border-primary-foreground/15"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"><span>© 2026 AUNA Partido de la Costa</span><div className="flex flex-wrap gap-x-5 gap-y-2"><Link to="/privacidad" className="hover:text-primary-foreground">Privacidad</Link><Link to="/terminos-promociones" className="hover:text-primary-foreground">Términos de promociones</Link></div></div></div>
     </footer>
   );
 }

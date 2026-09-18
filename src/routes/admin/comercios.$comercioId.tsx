@@ -29,10 +29,10 @@ export const Route = createFileRoute("/admin/comercios/$comercioId")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Editar comercio | Panel OLA!" },
-      { name: "description", content: "Formulario de carga y edición de comercios de OLA!." },
-      { property: "og:title", content: "Editar comercio | Panel OLA!" },
-      { property: "og:description", content: "Formulario de carga y edición de comercios de OLA!." },
+      { title: "Editar comercio | Panel AUNA" },
+      { name: "description", content: "Formulario de carga y edición de comercios de AUNA." },
+      { property: "og:title", content: "Editar comercio | Panel AUNA" },
+      { property: "og:description", content: "Formulario de carga y edición de comercios de AUNA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

@@ -13,7 +13,7 @@ export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: st
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase text-secondary">Elegidos para vos</p><h2 className="mt-2 font-display text-3xl font-extrabold text-primary sm:text-4xl">{title}</h2></div><span className="text-sm text-muted-foreground">{tarjetas.length} lugares</span></div>
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase text-secondary">Elegidos para vos</p><h2 className="mt-2 font-display text-3xl font-extrabold text-primary sm:text-4xl">{title}</h2></div><span className="shrink-0 text-sm text-muted-foreground">{tarjetas.length} lugares</span></div>
       {isLoading ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-80 animate-pulse rounded-md bg-muted" />)}</div> : null}
       {!isLoading && tarjetas.length === 0 ? <div className="border-y border-border py-16 text-center"><p className="font-display text-2xl font-bold text-primary">Todavía no hay resultados para esta combinación.</p><p className="mt-2 text-sm text-muted-foreground">Probá sumando otra localidad o cambiando el rubro.</p></div> : null}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -36,7 +36,7 @@ export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: st
               <Link to="/comercio/$comercioId" params={{ comercioId: item.id }} className="relative block aspect-[4/3] overflow-hidden bg-muted">
                 {portada
                   ? <img src={portada} alt={cupon ? `${cupon.titulo} — ${item.nombre}` : item.nombre} loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                  : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-5xl font-extrabold text-primary/20">OLA!</span></div>}
+                  : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-5xl font-extrabold text-primary/20">AUNA</span></div>}
                 {destacado ? <Badge className="absolute left-3 top-3 bg-secondary text-secondary-foreground"><Star className="mr-1 size-3 fill-current" /> Destacado</Badge> : null}
                 {cupon ? <Badge className="absolute bottom-3 right-3 bg-accent text-accent-foreground"><Ticket className="mr-1 size-3" /> Cupón activo</Badge> : null}
               </Link>

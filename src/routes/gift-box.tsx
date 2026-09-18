@@ -21,9 +21,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/gift-box")({
   head: () => ({
     meta: [
-      { title: "Gift Box | OLA!" },
-      { name: "description", content: "Regalá experiencias del Partido de la Costa con Gift Box de OLA!." },
-      { property: "og:title", content: "Gift Box | OLA!" },
+      { title: "Gift Box | AUNA" },
+      { name: "description", content: "Regalá experiencias del Partido de la Costa con Gift Box de AUNA." },
+      { property: "og:title", content: "Gift Box | AUNA" },
       { property: "og:description", content: "Una caja llena de experiencias locales." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -98,7 +98,7 @@ function GiftBoxPage() {
 
   if (confirmado) {
     return (
-      <main className="bg-[#0d2039] text-primary-foreground">
+      <main className="bg-gift text-gift-foreground">
         <section className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
           <span className="inline-flex size-16 items-center justify-center rounded-full bg-accent/20 text-accent">
             <Gift className="size-8" />
@@ -110,14 +110,14 @@ function GiftBoxPage() {
           </p>
           <ul className="mx-auto mt-8 space-y-2 text-left">
             {confirmado.items.map((item) => (
-              <li key={item.id} className="flex items-center justify-between rounded-xl border border-primary-foreground/15 px-4 py-3">
+              <li key={item.id} className="flex items-center justify-between gap-4 rounded-md border border-gift-foreground/15 px-4 py-3">
                 <span>{item.nombre}</span>
-                <span className="text-accent">{formatearPrecio(Number(item.precio))}</span>
+                <span className="shrink-0 text-gift-accent">{formatearPrecio(Number(item.precio))}</span>
               </li>
             ))}
           </ul>
           <p className="mt-6 font-display text-2xl font-bold">Total: {formatearPrecio(confirmado.total)}</p>
-          <div className="mt-8 flex justify-center gap-3">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button variant="secondary" onClick={() => setConfirmado(null)}>Armar otra caja</Button>
             <Button asChild variant="outline" className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
               <Link to="/">Volver al inicio</Link>
@@ -129,11 +129,11 @@ function GiftBoxPage() {
   }
 
   return (
-    <main className="bg-[#0d2039] text-primary-foreground">
+    <main className="bg-gift text-gift-foreground">
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-accent">Gift Box · Regalá La Costa</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gift-accent">Gift Box · Regalá La Costa</p>
             <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.02] sm:text-6xl">
               Una caja.<br />Muchas experiencias.
             </h1>
@@ -144,13 +144,13 @@ function GiftBoxPage() {
           </div>
           <ol className="space-y-4">
             {PASOS.map((paso, index) => (
-              <li key={paso.titulo} className="flex gap-4 rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 p-5 backdrop-blur">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+               <li key={paso.titulo} className="flex gap-4 rounded-md border border-gift-accent/25 bg-gift-foreground/5 p-5">
+                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-gift-accent">
                   <paso.icon className="size-5" />
                 </span>
                 <div>
                   <p className="font-display text-lg font-bold">
-                    <span className="text-accent">0{index + 1}</span> · {paso.titulo}
+                     <span className="text-gift-accent">0{index + 1}</span> · {paso.titulo}
                   </p>
                   <p className="mt-1 text-sm leading-6 text-primary-foreground/70">{paso.texto}</p>
                 </div>
@@ -168,14 +168,14 @@ function GiftBoxPage() {
           {items.isLoading ? (
             <p className="mt-10 text-primary-foreground/60">Cargando experiencias…</p>
           ) : (
-            <div className="mt-10 space-y-12 pb-40">
+             <div className="mt-10 space-y-12 pb-10 sm:pb-48">
               {CATEGORIAS.map((categoria) => {
                 const deCategoria = (items.data ?? []).filter((item) => item.categoria === categoria.id);
                 if (deCategoria.length === 0) return null;
                 return (
                   <div key={categoria.id}>
                     <div className="flex flex-wrap items-baseline gap-3">
-                      <h3 className="font-display text-2xl font-bold text-accent">{categoria.titulo}</h3>
+                       <h3 className="font-display text-2xl font-bold text-gift-accent">{categoria.titulo}</h3>
                       <p className="text-sm text-primary-foreground/60">{categoria.detalle}</p>
                     </div>
                     <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -188,19 +188,19 @@ function GiftBoxPage() {
                             onClick={() => toggle(item)}
                             aria-pressed={activo}
                             className={cn(
-                              "group flex h-full flex-col justify-between rounded-2xl border p-5 text-left transition-all",
+                               "group flex h-full flex-col justify-between rounded-md border p-5 text-left transition-all active:scale-[0.99]",
                               activo
-                                ? "border-accent bg-accent/15 shadow-premium"
-                                : "border-primary-foreground/15 bg-primary-foreground/5 hover:border-accent/50 hover:bg-primary-foreground/10",
+                                 ? "border-gift-accent bg-gift-accent/15 shadow-premium"
+                                 : "border-gift-foreground/15 bg-gift-foreground/5 hover:border-gift-accent/50 hover:bg-gift-foreground/10",
                             )}
                           >
                             <span className="font-display text-lg font-semibold">{item.nombre}</span>
                             <span className="mt-6 flex items-center justify-between">
-                              <span className="text-xl font-bold text-accent">{formatearPrecio(Number(item.precio))}</span>
+                               <span className="text-xl font-bold text-gift-accent">{formatearPrecio(Number(item.precio))}</span>
                               <span
                                 className={cn(
                                   "flex size-7 items-center justify-center rounded-full border",
-                                  activo ? "border-accent bg-accent text-primary" : "border-primary-foreground/30",
+                                   activo ? "border-gift-accent bg-gift-accent text-gift" : "border-gift-foreground/30",
                                 )}
                               >
                                 {activo ? <Check className="size-4" /> : null}
@@ -218,25 +218,25 @@ function GiftBoxPage() {
         </div>
       </section>
 
-      <div className="sticky bottom-0 z-30 border-t border-primary-foreground/15 bg-[#0d2039]/95 backdrop-blur">
+       <div className="border-t border-gift-accent/25 bg-gift sm:sticky sm:bottom-0 sm:z-30 sm:bg-gift/95 sm:backdrop-blur">
         <div className="mx-auto max-w-7xl space-y-4 px-4 py-5 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-widest text-primary-foreground/60">
                 {elegidos.length} {elegidos.length === 1 ? "experiencia elegida" : "experiencias elegidas"}
               </p>
-              <p className="font-display text-3xl font-extrabold text-accent">{formatearPrecio(total)}</p>
+               <p className="font-display text-3xl font-extrabold text-gift-accent">{formatearPrecio(total)}</p>
             </div>
-            <div className="flex gap-2">
+             <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
               {(["digital", "fisico"] as GiftboxFormato[]).map((opcion) => (
                 <button
                   key={opcion}
                   type="button"
                   onClick={() => setFormato(opcion)}
                   className={cn(
-                    "rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
+                     "min-w-0 rounded-full border px-3 py-2 text-sm font-semibold transition-colors sm:px-4",
                     formato === opcion
-                      ? "border-accent bg-accent text-primary"
+                       ? "border-gift-accent bg-gift-accent text-gift"
                       : "border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10",
                   )}
                 >
@@ -256,7 +256,7 @@ function GiftBoxPage() {
                 <Label htmlFor="gb-wsp" className="text-xs text-primary-foreground/70">Tu WhatsApp</Label>
                 <Input id="gb-wsp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/40" placeholder="2257 400000" />
               </div>
-              <Button size="lg" className="self-end bg-accent text-primary hover:bg-accent/90" onClick={confirmar} disabled={enviando}>
+               <Button size="lg" className="w-full self-end bg-gift-accent text-gift hover:bg-gift-accent/90 sm:w-auto" onClick={confirmar} disabled={enviando}>
                 {enviando ? "Enviando…" : "Confirmar Gift Box"}
               </Button>
             </div>

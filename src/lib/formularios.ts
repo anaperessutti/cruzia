@@ -5,12 +5,12 @@ import type { Database } from "@/integrations/supabase/types";
 
 export type FaseSolidaria = Database["public"]["Tables"]["huella_solidaria_fases"]["Row"];
 
-/** WhatsApp Business de OLA! (solo dígitos, formato internacional). */
-export const WHATSAPP_OLA = "5492227405370";
-export const EMAIL_OLA = "auna.comunidad@gmail.com";
+/** WhatsApp Business de AUNA (solo dígitos, formato internacional). */
+export const WHATSAPP_AUNA = "5492227405370";
+export const EMAIL_AUNA = "auna.comunidad@gmail.com";
 
-export function linkWhatsappOla(mensaje: string) {
-  return `https://wa.me/${WHATSAPP_OLA}?text=${encodeURIComponent(mensaje)}`;
+export function linkWhatsappAuna(mensaje: string) {
+  return `https://wa.me/${WHATSAPP_AUNA}?text=${encodeURIComponent(mensaje)}`;
 }
 
 async function getFasesSolidarias(): Promise<FaseSolidaria[]> {

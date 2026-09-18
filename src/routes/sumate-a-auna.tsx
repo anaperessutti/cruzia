@@ -7,15 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { enviarLeadComercio, linkWhatsappOla } from "@/lib/formularios";
+import { enviarLeadComercio, linkWhatsappAuna } from "@/lib/formularios";
 import type { Plan } from "@/lib/public-data";
 
 export const Route = createFileRoute("/sumate-a-auna")({
   head: () => ({
     meta: [
-      { title: "Sumate a AUNA | Sumá tu comercio a OLA!" },
+      { title: "Sumate a AUNA | Sumá tu comercio a AUNA" },
       { name: "description", content: "Sumá tu comercio a AUNA y conectá con quienes eligen el Partido de la Costa. Conocé los planes Básico, Pro y Premium." },
-      { property: "og:title", content: "Sumate a AUNA | Sumá tu comercio a OLA!" },
+      { property: "og:title", content: "Sumate a AUNA | Sumá tu comercio a AUNA" },
       { property: "og:description", content: "Vidriera digital, cupones destacados y alto impacto para tu negocio en La Costa." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -62,7 +62,7 @@ function Page() {
       whatsapp: form.whatsapp.trim(),
     };
     const mensaje = `Hola AUNA!, quiero sumar mi comercio a la app.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`;
-    const url = linkWhatsappOla(mensaje);
+    const url = linkWhatsappAuna(mensaje);
     try {
       await enviarLeadComercio(payload);
       setLinkWa(url);

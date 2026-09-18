@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/comercio/$comercioId")({
   head: () => ({ meta: [
-    { title: "Comercio | OLA!" },
+    { title: "Comercio | AUNA" },
     { name: "description", content: "Ficha del comercio: promociones, contacto, horarios y ubicación en el Partido de la Costa." },
-    { property: "og:title", content: "Comercio | OLA!" },
+    { property: "og:title", content: "Comercio | AUNA" },
     { property: "og:description", content: "Promociones, contacto y ubicación de comercios de La Costa." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },

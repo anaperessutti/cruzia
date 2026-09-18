@@ -18,10 +18,10 @@ export const Route = createFileRoute("/admin/comercios/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Comercios | Panel OLA!" },
-      { name: "description", content: "Alta y edición de comercios de OLA!." },
-      { property: "og:title", content: "Comercios | Panel OLA!" },
-      { property: "og:description", content: "Alta y edición de comercios de OLA!." },
+      { title: "Comercios | Panel AUNA" },
+      { name: "description", content: "Alta y edición de comercios de AUNA." },
+      { property: "og:title", content: "Comercios | Panel AUNA" },
+      { property: "og:description", content: "Alta y edición de comercios de AUNA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -102,7 +102,7 @@ function ComerciosAdmin() {
                 <TableBody>
                   {filtrados.map((c) => (
                     <TableRow key={c.id}>
-                      <TableCell className="font-medium">{c.nombre}</TableCell>
+                       <TableCell className="sticky left-0 z-10 bg-card font-medium">{c.nombre}</TableCell>
                       <TableCell>{nombre(c.plan_id, catalogos?.planes)}</TableCell>
                       <TableCell>{nombre(c.rubro_id, catalogos?.rubros)}</TableCell>
                       <TableCell>{nombre(c.localidad_id, catalogos?.localidades)}</TableCell>

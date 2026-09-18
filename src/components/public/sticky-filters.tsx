@@ -32,7 +32,7 @@ export function StickyFilters() {
             <div className="max-h-72 space-y-1 overflow-y-auto">
               {data.localidades.map((item) => {
                 const checked = filters.localidadIds.includes(item.id);
-                return <label key={item.id} className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted"><Checkbox checked={checked} onCheckedChange={() => setLocalidadIds(checked ? filters.localidadIds.filter((id) => id !== item.id) : [...filters.localidadIds, item.id])} /><span>{item.nombre}</span>{item.id === detectedLocalidadId ? <span className="ml-auto text-xs text-muted-foreground">cerca tuyo</span> : null}</label>;
+               return <label key={item.id} className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted"><Checkbox checked={checked} onCheckedChange={() => setLocalidadIds(checked ? filters.localidadIds.filter((id) => id !== item.id) : [...filters.localidadIds, item.id])} /><span className="min-w-0 flex-1 truncate" title={item.nombre}>{item.nombre}</span>{item.id === detectedLocalidadId ? <span className="shrink-0 text-xs text-muted-foreground">cerca tuyo</span> : null}</label>;
               })}
             </div>
           </PopoverContent>

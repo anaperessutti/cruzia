@@ -28,10 +28,10 @@ export const Route = createFileRoute("/admin/panel")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Panel de administración | OLA!" },
-      { name: "description", content: "Métricas por comercio y reportes en PDF de OLA!." },
-      { property: "og:title", content: "Panel de administración | OLA!" },
-      { property: "og:description", content: "Métricas por comercio y reportes en PDF de OLA!." },
+      { title: "Panel de administración | AUNA" },
+      { name: "description", content: "Métricas por comercio y reportes en PDF de AUNA." },
+      { property: "og:title", content: "Panel de administración | AUNA" },
+      { property: "og:description", content: "Métricas por comercio y reportes en PDF de AUNA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -190,10 +190,10 @@ function AdminPanel() {
       <header className="border-b bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
           <div>
-            <p className="font-display text-2xl font-bold">OLA! · Panel</p>
+            <p className="font-display text-2xl font-bold">AUNA · Panel</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
             <Button variant="secondary" size="sm" asChild>
               <Link to="/admin/comercios">Comercios</Link>
             </Button>
@@ -238,14 +238,14 @@ function AdminPanel() {
           <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>
             <CardDescription>
-              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de OLA!,
+              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de AUNA,
               listo para reenviar por WhatsApp.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <Select value={mes} onValueChange={setMes}>
-                <SelectTrigger className="w-[220px]">
+                <SelectTrigger className="w-full sm:w-[220px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,7 +256,7 @@ function AdminPanel() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="outline" onClick={onRecalcular} disabled={cargando}>
+              <Button className="w-full sm:w-auto" variant="outline" onClick={onRecalcular} disabled={cargando}>
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
@@ -292,7 +292,7 @@ function AdminPanel() {
                   <TableBody>
                     {metricas.map((m) => (
                       <TableRow key={m.comercioId}>
-                        <TableCell className="font-medium">{m.comercio}</TableCell>
+                        <TableCell className="sticky left-0 z-10 bg-card font-medium">{m.comercio}</TableCell>
                         <TableCell>
                           <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>{m.plan}</Badge>
                         </TableCell>

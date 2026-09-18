@@ -42,10 +42,10 @@ export const Route = createFileRoute("/admin/cupones")({
   }),
   head: () => ({
     meta: [
-      { title: "Promociones | Panel OLA!" },
-      { name: "description", content: "Edición rápida de cupones y promociones de OLA!." },
-      { property: "og:title", content: "Promociones | Panel OLA!" },
-      { property: "og:description", content: "Edición rápida de cupones y promociones de OLA!." },
+      { title: "Promociones | Panel AUNA" },
+      { name: "description", content: "Edición rápida de cupones y promociones de AUNA." },
+      { property: "og:title", content: "Promociones | Panel AUNA" },
+      { property: "og:description", content: "Edición rápida de cupones y promociones de AUNA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -239,7 +239,7 @@ function CuponesAdmin() {
                 })
               }
             >
-              <SelectTrigger className="w-[260px]">
+               <SelectTrigger className="w-full sm:w-[260px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
