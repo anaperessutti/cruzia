@@ -137,7 +137,10 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         <View style={s.body}>
           <Text style={s.comercio}>{metrica.comercio}</Text>
           {meta ? <Text style={s.meta}>{meta}</Text> : null}
-          <Text style={[s.periodo, { color: v.acento }]}>Reporte de {nombreMes(metrica.mes)}</Text>
+          <View style={s.periodoFila}>
+            <Text style={[s.periodo, { color: v.acento }]}>Reporte de {nombreMes(metrica.mes)}</Text>
+            <Text style={s.generado}>Generado el {generadoEl}</Text>
+          </View>
 
           <View style={s.tarjetas}>
             <View style={[s.tarjeta, { borderLeftColor: v.acento }]}>
@@ -145,16 +148,23 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
               <Text style={s.tarjetaLabel}>Cupones activados</Text>
             </View>
             <View style={[s.tarjeta, { borderLeftColor: MARCA.celeste }]}>
+              <Text style={s.tarjetaNum}>{metrica.totalInteracciones}</Text>
+              <Text style={s.tarjetaLabel}>Visitas a la ficha</Text>
+            </View>
+            <View style={[s.tarjeta, { borderLeftColor: MARCA.azul }]}>
               <Text style={s.tarjetaNum}>{clicksWhatsapp}</Text>
               <Text style={s.tarjetaLabel}>Consultas por WhatsApp</Text>
             </View>
-            <View style={[s.tarjeta, { borderLeftColor: MARCA.azul }]}>
+            <View style={[s.tarjeta, { borderLeftColor: MARCA.gris }]}>
               <Text style={s.tarjetaNum}>{detalle.filter((d) => d.redenciones > 0).length}</Text>
               <Text style={s.tarjetaLabel}>Promos con movimiento</Text>
             </View>
           </View>
 
           <Text style={s.seccion}>Detalle por promoción</Text>
+          <Text style={s.vacio}>
+            Incluye todas las promociones del comercio, también las que no tuvieron activaciones en el período.
+          </Text>
           {detalle.length === 0 ? (
             <Text style={s.vacio}>El comercio todavía no tiene promociones cargadas.</Text>
           ) : (
