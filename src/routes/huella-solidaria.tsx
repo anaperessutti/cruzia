@@ -14,7 +14,7 @@ export const Route = createFileRoute("/huella-solidaria")({
   head: () => ({
     meta: [
       { title: "Huella Solidaria | AUNA" },
-      { name: "description", content: "Historias, causas y acciones solidarias de la comunidad del Partido de la Costa. Postulá tu causa y sumate a la próxima ola." },
+      { name: "description", content: "Historias, causas y acciones solidarias de la comunidad del Partido de la Costa. Postulá tu causa y acompañá la próxima acción." },
       { property: "og:title", content: "Huella Solidaria | AUNA" },
       { property: "og:description", content: "Pequeñas acciones que dejan una gran huella en La Costa." },
       { property: "og:type", content: "website" },
