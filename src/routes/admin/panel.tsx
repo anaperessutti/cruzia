@@ -193,7 +193,7 @@ function AdminPanel() {
             <p className="font-display text-2xl font-bold">AUNA · Panel</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
             <Button variant="secondary" size="sm" asChild>
               <Link to="/admin/comercios">Comercios</Link>
             </Button>
@@ -245,7 +245,7 @@ function AdminPanel() {
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <Select value={mes} onValueChange={setMes}>
-                <SelectTrigger className="w-[220px]">
+                <SelectTrigger className="w-full sm:w-[220px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,7 +256,7 @@ function AdminPanel() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button variant="outline" onClick={onRecalcular} disabled={cargando}>
+              <Button className="w-full sm:w-auto" variant="outline" onClick={onRecalcular} disabled={cargando}>
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
@@ -292,7 +292,7 @@ function AdminPanel() {
                   <TableBody>
                     {metricas.map((m) => (
                       <TableRow key={m.comercioId}>
-                        <TableCell className="font-medium">{m.comercio}</TableCell>
+                        <TableCell className="sticky left-0 z-10 bg-card font-medium">{m.comercio}</TableCell>
                         <TableCell>
                           <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>{m.plan}</Badge>
                         </TableCell>

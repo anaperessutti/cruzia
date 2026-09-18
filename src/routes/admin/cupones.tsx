@@ -239,7 +239,7 @@ function CuponesAdmin() {
                 })
               }
             >
-              <SelectTrigger className="w-[260px]">
+               <SelectTrigger className="w-full sm:w-[260px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

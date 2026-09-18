@@ -90,7 +90,7 @@ function Page() {
               Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
-              En AUNA creemos que el éxito comercial no sirve si no empuja a la comunidad. Por eso, cada año destinamos un porcentaje de nuestros ingresos a acompañar proyectos e instituciones del Partido de la Costa. Es nuestra forma de devolver la confianza recibida y asegurarnos de que el crecimiento de la plataforma impulse también la vida cotidiana de nuestros barrios.
+              Somos parte de estos barrios y queremos crecer con ellos. Por eso acompañamos iniciativas e instituciones del Partido de la Costa que cuidan, reúnen y hacen más linda la vida de nuestros vecinos. Es nuestra manera de devolver un poco de todo lo que esta comunidad nos da.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
@@ -99,7 +99,7 @@ function Page() {
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
               { icon: Sparkles, titulo: "Compartido", texto: "Vecinos y comercios trabajando juntos." },
             ].map((item) => (
-              <div key={item.titulo} className="rounded-3xl bg-card p-5">
+               <div key={item.titulo} className="rounded-md border border-secondary/15 bg-card p-5">
                 <item.icon className="size-5 text-secondary" />
                 <p className="mt-3 font-display text-lg font-bold text-primary">{item.titulo}</p>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.texto}</p>
@@ -147,12 +147,12 @@ function Page() {
       ) : null}
 
       {/* Postulación */}
-      <section className="bg-primary text-primary-foreground">
+       <section className="bg-muted">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
-            <p className="text-xs font-bold uppercase text-accent">Postulá una causa</p>
-            <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
-            <p className="mt-5 max-w-lg leading-7 text-primary-foreground/75">
+             <p className="text-xs font-bold uppercase text-secondary">Postulá una causa</p>
+             <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight text-primary sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
+             <p className="mt-5 max-w-lg leading-7 text-muted-foreground">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>
           </div>

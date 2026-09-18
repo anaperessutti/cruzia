@@ -102,7 +102,7 @@ function ComerciosAdmin() {
                 <TableBody>
                   {filtrados.map((c) => (
                     <TableRow key={c.id}>
-                      <TableCell className="font-medium">{c.nombre}</TableCell>
+                       <TableCell className="sticky left-0 z-10 bg-card font-medium">{c.nombre}</TableCell>
                       <TableCell>{nombre(c.plan_id, catalogos?.planes)}</TableCell>
                       <TableCell>{nombre(c.rubro_id, catalogos?.rubros)}</TableCell>
                       <TableCell>{nombre(c.localidad_id, catalogos?.localidades)}</TableCell>
