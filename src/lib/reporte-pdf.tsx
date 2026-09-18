@@ -50,17 +50,21 @@ const s = StyleSheet.create({
   body: { paddingHorizontal: 40, paddingTop: 26 },
   comercio: { fontSize: 22, fontWeight: 700 },
   meta: { fontSize: 10, color: MARCA.gris, marginTop: 4 },
-  periodo: { fontSize: 12, marginTop: 14, fontWeight: 700 },
-  tarjetas: { flexDirection: "row", gap: 12, marginTop: 14 },
+  periodoFila: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 14 },
+  periodo: { fontSize: 12, fontWeight: 700 },
+  generado: { fontSize: 9, color: MARCA.gris },
+  tarjetas: { flexDirection: "row", gap: 10, marginTop: 12 },
   tarjeta: {
     flex: 1,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
     borderLeftWidth: 4,
-    padding: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    minHeight: 74,
   },
-  tarjetaNum: { fontSize: 24, fontWeight: 700 },
-  tarjetaLabel: { fontSize: 9, color: MARCA.gris, marginTop: 4 },
+  tarjetaNum: { fontSize: 22, fontWeight: 700 },
+  tarjetaLabel: { fontSize: 8, color: MARCA.gris, marginTop: 4 },
   seccion: { fontSize: 13, fontWeight: 700, marginTop: 26, marginBottom: 8 },
   filaHead: {
     flexDirection: "row",
@@ -90,6 +94,7 @@ const s = StyleSheet.create({
   },
   destacadoLabel: { fontSize: 9, color: MARCA.gris },
   destacadoValor: { fontSize: 14, fontWeight: 700, marginTop: 4 },
+  nota: { fontSize: 9, color: MARCA.gris, marginTop: -2, marginBottom: 10 },
   vacio: { fontSize: 10, color: MARCA.gris, marginTop: 10 },
   footer: {
     position: "absolute",
@@ -133,7 +138,10 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         <View style={s.body}>
           <Text style={s.comercio}>{metrica.comercio}</Text>
           {meta ? <Text style={s.meta}>{meta}</Text> : null}
-          <Text style={[s.periodo, { color: v.acento }]}>Reporte de {nombreMes(metrica.mes)}</Text>
+          <View style={s.periodoFila}>
+            <Text style={[s.periodo, { color: v.acento }]}>Reporte de {nombreMes(metrica.mes)}</Text>
+            <Text style={s.generado}>Generado el {generadoEl}</Text>
+          </View>
 
           <View style={s.tarjetas}>
             <View style={[s.tarjeta, { borderLeftColor: v.acento }]}>
@@ -141,16 +149,23 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
               <Text style={s.tarjetaLabel}>Cupones activados</Text>
             </View>
             <View style={[s.tarjeta, { borderLeftColor: MARCA.celeste }]}>
+              <Text style={s.tarjetaNum}>{metrica.totalInteracciones}</Text>
+              <Text style={s.tarjetaLabel}>Interacciones</Text>
+            </View>
+            <View style={[s.tarjeta, { borderLeftColor: MARCA.azul }]}>
               <Text style={s.tarjetaNum}>{clicksWhatsapp}</Text>
               <Text style={s.tarjetaLabel}>Consultas por WhatsApp</Text>
             </View>
-            <View style={[s.tarjeta, { borderLeftColor: MARCA.azul }]}>
+            <View style={[s.tarjeta, { borderLeftColor: MARCA.gris }]}>
               <Text style={s.tarjetaNum}>{detalle.filter((d) => d.redenciones > 0).length}</Text>
               <Text style={s.tarjetaLabel}>Promos con movimiento</Text>
             </View>
           </View>
 
           <Text style={s.seccion}>Detalle por promoción</Text>
+          <Text style={s.nota}>
+            Incluye todas las promociones del comercio, también las que no tuvieron activaciones en el período.
+          </Text>
           {detalle.length === 0 ? (
             <Text style={s.vacio}>El comercio todavía no tiene promociones cargadas.</Text>
           ) : (
@@ -177,7 +192,7 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         </View>
 
         <View style={s.footer} fixed>
-          <Text>AUNA · Generado el {generadoEl}</Text>
+          <Text>AUNA · Reporte de {nombreMes(metrica.mes)}</Text>
           <Text>auna.comunidad@gmail.com · @somos_auna</Text>
         </View>
       </Page>
