@@ -6,7 +6,7 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 import { StickyFilters } from "@/components/public/sticky-filters";
 
-type CategoriasSearch = { coleccion?: string; localidades?: string };
+type CategoriasSearch = { coleccion?: string | undefined; localidades?: string | undefined };
 
 export const Route = createFileRoute("/categorias")({
   validateSearch: (search: Record<string, unknown>): CategoriasSearch => ({
