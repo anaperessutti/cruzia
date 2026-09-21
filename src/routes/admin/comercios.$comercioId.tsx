@@ -56,6 +56,8 @@ const VACIO: ComercioForm = {
   whatsapp: "",
   galeria: [],
   activo: true,
+  es_indoor: false,
+  hero_alcance_local: false,
 };
 
 function EditorComercio() {
