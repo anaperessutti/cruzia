@@ -21,6 +21,7 @@ import {
   enDiasISO,
   cuponActivadoEsteMes,
   esErrorLimiteMensual,
+  getCatalogos,
   getComerciosAdmin,
   getCuponesAdmin,
   getCuposMes,
@@ -31,6 +32,7 @@ import {
   type Cupon,
   type CuponForm,
   type Modalidad,
+  type Plan,
 } from "@/lib/admin-cms";
 
 type Busqueda = { comercio?: string | undefined };
