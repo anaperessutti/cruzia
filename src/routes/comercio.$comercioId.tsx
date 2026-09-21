@@ -122,7 +122,7 @@ function FichaComercio() {
                 <Button key={nombre} asChild variant="outline"><a href={url} target="_blank" rel="noreferrer"><Instagram className="mr-1.5 size-4" /> {nombre}</a></Button>
               ) : null
             ))}
-            {cupones.length > 0 && conPromocion ? <Button asChild variant="ghost"><Link to="/cupones"><Ticket className="mr-1.5 size-4" /> Ver más cupones</Link></Button> : null}
+            {cupones.length > 0 && conPromocion ? <Button asChild variant="ghost"><Link to="/cupones" search={{}}><Ticket className="mr-1.5 size-4" /> Ver más cupones</Link></Button> : null}
           </div>
         </div>
         <div className="overflow-hidden rounded-md border border-border">

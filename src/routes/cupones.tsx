@@ -5,10 +5,12 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { StickyFilters } from "@/components/public/sticky-filters";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 
+type CuponesSearch = { soloCupon?: boolean; localidades?: string };
+
 export const Route = createFileRoute("/cupones")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    soloCupon: search.soloCupon === true || search.soloCupon === "true",
-    localidades: typeof search.localidades === "string" ? search.localidades : "",
+  validateSearch: (search: Record<string, unknown>): CuponesSearch => ({
+    soloCupon: search["soloCupon"] === true || search["soloCupon"] === "true" ? true : undefined,
+    localidades: typeof search["localidades"] === "string" ? search["localidades"] : undefined,
   }),
   head: () => ({ meta: [
     { title: "Cupones activos | AUNA" }, { name: "description", content: "Encontrá promociones y cupones vigentes en comercios del Partido de la Costa." },
