@@ -41,6 +41,7 @@ export function HomeCarousels() {
       rubro={rubroById.get(comercio.rubro_id ?? "")}
     />
   );
+  const imagenesDe = (tarjetas: TarjetaGrilla[]) => tarjetas.map(({ comercio, cupon }) => cupon?.flyer_url ?? comercio.galeria[0] ?? null);
 
   const filas = data.colecciones.map((coleccion) => {
     const comercioIds = new Set(
@@ -69,6 +70,7 @@ export function HomeCarousels() {
           titulo="Favoritos de la Costa"
           destinoUrl={`/cupones?soloCupon=true${localidadesQuery}`}
           tarjetas={favoritos.map(renderTarjeta)}
+          imagenes={imagenesDe(favoritos)}
         />
       ) : null}
       {filas.map(({ coleccion, tarjetas }) => (
@@ -77,6 +79,7 @@ export function HomeCarousels() {
           titulo={coleccion.nombre}
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
           tarjetas={tarjetas.map(renderTarjeta)}
+          imagenes={imagenesDe(tarjetas)}
         />
       ))}
     </div>

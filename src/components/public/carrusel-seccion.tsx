@@ -24,16 +24,18 @@ interface CarruselSeccionProps {
   destinoUrl: string;
   /** Tarjetas a mostrar, ya resueltas. El orden es el orden de la fila. */
   tarjetas: ReactNode[];
+  /** Imágenes de portada en el mismo orden, para el fondo de "Ver todo". */
+  imagenes?: (string | null)[];
   className?: string;
 }
 
-export function CarruselSeccion({ titulo, destinoUrl, tarjetas, className }: CarruselSeccionProps) {
+export function CarruselSeccion({ titulo, destinoUrl, tarjetas, imagenes = [], className }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const [sinScroll, setSinScroll] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
-  const tarjetaFondoVerTodo = tarjetas[10] ?? tarjetasVisibles.at(-1);
+  const imagenFondoVerTodo = imagenes[10] ?? imagenes[Math.min(tarjetasVisibles.length, imagenes.length) - 1] ?? null;
 
   const medir = useCallback(() => {
     const el = scrollerRef.current;
@@ -112,14 +114,7 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, className }: Car
               aria-label={`Ver todo: ${titulo}`}
               className="group relative flex h-full min-h-64 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-border px-4 text-center text-primary-foreground shadow-sm"
             >
-              {tarjetaFondoVerTodo && (
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 scale-110 overflow-hidden blur-md [&>*]:h-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover"
-                >
-                  {tarjetaFondoVerTodo}
-                </div>
-              )}
+              {imagenFondoVerTodo ? <img aria-hidden="true" src={imagenFondoVerTodo} alt="" className="pointer-events-none absolute inset-0 size-full scale-110 object-cover blur-md" /> : <span className="absolute inset-0 bg-wave-pattern" />}
               <span className="absolute inset-0 bg-primary/55 backdrop-blur-sm transition-colors group-hover:bg-primary/65" />
               <span className="relative flex size-11 items-center justify-center rounded-full border border-primary-foreground/50 bg-background/25 text-primary-foreground shadow-premium backdrop-blur-md transition-transform group-hover:scale-105">
                 <Plus className="size-5" />

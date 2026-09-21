@@ -5,7 +5,7 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { StickyFilters } from "@/components/public/sticky-filters";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 
-type CuponesSearch = { soloCupon?: boolean; localidades?: string };
+type CuponesSearch = { soloCupon?: boolean | undefined; localidades?: string | undefined };
 
 export const Route = createFileRoute("/cupones")({
   validateSearch: (search: Record<string, unknown>): CuponesSearch => ({
