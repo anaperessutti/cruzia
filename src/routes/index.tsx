@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { CommerceGrid } from "@/components/public/commerce-grid";
+import { HomeCarousels } from "@/components/public/home-carousels";
 import { PremiumHero } from "@/components/public/premium-hero";
 import { StickyFilters } from "@/components/public/sticky-filters";
 
@@ -31,5 +31,5 @@ function Index() {
     }
   }, [navigate]);
 
-  return <main><PremiumHero /><StickyFilters /><CommerceGrid /></main>;
+  return <main><PremiumHero /><StickyFilters /><HomeCarousels /></main>;
 }

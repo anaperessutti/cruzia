@@ -8,6 +8,8 @@ export type Cupon = Database["public"]["Tables"]["cupones"]["Row"];
 export type Localidad = Database["public"]["Tables"]["localidades"]["Row"];
 export type Plan = Database["public"]["Tables"]["planes"]["Row"];
 export type Rubro = Database["public"]["Tables"]["rubros"]["Row"];
+export type Coleccion = Database["public"]["Tables"]["colecciones"]["Row"];
+export type ComercioColeccion = Database["public"]["Tables"]["comercio_colecciones"]["Row"];
 
 export type PublicDirectoryData = {
   comercios: Comercio[];
@@ -16,19 +18,23 @@ export type PublicDirectoryData = {
   localidades: Localidad[];
   planes: Plan[];
   rubros: Rubro[];
+  colecciones: Coleccion[];
+  comercioColecciones: ComercioColeccion[];
 };
 
 async function getPublicDirectory(): Promise<PublicDirectoryData> {
-  const [comercios, cupones, config, localidades, planes, rubros] = await Promise.all([
+  const [comercios, cupones, config, localidades, planes, rubros, colecciones, comercioColecciones] = await Promise.all([
     supabase.from("comercios").select("*").order("nombre"),
     supabase.from("cupones").select("*").order("vigencia_fin"),
     supabase.from("configuracion_global").select("gift_box_visible").limit(1).maybeSingle(),
     supabase.from("localidades").select("*").order("nombre"),
     supabase.from("planes").select("*").order("prioridad_orden"),
     supabase.from("rubros").select("*").order("nombre"),
+    supabase.from("colecciones").select("*").order("orden"),
+    supabase.from("comercio_colecciones").select("*"),
   ]);
 
-  const firstError = [comercios.error, cupones.error, config.error, localidades.error, planes.error, rubros.error].find(Boolean);
+  const firstError = [comercios.error, cupones.error, config.error, localidades.error, planes.error, rubros.error, colecciones.error, comercioColecciones.error].find(Boolean);
   if (firstError) throw firstError;
 
   return {
@@ -38,6 +44,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     localidades: localidades.data ?? [],
     planes: planes.data ?? [],
     rubros: rubros.data ?? [],
+    colecciones: colecciones.data ?? [],
+    comercioColecciones: comercioColecciones.data ?? [],
   };
 }
 
