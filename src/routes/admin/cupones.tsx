@@ -21,6 +21,7 @@ import {
   enDiasISO,
   cuponActivadoEsteMes,
   esErrorLimiteMensual,
+  getCatalogos,
   getComerciosAdmin,
   getCuponesAdmin,
   getCuposMes,
@@ -31,6 +32,7 @@ import {
   type Cupon,
   type CuponForm,
   type Modalidad,
+  type Plan,
 } from "@/lib/admin-cms";
 
 type Busqueda = { comercio?: string | undefined };
@@ -65,6 +67,7 @@ function formDesde(c: Cupon): CuponForm {
     modalidad: c.modalidad,
     cooldown_dias: c.cooldown_dias,
     activo: c.activo,
+    es_favorita_home: c.es_favorita_home,
   };
 }
 
@@ -79,12 +82,18 @@ function CuponesAdmin() {
   const [aviso, setAviso] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState(false);
+  const [planes, setPlanes] = useState<Plan[]>([]);
 
   const cargar = useCallback(async () => {
     try {
-      const [cs, lista] = await Promise.all([getComerciosAdmin(), getCuponesAdmin(comercio)]);
+      const [cs, lista, cat] = await Promise.all([
+        getComerciosAdmin(),
+        getCuponesAdmin(comercio),
+        getCatalogos(),
+      ]);
       setComercios(cs);
       setCupones(lista);
+      setPlanes(cat.planes);
     } catch {
       setError("No pudimos cargar las promociones.");
     }
@@ -95,6 +104,13 @@ function CuponesAdmin() {
   }, [cargar]);
 
   const nombreComercio = (id: string) => comercios.find((c) => c.id === id)?.nombre ?? "—";
+
+  /** Solo los planes con cupones (Pro y Premium) pueden marcar favoritas de la Costa. */
+  const admiteFavorita = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    const plan = planes.find((p) => p.id === planId);
+    return Boolean(plan && plan.max_cupones_activos > 0);
+  };
 
   function nuevo() {
     setEditando("nuevo");
@@ -108,6 +124,7 @@ function CuponesAdmin() {
       modalidad: "presencial",
       cooldown_dias: 7,
       activo: true,
+      es_favorita_home: false,
     });
   }
 
@@ -414,6 +431,23 @@ function CuponesAdmin() {
               <Switch id="activa" checked={form.activo} onCheckedChange={(v) => set("activo", v)} />
               <Label htmlFor="activa">{form.activo ? "Activa" : "Pausada"}</Label>
             </div>
+
+            {admiteFavorita(form.comercio_id) && (
+              <div className="space-y-1 sm:col-span-2">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="favorita"
+                    checked={form.es_favorita_home}
+                    onCheckedChange={(v) => set("es_favorita_home", v)}
+                  />
+                  <Label htmlFor="favorita">Marcar como favorita de la Costa</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Las favoritas se destacan en el Home, en la selección “Favoritos de la Costa”.
+                </p>
+              </div>
+            )}
+
 
             <div className="flex flex-wrap gap-3 sm:col-span-2">
               <Button onClick={() => void onGuardar()} disabled={guardando || subiendo}>

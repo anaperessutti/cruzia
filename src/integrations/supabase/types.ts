@@ -77,13 +77,69 @@ export type Database = {
           },
         ]
       }
+      colecciones: {
+        Row: {
+          created_at: string
+          id: string
+          nombre: string
+          orden: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nombre: string
+          orden?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nombre?: string
+          orden?: number
+        }
+        Relationships: []
+      }
+      comercio_colecciones: {
+        Row: {
+          coleccion_id: string
+          comercio_id: string
+          created_at: string
+        }
+        Insert: {
+          coleccion_id: string
+          comercio_id: string
+          created_at?: string
+        }
+        Update: {
+          coleccion_id?: string
+          comercio_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comercio_colecciones_coleccion_id_fkey"
+            columns: ["coleccion_id"]
+            isOneToOne: false
+            referencedRelation: "colecciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercio_colecciones_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comercios: {
         Row: {
           activo: boolean
           created_at: string
           descripcion: string | null
           direccion: string | null
+          es_indoor: boolean
           galeria: string[]
+          hero_alcance_local: boolean
           horarios: string | null
           id: string
           lat: number | null
@@ -101,7 +157,9 @@ export type Database = {
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
+          es_indoor?: boolean
           galeria?: string[]
+          hero_alcance_local?: boolean
           horarios?: string | null
           id?: string
           lat?: number | null
@@ -119,7 +177,9 @@ export type Database = {
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
+          es_indoor?: boolean
           galeria?: string[]
+          hero_alcance_local?: boolean
           horarios?: string | null
           id?: string
           lat?: number | null
@@ -217,6 +277,7 @@ export type Database = {
           cooldown_dias: number
           created_at: string
           descripcion: string | null
+          es_favorita_home: boolean
           flyer_url: string | null
           id: string
           modalidad: Database["public"]["Enums"]["modalidad_cupon"]
@@ -233,6 +294,7 @@ export type Database = {
           cooldown_dias?: number
           created_at?: string
           descripcion?: string | null
+          es_favorita_home?: boolean
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
@@ -249,6 +311,7 @@ export type Database = {
           cooldown_dias?: number
           created_at?: string
           descripcion?: string | null
+          es_favorita_home?: boolean
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]

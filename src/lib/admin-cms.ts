@@ -28,25 +28,54 @@ export async function subirImagen(file: File, carpeta: string): Promise<string> 
   return data.signedUrl;
 }
 
+export type Coleccion = Database["public"]["Tables"]["colecciones"]["Row"];
+
 export type CatalogosCms = {
   localidades: Localidad[];
   planes: Plan[];
   rubros: Rubro[];
+  colecciones: Coleccion[];
 };
 
 export async function getCatalogos(): Promise<CatalogosCms> {
-  const [localidades, planes, rubros] = await Promise.all([
+  const [localidades, planes, rubros, colecciones] = await Promise.all([
     supabase.from("localidades").select("*").order("nombre"),
     supabase.from("planes").select("*").order("prioridad_orden"),
     supabase.from("rubros").select("*").order("nombre"),
+    supabase.from("colecciones").select("*").order("orden"),
   ]);
-  const err = [localidades.error, planes.error, rubros.error].find(Boolean);
+  const err = [localidades.error, planes.error, rubros.error, colecciones.error].find(Boolean);
   if (err) throw err;
   return {
     localidades: localidades.data ?? [],
     planes: planes.data ?? [],
     rubros: rubros.data ?? [],
+    colecciones: colecciones.data ?? [],
   };
+}
+
+/** Colecciones temáticas asignadas a un comercio. */
+export async function getColeccionesDeComercio(comercioId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("comercio_colecciones")
+    .select("coleccion_id")
+    .eq("comercio_id", comercioId);
+  if (error) throw error;
+  return (data ?? []).map((r) => r.coleccion_id);
+}
+
+/** Reemplaza las colecciones del comercio por la selección actual. */
+export async function guardarColeccionesDeComercio(comercioId: string, ids: string[]) {
+  const { error: errBorrar } = await supabase
+    .from("comercio_colecciones")
+    .delete()
+    .eq("comercio_id", comercioId);
+  if (errBorrar) throw errBorrar;
+  if (ids.length === 0) return;
+  const { error } = await supabase
+    .from("comercio_colecciones")
+    .insert(ids.map((coleccion_id) => ({ comercio_id: comercioId, coleccion_id })));
+  if (error) throw error;
 }
 
 export async function getComerciosAdmin(): Promise<Comercio[]> {
@@ -74,6 +103,8 @@ export type ComercioForm = {
   whatsapp: string | null;
   galeria: string[];
   activo: boolean;
+  es_indoor: boolean;
+  hero_alcance_local: boolean;
 };
 
 export async function guardarComercio(id: string | null, form: ComercioForm): Promise<string> {
@@ -110,6 +141,7 @@ export type CuponForm = {
   modalidad: Modalidad;
   cooldown_dias: number;
   activo: boolean;
+  es_favorita_home: boolean;
 };
 
 export async function guardarCupon(id: string | null, form: CuponForm): Promise<string> {

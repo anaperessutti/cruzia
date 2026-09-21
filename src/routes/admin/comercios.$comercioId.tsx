@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,7 +19,9 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarComercio,
   getCatalogos,
+  getColeccionesDeComercio,
   getComercio,
+  guardarColeccionesDeComercio,
   guardarComercio,
   subirImagen,
   type CatalogosCms,
@@ -54,6 +57,8 @@ const VACIO: ComercioForm = {
   whatsapp: "",
   galeria: [],
   activo: true,
+  es_indoor: false,
+  hero_alcance_local: false,
 };
 
 function EditorComercio() {
@@ -69,6 +74,7 @@ function EditorComercio() {
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
+  const [colecciones, setColecciones] = useState<string[]>([]);
 
   useEffect(() => {
     let activo = true;
@@ -80,11 +86,15 @@ function EditorComercio() {
         if (esNuevo) {
           setForm({ ...VACIO, plan_id: cat.planes.at(-1)?.id ?? cat.planes[0]?.id ?? "" });
         } else {
-          const c = await getComercio(comercioId);
+          const [c, cols] = await Promise.all([
+            getComercio(comercioId),
+            getColeccionesDeComercio(comercioId),
+          ]);
           if (!activo) return;
           if (!c) {
             setError("No encontramos ese comercio.");
           } else {
+            setColecciones(cols);
             setForm({
               nombre: c.nombre,
               plan_id: c.plan_id,
@@ -98,6 +108,8 @@ function EditorComercio() {
               whatsapp: c.whatsapp,
               galeria: c.galeria ?? [],
               activo: c.activo,
+              es_indoor: c.es_indoor,
+              hero_alcance_local: c.hero_alcance_local,
             });
           }
         }
@@ -111,6 +123,11 @@ function EditorComercio() {
       activo = false;
     };
   }, [comercioId, esNuevo]);
+
+  /** Premium es el único plan con presencia en el banner destacado del Home. */
+  const esPremium = Boolean(
+    catalogos?.planes.find((p) => p.id === form.plan_id)?.aparece_en_hero_banner,
+  );
 
   function set<K extends keyof ComercioForm>(campo: K, valor: ComercioForm[K]) {
     setForm((f) => ({ ...f, [campo]: valor }));
@@ -173,6 +190,7 @@ function EditorComercio() {
         ...form,
         nombre: form.nombre.trim(),
       });
+      await guardarColeccionesDeComercio(id, colecciones);
       if (esNuevo) {
         navigate({ to: "/admin/comercios/$comercioId", params: { comercioId: id }, replace: true });
       }
@@ -361,6 +379,67 @@ function EditorComercio() {
                   {form.activo ? "Publicado en la app" : "Oculto (no se ve en la app)"}
                 </Label>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Colecciones y Home</CardTitle>
+              <CardDescription>
+                Las colecciones agrupan comercios por momento o interés en el Home. Un comercio
+                puede estar en varias a la vez.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="grid gap-2 sm:grid-cols-2">
+                {catalogos?.colecciones.map((col) => {
+                  const elegida = colecciones.includes(col.id);
+                  return (
+                    <label
+                      key={col.id}
+                      className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-sm"
+                    >
+                      <Checkbox
+                        checked={elegida}
+                        onCheckedChange={(v) =>
+                          setColecciones((prev) =>
+                            v ? [...prev, col.id] : prev.filter((id) => id !== col.id),
+                          )
+                        }
+                      />
+                      <span>{col.nombre}</span>
+                    </label>
+                  );
+                })}
+              </div>
+
+              <label className="flex cursor-pointer items-center gap-3 text-sm">
+                <Checkbox
+                  checked={form.es_indoor}
+                  onCheckedChange={(v) => set("es_indoor", v === true)}
+                />
+                <span>Es un lugar bajo techo (indoor)</span>
+              </label>
+
+              {esPremium && (
+                <div className="space-y-1 rounded-lg border p-3">
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      id="hero-alcance"
+                      checked={!form.hero_alcance_local}
+                      onCheckedChange={(v) => set("hero_alcance_local", !v)}
+                    />
+                    <Label htmlFor="hero-alcance">
+                      {form.hero_alcance_local
+                        ? "Solo en mi localidad"
+                        : "Mostrar en todas las localidades"}
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Define a quién se le muestra este comercio en el banner destacado del Home.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
