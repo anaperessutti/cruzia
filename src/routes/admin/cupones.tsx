@@ -69,6 +69,7 @@ function formDesde(c: Cupon): CuponForm {
     activo: c.activo,
     es_favorita_home: c.es_favorita_home,
     es_top_slider: c.es_top_slider,
+    hero_alcance_local: c.hero_alcance_local,
   };
 }
 
@@ -134,6 +135,7 @@ function CuponesAdmin() {
       activo: true,
       es_favorita_home: false,
       es_top_slider: false,
+      hero_alcance_local: false,
     });
   }
 
