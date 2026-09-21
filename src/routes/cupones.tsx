@@ -5,12 +5,13 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { StickyFilters } from "@/components/public/sticky-filters";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 
-type CuponesSearch = { soloCupon?: boolean | undefined; localidades?: string | undefined };
+type CuponesSearch = { soloCupon?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
 
 export const Route = createFileRoute("/cupones")({
   validateSearch: (search: Record<string, unknown>): CuponesSearch => ({
     soloCupon: search["soloCupon"] === true || search["soloCupon"] === "true" ? true : undefined,
     localidades: typeof search["localidades"] === "string" ? search["localidades"] : undefined,
+    coleccion: typeof search["coleccion"] === "string" ? search["coleccion"] : undefined,
   }),
   head: () => ({ meta: [
     { title: "Cupones activos | AUNA" }, { name: "description", content: "Encontrá promociones y cupones vigentes en comercios del Partido de la Costa." },
@@ -22,10 +23,12 @@ export const Route = createFileRoute("/cupones")({
 
 function CuponesPage() {
   const search = Route.useSearch();
-  const { setSoloCupon, setLocalidadIds } = usePublicDirectory();
+  const { setSoloCupon, setLocalidadIds, setColeccionIds } = usePublicDirectory();
   useEffect(() => {
     setSoloCupon(true);
+    setColeccionIds(search.coleccion?.split(",").filter(Boolean) ?? []);
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
-  }, [search.localidades, setLocalidadIds, setSoloCupon]);
+    return () => setColeccionIds([]);
+  }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds, setSoloCupon]);
   return <main><section className="bg-secondary text-secondary-foreground"><div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase">Beneficios vigentes</p><h1 className="mt-3 font-display text-4xl font-extrabold sm:text-6xl">Cupones que hacen rendir tu verano.</h1></div></section><StickyFilters /><CommerceGrid title="Comercios con cupón" /></main>;
 }

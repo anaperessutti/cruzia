@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Crosshair, MapPin, Tag } from "lucide-react";
+import { ChevronDown, Crosshair, MapPin, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,9 +7,13 @@ import { Switch } from "@/components/ui/switch";
 import { usePublicDirectory } from "./public-directory-provider";
 
 export function StickyFilters() {
-  const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionId, setSoloCupon } = usePublicDirectory();
+  const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon } = usePublicDirectory();
   const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${filters.localidadIds.length} localidades`;
-  const coleccionLabel = data.colecciones.find((item) => item.id === filters.coleccionId)?.nombre ?? "Todas las categorías";
+  const coleccionLabel = filters.coleccionIds.length === 0
+    ? "Todas las categorías"
+    : filters.coleccionIds.length === 1
+      ? data.colecciones.find((item) => item.id === filters.coleccionIds[0])?.nombre ?? "1 categoría"
+      : `${filters.coleccionIds.length} categorías`;
   const detectedName = data.localidades.find((item) => item.id === detectedLocalidadId)?.nombre;
   const geoMessage =
     geoStatus === "solicitando" ? "Buscando tu ubicación…"
@@ -40,8 +44,13 @@ export function StickyFilters() {
         <Popover>
           <PopoverTrigger asChild><Button variant="outline" className="h-10 shrink-0 justify-between gap-3"><Tag className="text-secondary" /><span>{coleccionLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="max-h-80 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto p-2">
-            <Button variant="ghost" className="w-full justify-between" onClick={() => setColeccionId("")}>Todas las categorías{!filters.coleccionId ? <Check /> : null}</Button>
-            {data.colecciones.map((item) => <Button key={item.id} variant="ghost" className="h-auto w-full justify-between whitespace-normal py-2.5 text-left" onClick={() => setColeccionId(item.id)}>{item.nombre}{filters.coleccionId === item.id ? <Check /> : null}</Button>)}
+            <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Categorías</p>{filters.coleccionIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setColeccionIds([])}>Ver todas</Button> : null}</div>
+            <div className="max-h-72 space-y-1 overflow-y-auto">
+              {data.colecciones.map((item) => {
+                const checked = filters.coleccionIds.includes(item.id);
+                return <label key={item.id} className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm hover:bg-muted"><Checkbox checked={checked} onCheckedChange={() => setColeccionIds(checked ? filters.coleccionIds.filter((id) => id !== item.id) : [...filters.coleccionIds, item.id])} /><span className="min-w-0 flex-1 whitespace-normal">{item.nombre}</span></label>;
+              })}
+            </div>
           </PopoverContent>
         </Popover>
         <label className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-semibold"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} /><span>⭐ Solo con Cupón</span></label>
