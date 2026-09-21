@@ -378,6 +378,67 @@ function EditorComercio() {
 
           <Card>
             <CardHeader>
+              <CardTitle>Colecciones y Home</CardTitle>
+              <CardDescription>
+                Las colecciones agrupan comercios por momento o interés en el Home. Un comercio
+                puede estar en varias a la vez.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="grid gap-2 sm:grid-cols-2">
+                {catalogos?.colecciones.map((col) => {
+                  const elegida = colecciones.includes(col.id);
+                  return (
+                    <label
+                      key={col.id}
+                      className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-sm"
+                    >
+                      <Checkbox
+                        checked={elegida}
+                        onCheckedChange={(v) =>
+                          setColecciones((prev) =>
+                            v ? [...prev, col.id] : prev.filter((id) => id !== col.id),
+                          )
+                        }
+                      />
+                      <span>{col.nombre}</span>
+                    </label>
+                  );
+                })}
+              </div>
+
+              <label className="flex cursor-pointer items-center gap-3 text-sm">
+                <Checkbox
+                  checked={form.es_indoor}
+                  onCheckedChange={(v) => set("es_indoor", v === true)}
+                />
+                <span>Es un lugar bajo techo (indoor)</span>
+              </label>
+
+              {esPremium && (
+                <div className="space-y-1 rounded-lg border p-3">
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      id="hero-alcance"
+                      checked={!form.hero_alcance_local}
+                      onCheckedChange={(v) => set("hero_alcance_local", !v)}
+                    />
+                    <Label htmlFor="hero-alcance">
+                      {form.hero_alcance_local
+                        ? "Solo en mi localidad"
+                        : "Mostrar en todas las localidades"}
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Define a quién se le muestra este comercio en el banner destacado del Home.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>Fotos</CardTitle>
               <CardDescription>
                 La primera foto es la portada de la tarjeta en la grilla. Medidas recomendadas:
