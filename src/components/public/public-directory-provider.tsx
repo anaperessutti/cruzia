@@ -103,10 +103,17 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
         }
         setDetectedLocalidadId(nearest.id);
         setGeoStatus("detectada");
+        // Preseleccionamos todas las localidades dentro del mismo radio de cercanía (10 km),
+        // no solo la más próxima. La usuaria puede editarlas a mano después.
+        const usuario = { lat: coords.latitude, lng: coords.longitude };
+        const cercanas = candidates
+          .filter((c) => haversineKm(usuario, c) <= RADIO_CERCANIA_KM)
+          .map((c) => c.id);
+        const preseleccion = cercanas.includes(nearest.id) ? cercanas : [nearest.id, ...cercanas];
         setFilters((current) =>
           manualSelectionRef.current || current.localidadIds.length > 0
             ? current
-            : { ...current, localidadIds: [nearest.id] },
+            : { ...current, localidadIds: preseleccion },
         );
       },
       (error) => {
