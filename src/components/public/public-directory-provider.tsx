@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
+import type { Coords } from "@/lib/geo";
 import { coordsForLocalidad } from "@/lib/localidad-coords";
 import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
 
@@ -27,6 +28,8 @@ type PublicDirectoryContextValue = {
   filters: Filters;
   isLoading: boolean;
   geoStatus: GeoStatus;
+  /** Coordenadas reales del GPS del navegador, usadas para el radio de cercanía. */
+  userCoords: Coords | null;
   detectedLocalidadId: string | null;
   detectLocation: () => void;
   setLocalidadIds: (ids: string[]) => void;
