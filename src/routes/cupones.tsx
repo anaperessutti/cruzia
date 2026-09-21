@@ -5,11 +5,12 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { StickyFilters } from "@/components/public/sticky-filters";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 
-type CuponesSearch = { soloCupon?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
+type CuponesSearch = { soloCupon?: boolean | undefined; favoritos?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
 
 export const Route = createFileRoute("/cupones")({
   validateSearch: (search: Record<string, unknown>): CuponesSearch => ({
     soloCupon: search["soloCupon"] === true || search["soloCupon"] === "true" ? true : undefined,
+    favoritos: search["favoritos"] === true || search["favoritos"] === "true" ? true : undefined,
     localidades: typeof search["localidades"] === "string" ? search["localidades"] : undefined,
     coleccion: typeof search["coleccion"] === "string" ? search["coleccion"] : undefined,
   }),

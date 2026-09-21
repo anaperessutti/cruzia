@@ -79,7 +79,7 @@ export function HomeCarousels() {
       {favoritos.length > 0 ? (
         <CarruselSeccion
           titulo="Favoritos de la Costa"
-          destinoUrl={`/cupones?soloCupon=true${localidadesQuery}`}
+          destinoUrl={`/cupones?soloCupon=true&favoritos=true${localidadesQuery}`}
           tarjetas={favoritos.map(renderTarjeta)}
           imagenes={imagenesDe(favoritos)}
         />
