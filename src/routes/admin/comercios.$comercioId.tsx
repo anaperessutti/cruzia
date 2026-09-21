@@ -124,6 +124,11 @@ function EditorComercio() {
     };
   }, [comercioId, esNuevo]);
 
+  /** Premium es el único plan con presencia en el banner destacado del Home. */
+  const esPremium = Boolean(
+    catalogos?.planes.find((p) => p.id === form.plan_id)?.aparece_en_hero_banner,
+  );
+
   function set<K extends keyof ComercioForm>(campo: K, valor: ComercioForm[K]) {
     setForm((f) => ({ ...f, [campo]: valor }));
   }
