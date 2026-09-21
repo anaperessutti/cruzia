@@ -457,6 +457,21 @@ function CuponesAdmin() {
               </div>
             )}
 
+            {admiteTopSlider(form.comercio_id) && (
+              <div className="space-y-1 sm:col-span-2">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="top-slider"
+                    checked={form.es_top_slider}
+                    onCheckedChange={(v) => set("es_top_slider", v)}
+                  />
+                  <Label htmlFor="top-slider">Postular al Top Slider</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  El comercio puede postular una sola promoción: al marcar esta, se desmarca automáticamente la anterior.
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-3 sm:col-span-2">
               <Button onClick={() => void onGuardar()} disabled={guardando || subiendo}>
