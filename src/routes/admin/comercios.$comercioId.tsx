@@ -73,6 +73,7 @@ function EditorComercio() {
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
+  const [colecciones, setColecciones] = useState<string[]>([]);
 
   useEffect(() => {
     let activo = true;
@@ -84,11 +85,15 @@ function EditorComercio() {
         if (esNuevo) {
           setForm({ ...VACIO, plan_id: cat.planes.at(-1)?.id ?? cat.planes[0]?.id ?? "" });
         } else {
-          const c = await getComercio(comercioId);
+          const [c, cols] = await Promise.all([
+            getComercio(comercioId),
+            getColeccionesDeComercio(comercioId),
+          ]);
           if (!activo) return;
           if (!c) {
             setError("No encontramos ese comercio.");
           } else {
+            setColecciones(cols);
             setForm({
               nombre: c.nombre,
               plan_id: c.plan_id,
@@ -102,6 +107,8 @@ function EditorComercio() {
               whatsapp: c.whatsapp,
               galeria: c.galeria ?? [],
               activo: c.activo,
+              es_indoor: c.es_indoor,
+              hero_alcance_local: c.hero_alcance_local,
             });
           }
         }
