@@ -432,6 +432,23 @@ function CuponesAdmin() {
               <Label htmlFor="activa">{form.activo ? "Activa" : "Pausada"}</Label>
             </div>
 
+            {admiteFavorita(form.comercio_id) && (
+              <div className="space-y-1 sm:col-span-2">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="favorita"
+                    checked={form.es_favorita_home}
+                    onCheckedChange={(v) => set("es_favorita_home", v)}
+                  />
+                  <Label htmlFor="favorita">Marcar como favorita de la Costa</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Las favoritas se destacan en el Home, en la selección “Favoritos de la Costa”.
+                </p>
+              </div>
+            )}
+
+
             <div className="flex flex-wrap gap-3 sm:col-span-2">
               <Button onClick={() => void onGuardar()} disabled={guardando || subiendo}>
                 {guardando ? "Guardando…" : "Guardar promoción"}
