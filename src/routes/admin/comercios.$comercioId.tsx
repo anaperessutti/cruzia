@@ -18,7 +18,9 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarComercio,
   getCatalogos,
+  getColeccionesDeComercio,
   getComercio,
+  guardarColeccionesDeComercio,
   guardarComercio,
   subirImagen,
   type CatalogosCms,
