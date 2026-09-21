@@ -196,9 +196,3 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }
-
-export function usePublicDirectory() {
-  const context = useContext(PublicDirectoryContext);
-  if (!context) throw new Error("usePublicDirectory must be used within PublicDirectoryProvider");
-  return context;
-}
