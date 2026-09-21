@@ -109,6 +109,7 @@ function CuponesAdmin() {
       modalidad: "presencial",
       cooldown_dias: 7,
       activo: true,
+      es_favorita_home: false,
     });
   }
 
