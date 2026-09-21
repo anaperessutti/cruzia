@@ -7,8 +7,7 @@ import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectory
 
 type Filters = {
   localidadIds: string[];
-  rubroId: string;
-  coleccionId: string;
+  coleccionIds: string[];
   soloCupon: boolean;
 };
 
@@ -33,8 +32,7 @@ type PublicDirectoryContextValue = {
   detectedLocalidadId: string | null;
   detectLocation: () => void;
   setLocalidadIds: (ids: string[]) => void;
-  setRubroId: (id: string) => void;
-  setColeccionId: (id: string) => void;
+  setColeccionIds: (ids: string[]) => void;
   setSoloCupon: (value: boolean) => void;
 };
 
@@ -58,7 +56,7 @@ function distanceSquared(latA: number, lngA: number, latB: number, lngB: number)
 export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const query = useQuery(publicDirectoryOptions);
   const data = query.data ?? emptyData;
-  const [filters, setFilters] = useState<Filters>({ localidadIds: [], rubroId: "", coleccionId: "", soloCupon: false });
+  const [filters, setFilters] = useState<Filters>({ localidadIds: [], coleccionIds: [], soloCupon: false });
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [detectedLocalidadId, setDetectedLocalidadId] = useState<string | null>(null);
   const [userCoords, setUserCoords] = useState<Coords | null>(null);
@@ -128,12 +126,11 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const filteredComercios = useMemo(() => {
     const cuponCommerceIds = new Set(data.cupones.map((cupon) => cupon.comercio_id));
     const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
-    const comerciosColeccion = filters.coleccionId
-      ? new Set(data.comercioColecciones.filter((item) => item.coleccion_id === filters.coleccionId).map((item) => item.comercio_id))
+    const comerciosColeccion = filters.coleccionIds.length > 0
+      ? new Set(data.comercioColecciones.filter((item) => filters.coleccionIds.includes(item.coleccion_id)).map((item) => item.comercio_id))
       : null;
     const base = data.comercios
       .filter((item) => filters.localidadIds.length === 0 || (item.localidad_id && filters.localidadIds.includes(item.localidad_id)))
-      .filter((item) => !filters.rubroId || item.rubro_id === filters.rubroId)
       .filter((item) => !comerciosColeccion || comerciosColeccion.has(item.id))
       .filter((item) => !filters.soloCupon || cuponCommerceIds.has(item.id))
       .filter((item) => planById.get(item.plan_id)?.aparece_en_grilla ?? false);
@@ -186,8 +183,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     manualSelectionRef.current = true;
     setFilters((current) => ({ ...current, localidadIds }));
   }, []);
-  const setRubroId = useCallback((rubroId: string) => setFilters((current) => ({ ...current, rubroId })), []);
-  const setColeccionId = useCallback((coleccionId: string) => setFilters((current) => ({ ...current, coleccionId })), []);
+  const setColeccionIds = useCallback((coleccionIds: string[]) => setFilters((current) => ({ ...current, coleccionIds })), []);
   const setSoloCupon = useCallback((soloCupon: boolean) => setFilters((current) => current.soloCupon === soloCupon ? current : ({ ...current, soloCupon })), []);
 
   const detectLocation = useCallback(() => {
@@ -207,10 +203,9 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     detectedLocalidadId,
     detectLocation,
     setLocalidadIds,
-    setRubroId,
-    setColeccionId,
+    setColeccionIds,
     setSoloCupon,
-  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }

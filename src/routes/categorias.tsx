@@ -23,11 +23,15 @@ export const Route = createFileRoute("/categorias")({
 
 function CategoriasPage() {
   const search = Route.useSearch();
-  const { data, setRubroId, setColeccionId, setLocalidadIds } = usePublicDirectory();
+  const { data, filters, setColeccionIds, setLocalidadIds } = usePublicDirectory();
   useEffect(() => {
-    setColeccionId(search.coleccion ?? "");
+    setColeccionIds(search.coleccion?.split(",").filter(Boolean) ?? []);
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
-    return () => setColeccionId("");
-  }, [search.coleccion, search.localidades, setColeccionId, setLocalidadIds]);
-  return <main><section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase text-secondary">Explorá a tu manera</p><h1 className="mt-3 max-w-3xl font-display text-4xl font-extrabold text-primary sm:text-6xl">Todo lo que te gusta, cerca.</h1><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.rubros.map((item, index) => <Link key={item.id} to="/categorias" search={{}} onClick={() => setRubroId(item.id)} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">0{index + 1}</span><span className="mt-2 block font-display text-xl font-bold text-primary">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</div></section><StickyFilters /><CommerceGrid title="Descubrí por categoría" /></main>;
+    return () => setColeccionIds([]);
+  }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds]);
+  const coleccionSeleccionada = filters.coleccionIds.length === 1
+    ? data.colecciones.find((item) => item.id === filters.coleccionIds[0])
+    : undefined;
+  const tituloGrilla = coleccionSeleccionada?.nombre ?? "Elegí tu mejor opción";
+  return <main>{filters.coleccionIds.length === 0 ? <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase text-secondary">Explorá a tu manera</p><h1 className="mt-3 max-w-3xl font-display text-4xl font-extrabold text-primary sm:text-6xl">Todo lo que te gusta, cerca.</h1><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.colecciones.map((item, index) => <Link key={item.id} to="/categorias" search={{ coleccion: item.id }} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">{String(index + 1).padStart(2, "0")}</span><span className="mt-2 block font-display text-xl font-bold text-primary">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</div></section> : null}<StickyFilters /><CommerceGrid title={tituloGrilla} /></main>;
 }

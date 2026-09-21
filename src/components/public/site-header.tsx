@@ -11,7 +11,7 @@ import { SearchDialog } from "./search-dialog";
 const links = [
   { to: "/" as const, label: "Inicio" },
   { to: "/cupones" as const, label: "⭐ Cupones" },
-  { to: "/categorias" as const, label: "Categorías de Rubros" },
+  { to: "/categorias" as const, label: "Categorías" },
   { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
   { to: "/sumate-a-auna" as const, label: "Sumate a AUNA" },
   { to: "/contacto" as const, label: "Contacto" },

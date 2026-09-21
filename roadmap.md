@@ -12,3 +12,4 @@
 - [x] Rediseñar Home con slider Premium, favoritos y colecciones de datos reales
 - [x] Conservar localidades activas al abrir la grilla desde cada carrusel
 - [x] Etiquetar comercios de prueba y validar filas vacías, límites y navegación
+- [x] Unificar la navegación y los filtros públicos con las 12 colecciones
