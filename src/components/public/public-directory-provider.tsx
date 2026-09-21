@@ -1,41 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import type { Coords } from "@/lib/geo";
 import { coordsForLocalidad } from "@/lib/localidad-coords";
 import { haversineKm, RADIO_CERCANIA_KM } from "@/lib/geo";
 import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
+import {
+  PublicDirectoryContext,
+  usePublicDirectory,
+  type Filters,
+  type GeoStatus,
+  type PublicDirectoryContextValue,
+  type TarjetaGrilla,
+} from "./public-directory-context";
 
-type Filters = {
-  localidadIds: string[];
-  coleccionIds: string[];
-  soloCupon: boolean;
-};
-
-export type GeoStatus = "idle" | "solicitando" | "detectada" | "denegada" | "no-disponible";
-
-/** Una tarjeta de la grilla: o bien una promoción activa, o bien un comercio sin promociones. */
-export type TarjetaGrilla = {
-  key: string;
-  comercio: Comercio;
-  cupon: Cupon | null;
-};
-
-type PublicDirectoryContextValue = {
-  data: PublicDirectoryData;
-  filteredComercios: Comercio[];
-  tarjetas: TarjetaGrilla[];
-  filters: Filters;
-  isLoading: boolean;
-  geoStatus: GeoStatus;
-  /** Coordenadas reales del GPS del navegador, usadas para el radio de cercanía. */
-  userCoords: Coords | null;
-  detectedLocalidadId: string | null;
-  detectLocation: () => void;
-  setLocalidadIds: (ids: string[]) => void;
-  setColeccionIds: (ids: string[]) => void;
-  setSoloCupon: (value: boolean) => void;
-};
+export { usePublicDirectory };
+export type { Filters, GeoStatus, PublicDirectoryContextValue, TarjetaGrilla };
 
 const emptyData: PublicDirectoryData = {
   comercios: [],
@@ -48,7 +28,6 @@ const emptyData: PublicDirectoryData = {
   comercioColecciones: [],
 };
 
-const PublicDirectoryContext = createContext<PublicDirectoryContextValue | undefined>(undefined);
 
 function distanceSquared(latA: number, lngA: number, latB: number, lngB: number) {
   return (latA - latB) ** 2 + (lngA - lngB) ** 2;
@@ -216,10 +195,4 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
-}
-
-export function usePublicDirectory() {
-  const context = useContext(PublicDirectoryContext);
-  if (!context) throw new Error("usePublicDirectory must be used within PublicDirectoryProvider");
-  return context;
 }
