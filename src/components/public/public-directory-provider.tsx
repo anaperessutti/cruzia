@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 
 import type { Coords } from "@/lib/geo";
 import { coordsForLocalidad } from "@/lib/localidad-coords";
+import { haversineKm, RADIO_CERCANIA_KM } from "@/lib/geo";
 import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
 
 type Filters = {
