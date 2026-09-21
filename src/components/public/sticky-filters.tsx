@@ -7,9 +7,9 @@ import { Switch } from "@/components/ui/switch";
 import { usePublicDirectory } from "./public-directory-provider";
 
 export function StickyFilters() {
-  const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon } = usePublicDirectory();
+  const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionId, setSoloCupon } = usePublicDirectory();
   const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${filters.localidadIds.length} localidades`;
-  const rubroLabel = data.rubros.find((item) => item.id === filters.rubroId)?.nombre ?? "Todos los rubros";
+  const coleccionLabel = data.colecciones.find((item) => item.id === filters.coleccionId)?.nombre ?? "Todas las categorías";
   const detectedName = data.localidades.find((item) => item.id === detectedLocalidadId)?.nombre;
   const geoMessage =
     geoStatus === "solicitando" ? "Buscando tu ubicación…"
@@ -38,10 +38,10 @@ export function StickyFilters() {
           </PopoverContent>
         </Popover>
         <Popover>
-          <PopoverTrigger asChild><Button variant="outline" className="h-10 shrink-0 justify-between gap-3"><Tag className="text-secondary" /><span>{rubroLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
-          <PopoverContent align="start" className="w-[min(22rem,calc(100vw-2rem))] p-2">
-            <Button variant="ghost" className="w-full justify-between" onClick={() => setRubroId("")}>Todos los rubros{!filters.rubroId ? <Check /> : null}</Button>
-            {data.rubros.map((item) => <Button key={item.id} variant="ghost" className="h-auto w-full justify-between whitespace-normal py-2.5 text-left" onClick={() => setRubroId(item.id)}>{item.nombre}{filters.rubroId === item.id ? <Check /> : null}</Button>)}
+          <PopoverTrigger asChild><Button variant="outline" className="h-10 shrink-0 justify-between gap-3"><Tag className="text-secondary" /><span>{coleccionLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
+          <PopoverContent align="start" className="max-h-80 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto p-2">
+            <Button variant="ghost" className="w-full justify-between" onClick={() => setColeccionId("")}>Todas las categorías{!filters.coleccionId ? <Check /> : null}</Button>
+            {data.colecciones.map((item) => <Button key={item.id} variant="ghost" className="h-auto w-full justify-between whitespace-normal py-2.5 text-left" onClick={() => setColeccionId(item.id)}>{item.nombre}{filters.coleccionId === item.id ? <Check /> : null}</Button>)}
           </PopoverContent>
         </Popover>
         <label className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-semibold"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} /><span>⭐ Solo con Cupón</span></label>
