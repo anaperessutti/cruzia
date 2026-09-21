@@ -68,6 +68,7 @@ function formDesde(c: Cupon): CuponForm {
     cooldown_dias: c.cooldown_dias,
     activo: c.activo,
     es_favorita_home: c.es_favorita_home,
+    es_top_slider: c.es_top_slider,
   };
 }
 
@@ -112,6 +113,13 @@ function CuponesAdmin() {
     return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
+  /** Solo los comercios Premium (con presencia en el Top Slider) pueden postular un cupón. */
+  const admiteTopSlider = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    const plan = planes.find((p) => p.id === planId);
+    return Boolean(plan?.aparece_en_hero_banner);
+  };
+
   function nuevo() {
     setEditando("nuevo");
     setForm({
@@ -125,6 +133,7 @@ function CuponesAdmin() {
       cooldown_dias: 7,
       activo: true,
       es_favorita_home: false,
+      es_top_slider: false,
     });
   }
 
