@@ -278,6 +278,7 @@ export type Database = {
           created_at: string
           descripcion: string | null
           es_favorita_home: boolean
+          es_top_slider: boolean
           flyer_url: string | null
           id: string
           modalidad: Database["public"]["Enums"]["modalidad_cupon"]
@@ -295,6 +296,7 @@ export type Database = {
           created_at?: string
           descripcion?: string | null
           es_favorita_home?: boolean
+          es_top_slider?: boolean
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
@@ -312,6 +314,7 @@ export type Database = {
           created_at?: string
           descripcion?: string | null
           es_favorita_home?: boolean
+          es_top_slider?: boolean
           flyer_url?: string | null
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
