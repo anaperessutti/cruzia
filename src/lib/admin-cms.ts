@@ -103,6 +103,8 @@ export type ComercioForm = {
   whatsapp: string | null;
   galeria: string[];
   activo: boolean;
+  es_indoor: boolean;
+  hero_alcance_local: boolean;
 };
 
 export async function guardarComercio(id: string | null, form: ComercioForm): Promise<string> {
