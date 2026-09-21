@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
  * - Scroll horizontal nativo (swipe natural en mobile, sin flechas en touch).
  * - En desktop (md+) suma flechas de navegación a los costados.
  * - Limita el recorrido a 10 tarjetas reales y agrega "Ver todo" al final.
- * - En desktop muestra un único indicador con fade y flecha mientras queda
- *   contenido hacia la derecha.
+ * - En desktop muestra indicadores laterales espejados con fade y flecha.
  * - El título del encabezado también es clickeable y lleva al mismo destino.
  * - No tiene lógica de datos: recibe las tarjetas ya resueltas como props.
  *
@@ -34,6 +33,7 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, className }: Car
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const [sinScroll, setSinScroll] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
+  const tarjetaFondoVerTodo = tarjetas[10] ?? tarjetasVisibles.at(-1);
 
   const medir = useCallback(() => {
     const el = scrollerRef.current;
@@ -110,27 +110,39 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, className }: Car
             <a
               href={destinoUrl}
               aria-label={`Ver todo: ${titulo}`}
-              className="group flex h-full min-h-64 flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card px-4 text-center text-primary shadow-sm transition-colors hover:bg-muted"
+              className="group relative flex h-full min-h-64 flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-border px-4 text-center text-primary-foreground shadow-sm"
             >
-              <span className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-premium transition-transform group-hover:scale-105">
+              {tarjetaFondoVerTodo && (
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 scale-110 overflow-hidden blur-md [&>*]:h-full [&_img]:h-full [&_img]:w-full [&_img]:object-cover"
+                >
+                  {tarjetaFondoVerTodo}
+                </div>
+              )}
+              <span className="absolute inset-0 bg-primary/55 backdrop-blur-sm transition-colors group-hover:bg-primary/65" />
+              <span className="relative flex size-11 items-center justify-center rounded-full border border-primary-foreground/50 bg-background/25 text-primary-foreground shadow-premium backdrop-blur-md transition-transform group-hover:scale-105">
                 <Plus className="size-5" />
               </span>
-              <span className="font-display text-base font-extrabold">Ver todo</span>
+              <span className="relative font-display text-base font-extrabold">Ver todo</span>
             </a>
           </div>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={() => desplazar(-1)}
-          disabled={!puedeAtras}
-          aria-label="Anterior"
-          className="absolute left-0 top-1/2 z-20 hidden size-10 -translate-y-1/2 rounded-full text-primary shadow-md disabled:opacity-0 md:flex lg:-left-2"
-        >
-          <ChevronLeft className="size-5" />
-        </Button>
+        {!sinScroll && puedeAtras && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-24 items-center justify-start bg-gradient-to-l from-background/0 via-background/70 to-background pl-3 md:flex">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => desplazar(-1)}
+              aria-label="Ver tarjetas anteriores"
+              className="pointer-events-auto rounded-full text-primary hover:bg-background/80"
+            >
+              <ChevronLeft className="size-6" />
+            </Button>
+          </div>
+        )}
 
         {!sinScroll && puedeAdelante && (
           <div className="pointer-events-none absolute inset-y-0 right-0 z-20 hidden w-24 items-center justify-end bg-gradient-to-r from-background/0 via-background/70 to-background pr-3 md:flex">
