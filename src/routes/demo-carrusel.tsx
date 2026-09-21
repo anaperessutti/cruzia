@@ -19,6 +19,12 @@ const TARJETAS_ALMUERZOS = [
   { nombre: "Rotisería Mar Azul", etiqueta: "Take away" },
   { nombre: "Cervecería del Faro", etiqueta: "Cenas" },
   { nombre: "Empanadas del Pueblo", etiqueta: "Almuerzos" },
+  { nombre: "Bodegón Santa Teresita", etiqueta: "Menú del día" },
+  { nombre: "Costa Brava Restó", etiqueta: "Mariscos" },
+  { nombre: "El Patio de Lucía", etiqueta: "Tapeos" },
+  { nombre: "Pasta y Mar", etiqueta: "Pastas" },
+  { nombre: "Sabores del Bosque", etiqueta: "Parrilla" },
+  { nombre: "La Esquina Costera", etiqueta: "Almuerzos" },
 ];
 
 const TARJETAS_PLAYA = [
@@ -29,6 +35,10 @@ const TARJETAS_PLAYA = [
   { nombre: "Frente al Mar Quinchos", etiqueta: "Playa" },
   { nombre: "Fishing La Costa", etiqueta: "Aire libre" },
   { nombre: "Duendes del Camino", etiqueta: "Playa" },
+  { nombre: "Aventura Atlántica", etiqueta: "Aire libre" },
+  { nombre: "Pinar Recreativo", etiqueta: "Naturaleza" },
+  { nombre: "Náutica del Sol", etiqueta: "Deportes" },
+  { nombre: "Bosque Aventura", etiqueta: "Aire libre" },
 ];
 
 function DemoCarruselPage() {
@@ -36,12 +46,12 @@ function DemoCarruselPage() {
     <main className="space-y-12 py-10">
       <CarruselSeccion
         titulo="Almuerzos y tapeos"
-        destinoUrl="/categorias"
+        destinoUrl="/categorias?coleccion=almuerzos-y-tapeos"
         tarjetas={TARJETAS_ALMUERZOS.map((item) => <TarjetaDemo key={item.nombre} {...item} />)}
       />
       <CarruselSeccion
         titulo="Playa y Aire Libre"
-        destinoUrl="/categorias"
+        destinoUrl="/categorias?coleccion=playa-y-aire-libre"
         tarjetas={TARJETAS_PLAYA.map((item) => <TarjetaDemo key={item.nombre} {...item} />)}
       />
     </main>
