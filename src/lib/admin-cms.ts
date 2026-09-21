@@ -142,6 +142,7 @@ export type CuponForm = {
   cooldown_dias: number;
   activo: boolean;
   es_favorita_home: boolean;
+  es_top_slider: boolean;
 };
 
 export async function guardarCupon(id: string | null, form: CuponForm): Promise<string> {

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
+import type { Coords } from "@/lib/geo";
 import { coordsForLocalidad } from "@/lib/localidad-coords";
 import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectoryData } from "@/lib/public-data";
 
@@ -27,6 +28,8 @@ type PublicDirectoryContextValue = {
   filters: Filters;
   isLoading: boolean;
   geoStatus: GeoStatus;
+  /** Coordenadas reales del GPS del navegador, usadas para el radio de cercanía. */
+  userCoords: Coords | null;
   detectedLocalidadId: string | null;
   detectLocation: () => void;
   setLocalidadIds: (ids: string[]) => void;
@@ -58,6 +61,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<Filters>({ localidadIds: [], rubroId: "", coleccionId: "", soloCupon: false });
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [detectedLocalidadId, setDetectedLocalidadId] = useState<string | null>(null);
+  const [userCoords, setUserCoords] = useState<Coords | null>(null);
   // Si la usuaria ya eligió localidades a mano, el GPS nunca pisa esa selección.
   const manualSelectionRef = useRef(false);
   const requestedRef = useRef(false);
@@ -87,6 +91,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setGeoStatus("solicitando");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
+        setUserCoords({ lat: coords.latitude, lng: coords.longitude });
         const nearest = candidates
           .slice()
           .sort(
@@ -198,13 +203,14 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     filters,
     isLoading: query.isLoading,
     geoStatus,
+    userCoords,
     detectedLocalidadId,
     detectLocation,
     setLocalidadIds,
     setRubroId,
     setColeccionId,
     setSoloCupon,
-  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }

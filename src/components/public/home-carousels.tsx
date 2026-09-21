@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { distanciaAComercio, estaCerca } from "@/lib/geo";
 import { CarruselSeccion } from "./carrusel-seccion";
 import { CommerceCard } from "./commerce-card";
 import { usePublicDirectory, type TarjetaGrilla } from "./public-directory-provider";
@@ -10,7 +11,7 @@ function vigente(fechaInicio: string, fechaFin: string) {
 }
 
 export function HomeCarousels() {
-  const { data, filters, isLoading } = usePublicDirectory();
+  const { data, filters, isLoading, userCoords } = usePublicDirectory();
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
@@ -56,7 +57,17 @@ export function HomeCarousels() {
       if (promociones.length === 0) tarjetas.push({ key: comercio.id, comercio, cupon: null });
       else promociones.forEach((cupon) => tarjetas.push({ key: cupon.id, comercio, cupon }));
     }
-    return { coleccion, tarjetas };
+    // Primero lo que está dentro del radio de cercanía; después el resto, para no vaciar la fila.
+    const ordenadas = tarjetas.slice().sort((a, b) => {
+      const cercaA = estaCerca(userCoords, a.comercio) ? 0 : 1;
+      const cercaB = estaCerca(userCoords, b.comercio) ? 0 : 1;
+      if (cercaA !== cercaB) return cercaA - cercaB;
+      const da = distanciaAComercio(userCoords, a.comercio);
+      const db = distanciaAComercio(userCoords, b.comercio);
+      if (da !== null && db !== null) return da - db;
+      return 0;
+    });
+    return { coleccion, tarjetas: ordenadas };
   }).filter(({ tarjetas }) => tarjetas.length > 0);
 
   if (isLoading) {

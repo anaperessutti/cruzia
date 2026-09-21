@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 import { HomeCarousels } from "@/components/public/home-carousels";
 import { PremiumHero } from "@/components/public/premium-hero";
-import { StickyFilters } from "@/components/public/sticky-filters";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -31,5 +30,6 @@ function Index() {
     }
   }, [navigate]);
 
-  return <main><PremiumHero /><StickyFilters /><HomeCarousels /></main>;
+  // La Barra de Filtros Sticky no se muestra en el Home; el GPS igual corre en el proveedor.
+  return <main><PremiumHero /><HomeCarousels /></main>;
 }

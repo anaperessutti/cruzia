@@ -68,6 +68,7 @@ function formDesde(c: Cupon): CuponForm {
     cooldown_dias: c.cooldown_dias,
     activo: c.activo,
     es_favorita_home: c.es_favorita_home,
+    es_top_slider: c.es_top_slider,
   };
 }
 
@@ -112,6 +113,13 @@ function CuponesAdmin() {
     return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
+  /** Solo los comercios Premium (con presencia en el Top Slider) pueden postular un cupón. */
+  const admiteTopSlider = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    const plan = planes.find((p) => p.id === planId);
+    return Boolean(plan?.aparece_en_hero_banner);
+  };
+
   function nuevo() {
     setEditando("nuevo");
     setForm({
@@ -125,6 +133,7 @@ function CuponesAdmin() {
       cooldown_dias: 7,
       activo: true,
       es_favorita_home: false,
+      es_top_slider: false,
     });
   }
 
@@ -448,6 +457,21 @@ function CuponesAdmin() {
               </div>
             )}
 
+            {admiteTopSlider(form.comercio_id) && (
+              <div className="space-y-1 sm:col-span-2">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="top-slider"
+                    checked={form.es_top_slider}
+                    onCheckedChange={(v) => set("es_top_slider", v)}
+                  />
+                  <Label htmlFor="top-slider">Postular al Top Slider</Label>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  El comercio puede postular una sola promoción: al marcar esta, se desmarca automáticamente la anterior.
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-3 sm:col-span-2">
               <Button onClick={() => void onGuardar()} disabled={guardando || subiendo}>
