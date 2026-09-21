@@ -280,6 +280,7 @@ export type Database = {
           es_favorita_home: boolean
           es_top_slider: boolean
           flyer_url: string | null
+          hero_alcance_local: boolean
           id: string
           modalidad: Database["public"]["Enums"]["modalidad_cupon"]
           primera_activacion: string | null
@@ -298,6 +299,7 @@ export type Database = {
           es_favorita_home?: boolean
           es_top_slider?: boolean
           flyer_url?: string | null
+          hero_alcance_local?: boolean
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
           primera_activacion?: string | null
@@ -316,6 +318,7 @@ export type Database = {
           es_favorita_home?: boolean
           es_top_slider?: boolean
           flyer_url?: string | null
+          hero_alcance_local?: boolean
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
           primera_activacion?: string | null
