@@ -65,6 +65,7 @@ function formDesde(c: Cupon): CuponForm {
     modalidad: c.modalidad,
     cooldown_dias: c.cooldown_dias,
     activo: c.activo,
+    es_favorita_home: c.es_favorita_home,
   };
 }
 
