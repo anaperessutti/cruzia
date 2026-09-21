@@ -48,11 +48,13 @@ function DemoCarruselPage() {
         titulo="Almuerzos y tapeos"
         destinoUrl="/categorias?coleccion=almuerzos-y-tapeos"
         tarjetas={TARJETAS_ALMUERZOS.map((item) => <TarjetaDemo key={item.nombre} {...item} />)}
+        imagenes={TARJETAS_ALMUERZOS.map(() => heroImage)}
       />
       <CarruselSeccion
         titulo="Playa y Aire Libre"
         destinoUrl="/categorias?coleccion=playa-y-aire-libre"
         tarjetas={TARJETAS_PLAYA.map((item) => <TarjetaDemo key={item.nombre} {...item} />)}
+        imagenes={TARJETAS_PLAYA.map(() => heroImage)}
       />
     </main>
   );
