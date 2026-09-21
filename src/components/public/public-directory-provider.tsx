@@ -7,6 +7,7 @@ import { publicDirectoryOptions, type Comercio, type Cupon, type PublicDirectory
 type Filters = {
   localidadIds: string[];
   rubroId: string;
+  coleccionId: string;
   soloCupon: boolean;
 };
 
@@ -30,6 +31,7 @@ type PublicDirectoryContextValue = {
   detectLocation: () => void;
   setLocalidadIds: (ids: string[]) => void;
   setRubroId: (id: string) => void;
+  setColeccionId: (id: string) => void;
   setSoloCupon: (value: boolean) => void;
 };
 
@@ -40,6 +42,8 @@ const emptyData: PublicDirectoryData = {
   localidades: [],
   planes: [],
   rubros: [],
+  colecciones: [],
+  comercioColecciones: [],
 };
 
 const PublicDirectoryContext = createContext<PublicDirectoryContextValue | undefined>(undefined);
@@ -51,7 +55,7 @@ function distanceSquared(latA: number, lngA: number, latB: number, lngB: number)
 export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const query = useQuery(publicDirectoryOptions);
   const data = query.data ?? emptyData;
-  const [filters, setFilters] = useState<Filters>({ localidadIds: [], rubroId: "", soloCupon: false });
+  const [filters, setFilters] = useState<Filters>({ localidadIds: [], rubroId: "", coleccionId: "", soloCupon: false });
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [detectedLocalidadId, setDetectedLocalidadId] = useState<string | null>(null);
   // Si la usuaria ya eligió localidades a mano, el GPS nunca pisa esa selección.
@@ -119,9 +123,13 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const filteredComercios = useMemo(() => {
     const cuponCommerceIds = new Set(data.cupones.map((cupon) => cupon.comercio_id));
     const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
+    const comerciosColeccion = filters.coleccionId
+      ? new Set(data.comercioColecciones.filter((item) => item.coleccion_id === filters.coleccionId).map((item) => item.comercio_id))
+      : null;
     const base = data.comercios
       .filter((item) => filters.localidadIds.length === 0 || (item.localidad_id && filters.localidadIds.includes(item.localidad_id)))
       .filter((item) => !filters.rubroId || item.rubro_id === filters.rubroId)
+      .filter((item) => !comerciosColeccion || comerciosColeccion.has(item.id))
       .filter((item) => !filters.soloCupon || cuponCommerceIds.has(item.id))
       .filter((item) => planById.get(item.plan_id)?.aparece_en_grilla ?? false);
 
@@ -174,6 +182,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setFilters((current) => ({ ...current, localidadIds }));
   }, []);
   const setRubroId = useCallback((rubroId: string) => setFilters((current) => ({ ...current, rubroId })), []);
+  const setColeccionId = useCallback((coleccionId: string) => setFilters((current) => ({ ...current, coleccionId })), []);
   const setSoloCupon = useCallback((soloCupon: boolean) => setFilters((current) => current.soloCupon === soloCupon ? current : ({ ...current, soloCupon })), []);
 
   const detectLocation = useCallback(() => {
@@ -193,8 +202,9 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     detectLocation,
     setLocalidadIds,
     setRubroId,
+    setColeccionId,
     setSoloCupon,
-  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }

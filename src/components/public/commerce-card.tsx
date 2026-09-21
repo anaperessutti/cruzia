@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 interface CommerceCardProps {
   comercio: Comercio;
   cupon: Cupon | null;
-  plan?: Plan;
-  localidad?: Localidad;
-  rubro?: Rubro;
+  plan?: Plan | undefined;
+  localidad?: Localidad | undefined;
+  rubro?: Rubro | undefined;
   className?: string;
 }
 
