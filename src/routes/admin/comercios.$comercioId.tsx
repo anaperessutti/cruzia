@@ -184,6 +184,7 @@ function EditorComercio() {
         ...form,
         nombre: form.nombre.trim(),
       });
+      await guardarColeccionesDeComercio(id, colecciones);
       if (esNuevo) {
         navigate({ to: "/admin/comercios/$comercioId", params: { comercioId: id }, replace: true });
       }
