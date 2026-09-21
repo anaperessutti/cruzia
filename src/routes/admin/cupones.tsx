@@ -470,6 +470,26 @@ function CuponesAdmin() {
                 <p className="text-xs text-muted-foreground">
                   El comercio puede postular una sola promoción: al marcar esta, se desmarca automáticamente la anterior.
                 </p>
+
+                {form.es_top_slider && (
+                  <div className="mt-3 space-y-1 rounded-lg border p-3">
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        id="hero-alcance"
+                        checked={!form.hero_alcance_local}
+                        onCheckedChange={(v) => set("hero_alcance_local", !v)}
+                      />
+                      <Label htmlFor="hero-alcance">
+                        {form.hero_alcance_local
+                          ? "Solo cerca del comercio (10 km)"
+                          : "Mostrar en todas las localidades"}
+                      </Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Define a quién se le muestra este anuncio en el banner destacado del Home.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
