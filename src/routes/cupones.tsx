@@ -5,11 +5,12 @@ import { CommerceGrid } from "@/components/public/commerce-grid";
 import { StickyFilters } from "@/components/public/sticky-filters";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
 
-type CuponesSearch = { soloCupon?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
+type CuponesSearch = { soloCupon?: boolean | undefined; favoritos?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
 
 export const Route = createFileRoute("/cupones")({
   validateSearch: (search: Record<string, unknown>): CuponesSearch => ({
     soloCupon: search["soloCupon"] === true || search["soloCupon"] === "true" ? true : undefined,
+    favoritos: search["favoritos"] === true || search["favoritos"] === "true" ? true : undefined,
     localidades: typeof search["localidades"] === "string" ? search["localidades"] : undefined,
     coleccion: typeof search["coleccion"] === "string" ? search["coleccion"] : undefined,
   }),
@@ -30,5 +31,5 @@ function CuponesPage() {
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
     return () => setColeccionIds([]);
   }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds, setSoloCupon]);
-  return <main><section className="bg-secondary text-secondary-foreground"><div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase">Beneficios vigentes</p><h1 className="mt-3 font-display text-4xl font-extrabold sm:text-6xl">Cupones que hacen rendir tu verano.</h1></div></section><StickyFilters /><CommerceGrid title="Comercios con cupón" /></main>;
+  return <main><section className="bg-secondary text-secondary-foreground"><div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase">Beneficios vigentes</p><h1 className="mt-3 font-display text-4xl font-extrabold sm:text-6xl">Cupones que hacen rendir tu verano.</h1></div></section><StickyFilters /><CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
 }
