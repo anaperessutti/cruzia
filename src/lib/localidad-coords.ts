@@ -14,6 +14,7 @@ export const LOCALIDAD_COORDS: Record<string, { lat: number; lng: number }> = {
   "Mar de Ajó": { lat: -36.7167, lng: -56.6833 },
   "Nueva Atlantis": { lat: -36.7472, lng: -56.6931 },
   "Punta Médanos": { lat: -36.8333, lng: -56.6833 },
+  "Costa Esmeralda": { lat: -37.0167, lng: -56.7333 },
 };
 
 export function normalizeLocalidadName(nombre: string) {
