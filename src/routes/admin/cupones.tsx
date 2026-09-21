@@ -82,12 +82,18 @@ function CuponesAdmin() {
   const [aviso, setAviso] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState(false);
+  const [planes, setPlanes] = useState<Plan[]>([]);
 
   const cargar = useCallback(async () => {
     try {
-      const [cs, lista] = await Promise.all([getComerciosAdmin(), getCuponesAdmin(comercio)]);
+      const [cs, lista, cat] = await Promise.all([
+        getComerciosAdmin(),
+        getCuponesAdmin(comercio),
+        getCatalogos(),
+      ]);
       setComercios(cs);
       setCupones(lista);
+      setPlanes(cat.planes);
     } catch {
       setError("No pudimos cargar las promociones.");
     }
@@ -98,6 +104,13 @@ function CuponesAdmin() {
   }, [cargar]);
 
   const nombreComercio = (id: string) => comercios.find((c) => c.id === id)?.nombre ?? "—";
+
+  /** Solo los planes con cupones (Pro y Premium) pueden marcar favoritas de la Costa. */
+  const admiteFavorita = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    const plan = planes.find((p) => p.id === planId);
+    return Boolean(plan && plan.max_cupones_activos > 0);
+  };
 
   function nuevo() {
     setEditando("nuevo");
