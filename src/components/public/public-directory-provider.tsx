@@ -61,6 +61,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<Filters>({ localidadIds: [], rubroId: "", coleccionId: "", soloCupon: false });
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [detectedLocalidadId, setDetectedLocalidadId] = useState<string | null>(null);
+  const [userCoords, setUserCoords] = useState<Coords | null>(null);
   // Si la usuaria ya eligió localidades a mano, el GPS nunca pisa esa selección.
   const manualSelectionRef = useRef(false);
   const requestedRef = useRef(false);
@@ -90,6 +91,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setGeoStatus("solicitando");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
+        setUserCoords({ lat: coords.latitude, lng: coords.longitude });
         const nearest = candidates
           .slice()
           .sort(
@@ -201,13 +203,14 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     filters,
     isLoading: query.isLoading,
     geoStatus,
+    userCoords,
     detectedLocalidadId,
     detectLocation,
     setLocalidadIds,
     setRubroId,
     setColeccionId,
     setSoloCupon,
-  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setRubroId, setColeccionId, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }
