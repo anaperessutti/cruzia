@@ -1,0 +1,1 @@
+ALTER TABLE public.cupones ADD COLUMN IF NOT EXISTS hero_alcance_local boolean NOT NULL DEFAULT false;

@@ -17,17 +17,20 @@ export function PremiumHero() {
   const { data, userCoords } = usePublicDirectory();
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
   const ordenAleatorio = useMemo(() => new Map(data.comercios.map((item) => [item.id, Math.random()])), [data.comercios]);
-  const premium = data.comercios
-    .filter((item) => item.activo && (planById.get(item.plan_id)?.aparece_en_hero_banner ?? false))
-    // hero_alcance_local = true → solo para usuarios dentro del radio de cercanía real.
-    .filter((item) => !item.hero_alcance_local || estaCerca(userCoords, item))
-    .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
-    .slice(0, 7);
   /** Cupón postulado al Top Slider por ese comercio (uno solo, garantizado por trigger). */
   const cuponTop = (comercioId: string) =>
     data.cupones.find(
       (cupon) => cupon.comercio_id === comercioId && cupon.es_top_slider && cupon.activo && vigente(cupon.vigencia_inicio, cupon.vigencia_fin),
     ) ?? null;
+  const premium = data.comercios
+    .filter((item) => item.activo && (planById.get(item.plan_id)?.aparece_en_hero_banner ?? false))
+    // El alcance se define en el anuncio postulado al Top Slider, no en el comercio.
+    .filter((item) => {
+      const promo = cuponTop(item.id);
+      return !promo?.hero_alcance_local || estaCerca(userCoords, item);
+    })
+    .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
+    .slice(0, 7);
   const slides = premium.length > 0 ? premium : [null];
 
   return (

@@ -29,6 +29,13 @@
       "when": 1790028717691,
       "tag": "0003_cupones_top_slider",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790031521341,
+      "tag": "0004_cupon_hero_alcance_local",
+      "breakpoints": true
     }
   ]
 }
