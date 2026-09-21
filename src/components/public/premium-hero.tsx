@@ -5,6 +5,7 @@ import { ArrowRight, Star } from "lucide-react";
 import heroImage from "@/assets/auna-costa-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { estaCerca } from "@/lib/geo";
 import { usePublicDirectory } from "./public-directory-provider";
 
 function vigente(inicio: string, fin: string) {
