@@ -9,6 +9,7 @@ export const LOCALIDAD_COORDS: Record<string, { lat: number; lng: number }> = {
   "Costa del Este": { lat: -36.6167, lng: -56.6667 },
   "Aguas Verdes": { lat: -36.6431, lng: -56.6764 },
   "La Lucila del Mar": { lat: -36.6597, lng: -56.6764 },
+  "Costa Azul": { lat: -36.6736, lng: -56.6792 },
   "San Bernardo": { lat: -36.6889, lng: -56.6764 },
   "Mar de Ajó": { lat: -36.7167, lng: -56.6833 },
   "Nueva Atlantis": { lat: -36.7472, lng: -56.6931 },
