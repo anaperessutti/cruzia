@@ -13,3 +13,5 @@
 - [x] Conservar localidades activas al abrir la grilla desde cada carrusel
 - [x] Etiquetar comercios de prueba y validar filas vacías, límites y navegación
 - [x] Unificar la navegación y los filtros públicos con las 12 colecciones
+
+- [x] Colecciones propias por promoción, sección de Eventos y Top Slider unificado (promo o evento)
