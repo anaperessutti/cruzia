@@ -270,6 +270,39 @@ export type Database = {
           },
         ]
       }
+      cupon_colecciones: {
+        Row: {
+          coleccion_id: string
+          created_at: string
+          cupon_id: string
+        }
+        Insert: {
+          coleccion_id: string
+          created_at?: string
+          cupon_id: string
+        }
+        Update: {
+          coleccion_id?: string
+          created_at?: string
+          cupon_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cupon_colecciones_coleccion_id_fkey"
+            columns: ["coleccion_id"]
+            isOneToOne: false
+            referencedRelation: "colecciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cupon_colecciones_cupon_id_fkey"
+            columns: ["cupon_id"]
+            isOneToOne: false
+            referencedRelation: "cupones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cupones: {
         Row: {
           activo: boolean
@@ -334,6 +367,108 @@ export type Database = {
             columns: ["comercio_id"]
             isOneToOne: false
             referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evento_colecciones: {
+        Row: {
+          coleccion_id: string
+          created_at: string
+          evento_id: string
+        }
+        Insert: {
+          coleccion_id: string
+          created_at?: string
+          evento_id: string
+        }
+        Update: {
+          coleccion_id?: string
+          created_at?: string
+          evento_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evento_colecciones_coleccion_id_fkey"
+            columns: ["coleccion_id"]
+            isOneToOne: false
+            referencedRelation: "colecciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evento_colecciones_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventos: {
+        Row: {
+          comercio_id: string | null
+          created_at: string
+          descripcion: string | null
+          es_favorita_home: boolean
+          es_top_slider: boolean
+          fecha_fin: string
+          fecha_inicio: string
+          hero_alcance_local: boolean
+          id: string
+          imagen_url: string | null
+          lat: number | null
+          lng: number | null
+          localidad_id: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          comercio_id?: string | null
+          created_at?: string
+          descripcion?: string | null
+          es_favorita_home?: boolean
+          es_top_slider?: boolean
+          fecha_fin: string
+          fecha_inicio?: string
+          hero_alcance_local?: boolean
+          id?: string
+          imagen_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          comercio_id?: string | null
+          created_at?: string
+          descripcion?: string | null
+          es_favorita_home?: boolean
+          es_top_slider?: boolean
+          fecha_fin?: string
+          fecha_inicio?: string
+          hero_alcance_local?: boolean
+          id?: string
+          imagen_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventos_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventos_localidad_id_fkey"
+            columns: ["localidad_id"]
+            isOneToOne: false
+            referencedRelation: "localidades"
             referencedColumns: ["id"]
           },
         ]
