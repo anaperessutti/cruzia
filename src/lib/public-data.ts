@@ -28,6 +28,8 @@ export type PublicDirectoryData = {
   cuponColecciones: CuponColeccion[];
   eventos: Evento[];
   eventoColecciones: EventoColeccion[];
+  comercioSedes: ComercioSede[];
+  cuponSedes: CuponSede[];
 };
 
 async function getPublicDirectory(): Promise<PublicDirectoryData> {
