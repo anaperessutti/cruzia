@@ -97,8 +97,14 @@ export function HomeCarousels() {
         tarjetas.push({ tipo: "evento", key: `evento-${evento.id}`, evento });
       }
     }
+    // Con mal clima, dentro de "Juegos y Entretenimiento" van primero los lugares bajo techo.
+    const prioridadIndoor = malClima && coleccion.nombre === "Juegos y Entretenimiento";
+    const indoor = (tarjeta: TarjetaGrilla) =>
+      prioridadIndoor && tarjeta.tipo === "comercio" && tarjeta.comercio.es_indoor ? 0 : 1;
     // Primero lo que está dentro del radio de cercanía; después el resto, para no vaciar la fila.
     const ordenadas = tarjetas.slice().sort((a, b) => {
+      const dif = indoor(a) - indoor(b);
+      if (dif !== 0) return dif;
       const cercaA = estaCerca(userCoords, puntoDe(a)) ? 0 : 1;
       const cercaB = estaCerca(userCoords, puntoDe(b)) ? 0 : 1;
       if (cercaA !== cercaB) return cercaA - cercaB;
@@ -109,6 +115,13 @@ export function HomeCarousels() {
     });
     return { coleccion, tarjetas: ordenadas };
   }).filter(({ tarjetas }) => tarjetas.length > 0);
+
+  // Orden dinámico de las filas temáticas: manda el clima; si está bueno, la franja horaria.
+  const filasOrdenadas = ordenarColecciones(
+    filas.map((fila) => ({ ...fila, id: fila.coleccion.id, nombre: fila.coleccion.nombre })),
+    { malClima, minutosDelDia },
+  );
+  void AL_FINAL_MAL_CLIMA;
 
   if (isLoading) {
     return <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8"><div className="h-72 animate-pulse rounded-md bg-muted" /></div>;
