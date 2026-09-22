@@ -63,6 +63,9 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
               <Link to="/admin/cupones">Promociones</Link>
             </Button>
             <Button variant="secondary" size="sm" asChild>
+              <Link to="/admin/eventos">Eventos</Link>
+            </Button>
+            <Button variant="secondary" size="sm" asChild>
               <Link to="/">Ver la app</Link>
             </Button>
           </nav>

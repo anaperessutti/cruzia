@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { distanciaAComercio, estaCerca } from "@/lib/geo";
 import { CarruselSeccion } from "./carrusel-seccion";
 import { CommerceCard } from "./commerce-card";
+import { EventoCard } from "./evento-card";
 import { usePublicDirectory, type TarjetaGrilla } from "./public-directory-provider";
 
 function vigente(fechaInicio: string, fechaFin: string) {
@@ -11,7 +12,7 @@ function vigente(fechaInicio: string, fechaFin: string) {
 }
 
 export function HomeCarousels() {
-  const { data, filters, isLoading, userCoords } = usePublicDirectory();
+  const { data, filters, isLoading, userCoords, coleccionesDeCupon, coleccionesDeEvento } = usePublicDirectory();
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
@@ -23,24 +24,40 @@ export function HomeCarousels() {
   const localidadesQuery = filters.localidadIds.length > 0
     ? `&localidades=${encodeURIComponent(filters.localidadIds.join(","))}`
     : "";
-  const favoritos = cuponesActivos.flatMap<TarjetaGrilla>((cupon) => {
-    const comercio = comercioById.get(cupon.comercio_id);
-    const plan = comercio ? planById.get(comercio.plan_id) : undefined;
-    return comercio?.activo && cupon.es_favorita_home && (plan?.tiene_modulo_promocion ?? false)
-      ? [{ key: cupon.id, comercio, cupon }]
-      : [];
-  });
+  const favoritos: TarjetaGrilla[] = [
+    ...cuponesActivos.flatMap<TarjetaGrilla>((cupon) => {
+      const comercio = comercioById.get(cupon.comercio_id);
+      const plan = comercio ? planById.get(comercio.plan_id) : undefined;
+      return comercio?.activo && cupon.es_favorita_home && (plan?.tiene_modulo_promocion ?? false)
+        ? [{ tipo: "comercio", key: cupon.id, comercio, cupon }]
+        : [];
+    }),
+    ...data.eventos
+      .filter((evento) => evento.es_favorita_home)
+      .map<TarjetaGrilla>((evento) => ({ tipo: "evento", key: `evento-${evento.id}`, evento })),
+  ];
 
-  const renderTarjeta = ({ key, comercio, cupon }: TarjetaGrilla) => (
-    <CommerceCard
-      key={key}
-      comercio={comercio}
-      cupon={cupon}
-      plan={planById.get(comercio.plan_id)}
-      localidad={localidadById.get(comercio.localidad_id ?? "")}
-    />
-  );
-  const imagenesDe = (tarjetas: TarjetaGrilla[]) => tarjetas.map(({ comercio, cupon }) => cupon?.flyer_url ?? comercio.galeria[0] ?? null);
+  const renderTarjeta = (tarjeta: TarjetaGrilla) =>
+    tarjeta.tipo === "evento" ? (
+      <EventoCard key={tarjeta.key} evento={tarjeta.evento} localidad={localidadById.get(tarjeta.evento.localidad_id ?? "")} />
+    ) : (
+      <CommerceCard
+        key={tarjeta.key}
+        comercio={tarjeta.comercio}
+        cupon={tarjeta.cupon}
+        plan={planById.get(tarjeta.comercio.plan_id)}
+        localidad={localidadById.get(tarjeta.comercio.localidad_id ?? "")}
+      />
+    );
+  const imagenesDe = (tarjetas: TarjetaGrilla[]) =>
+    tarjetas.map((tarjeta) =>
+      tarjeta.tipo === "evento"
+        ? tarjeta.evento.imagen_url
+        : tarjeta.cupon?.flyer_url ?? tarjeta.comercio.galeria[0] ?? null,
+    );
+  /** Coordenadas usadas para el orden por cercanía de cada tarjeta. */
+  const puntoDe = (tarjeta: TarjetaGrilla) =>
+    tarjeta.tipo === "evento" ? { lat: tarjeta.evento.lat, lng: tarjeta.evento.lng } : tarjeta.comercio;
 
   const filas = data.colecciones.map((coleccion) => {
     const comercioIds = new Set(
@@ -50,18 +67,28 @@ export function HomeCarousels() {
     );
     const tarjetas: TarjetaGrilla[] = [];
     for (const comercio of data.comercios) {
-      if (!comercio.activo || !comercioIds.has(comercio.id)) continue;
-      const promociones = cuponesActivos.filter((cupon) => cupon.comercio_id === comercio.id);
-      if (promociones.length === 0) tarjetas.push({ key: comercio.id, comercio, cupon: null });
-      else promociones.forEach((cupon) => tarjetas.push({ key: cupon.id, comercio, cupon }));
+      if (!comercio.activo) continue;
+      const promociones = cuponesActivos.filter(
+        (cupon) => cupon.comercio_id === comercio.id && coleccionesDeCupon(cupon).includes(coleccion.id),
+      );
+      if (promociones.length > 0) {
+        promociones.forEach((cupon) => tarjetas.push({ tipo: "comercio", key: cupon.id, comercio, cupon }));
+      } else if (comercioIds.has(comercio.id)) {
+        tarjetas.push({ tipo: "comercio", key: comercio.id, comercio, cupon: null });
+      }
+    }
+    for (const evento of data.eventos) {
+      if (coleccionesDeEvento(evento.id).includes(coleccion.id)) {
+        tarjetas.push({ tipo: "evento", key: `evento-${evento.id}`, evento });
+      }
     }
     // Primero lo que está dentro del radio de cercanía; después el resto, para no vaciar la fila.
     const ordenadas = tarjetas.slice().sort((a, b) => {
-      const cercaA = estaCerca(userCoords, a.comercio) ? 0 : 1;
-      const cercaB = estaCerca(userCoords, b.comercio) ? 0 : 1;
+      const cercaA = estaCerca(userCoords, puntoDe(a)) ? 0 : 1;
+      const cercaB = estaCerca(userCoords, puntoDe(b)) ? 0 : 1;
       if (cercaA !== cercaB) return cercaA - cercaB;
-      const da = distanciaAComercio(userCoords, a.comercio);
-      const db = distanciaAComercio(userCoords, b.comercio);
+      const da = distanciaAComercio(userCoords, puntoDe(a));
+      const db = distanciaAComercio(userCoords, puntoDe(b));
       if (da !== null && db !== null) return da - db;
       return 0;
     });

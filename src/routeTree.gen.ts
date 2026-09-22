@@ -21,10 +21,12 @@ import { Route as SumateAAunaRouteImport } from './routes/sumate-a-auna'
 import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminCuponesRouteImport } from './routes/admin/cupones'
+import { Route as AdminEventosRouteImport } from './routes/admin/eventos'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
 import { Route as ComercioComercioIdRouteImport } from './routes/comercio.$comercioId'
+import { Route as EventosEventoIdRouteImport } from './routes/eventos.$eventoId'
 import { Route as AdminComerciosIndexRouteImport } from './routes/admin/comercios.index'
 import { Route as AdminComerciosComercioIdRouteImport } from './routes/admin/comercios.$comercioId'
 
@@ -88,6 +90,11 @@ const AdminCuponesRoute = AdminCuponesRouteImport.update({
   path: '/admin/cupones',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminEventosRoute = AdminEventosRouteImport.update({
+  id: '/admin/eventos',
+  path: '/admin/eventos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -106,6 +113,11 @@ const AdminSetupRoute = AdminSetupRouteImport.update({
 const ComercioComercioIdRoute = ComercioComercioIdRouteImport.update({
   id: '/comercio/$comercioId',
   path: '/comercio/$comercioId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosEventoIdRoute = EventosEventoIdRouteImport.update({
+  id: '/eventos/$eventoId',
+  path: '/eventos/$eventoId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminComerciosIndexRoute = AdminComerciosIndexRouteImport.update({
@@ -133,10 +145,12 @@ export interface FileRoutesByFullPath {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -153,10 +167,12 @@ export interface FileRoutesByTo {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios': typeof AdminComerciosIndexRoute
 }
@@ -174,10 +190,12 @@ export interface FileRoutesById {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -196,10 +214,12 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesByTo: FileRoutesByTo
@@ -216,10 +236,12 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios'
   id:
@@ -236,10 +258,12 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesById: FileRoutesById
@@ -257,10 +281,12 @@ export interface RootRouteChildren {
   TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminCuponesRoute: typeof AdminCuponesRoute
+  AdminEventosRoute: typeof AdminEventosRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
   ComercioComercioIdRoute: typeof ComercioComercioIdRoute
+  EventosEventoIdRoute: typeof EventosEventoIdRoute
   AdminComerciosComercioIdRoute: typeof AdminComerciosComercioIdRoute
   AdminComerciosIndexRoute: typeof AdminComerciosIndexRoute
 }
@@ -351,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCuponesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/eventos': {
+      id: '/admin/eventos'
+      path: '/admin/eventos'
+      fullPath: '/admin/eventos'
+      preLoaderRoute: typeof AdminEventosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -377,6 +410,13 @@ declare module '@tanstack/react-router' {
       path: '/comercio/$comercioId'
       fullPath: '/comercio/$comercioId'
       preLoaderRoute: typeof ComercioComercioIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eventos/$eventoId': {
+      id: '/eventos/$eventoId'
+      path: '/eventos/$eventoId'
+      fullPath: '/eventos/$eventoId'
+      preLoaderRoute: typeof EventosEventoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/comercios/': {
@@ -409,10 +449,12 @@ const rootRouteChildren: RootRouteChildren = {
   TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminCuponesRoute: AdminCuponesRoute,
+  AdminEventosRoute: AdminEventosRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
   ComercioComercioIdRoute: ComercioComercioIdRoute,
+  EventosEventoIdRoute: EventosEventoIdRoute,
   AdminComerciosComercioIdRoute: AdminComerciosComercioIdRoute,
   AdminComerciosIndexRoute: AdminComerciosIndexRoute,
 }

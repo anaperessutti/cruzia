@@ -1,4 +1,5 @@
 import { CommerceCard } from "./commerce-card";
+import { EventoCard } from "./evento-card";
 import { usePublicDirectory } from "./public-directory-provider";
 
 export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: string }) {
@@ -12,8 +13,10 @@ export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: st
       {isLoading ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-80 animate-pulse rounded-md bg-muted" />)}</div> : null}
       {!isLoading && tarjetas.length === 0 ? <div className="border-y border-border py-16 text-center"><p className="font-display text-2xl font-bold text-primary">Todavía no hay resultados para esta combinación.</p><p className="mt-2 text-sm text-muted-foreground">Probá sumando otra localidad o cambiando la categoría.</p></div> : null}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {tarjetas.map(({ key, comercio, cupon }) => (
-          <CommerceCard key={key} comercio={comercio} cupon={cupon} plan={planById.get(comercio.plan_id)} localidad={localidadById.get(comercio.localidad_id ?? "")} />
+        {tarjetas.map((tarjeta) => tarjeta.tipo === "evento" ? (
+          <EventoCard key={tarjeta.key} evento={tarjeta.evento} localidad={localidadById.get(tarjeta.evento.localidad_id ?? "")} />
+        ) : (
+          <CommerceCard key={tarjeta.key} comercio={tarjeta.comercio} cupon={tarjeta.cupon} plan={planById.get(tarjeta.comercio.plan_id)} localidad={localidadById.get(tarjeta.comercio.localidad_id ?? "")} />
         ))}
       </div>
     </section>

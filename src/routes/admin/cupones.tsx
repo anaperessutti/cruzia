@@ -16,18 +16,22 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   eliminarCupon,
   enDiasISO,
   cuponActivadoEsteMes,
   esErrorLimiteMensual,
   getCatalogos,
+  getColeccionesDeCupon,
   getComerciosAdmin,
   getCuponesAdmin,
   getCuposMes,
+  guardarColeccionesDeCupon,
   guardarCupon,
   hoyISO,
   subirImagen,
+  type Coleccion,
   type Comercio,
   type Cupon,
   type CuponForm,
@@ -85,6 +89,9 @@ function CuponesAdmin() {
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState(false);
   const [planes, setPlanes] = useState<Plan[]>([]);
+  const [colecciones, setColecciones] = useState<Coleccion[]>([]);
+  /** Colecciones propias de la promoción en edición (vacío = hereda las del comercio). */
+  const [coleccionesSel, setColeccionesSel] = useState<string[]>([]);
 
   const cargar = useCallback(async () => {
     try {
@@ -96,6 +103,7 @@ function CuponesAdmin() {
       setComercios(cs);
       setCupones(lista);
       setPlanes(cat.planes);
+      setColecciones(cat.colecciones);
     } catch {
       setError("No pudimos cargar las promociones.");
     }
@@ -107,22 +115,26 @@ function CuponesAdmin() {
 
   const nombreComercio = (id: string) => comercios.find((c) => c.id === id)?.nombre ?? "—";
 
+  const planDeComercio = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    return planes.find((p) => p.id === planId);
+  };
+
   /** Solo los planes con cupones (Pro y Premium) pueden marcar favoritas de la Costa. */
   const admiteFavorita = (comercioId: string) => {
-    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
-    const plan = planes.find((p) => p.id === planId);
+    const plan = planDeComercio(comercioId);
     return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
-  /** Solo los comercios Premium (con presencia en el Top Slider) pueden postular un cupón. */
+  /** El Top Slider se ofrece a los comercios con promociones (Pro y Premium). */
   const admiteTopSlider = (comercioId: string) => {
-    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
-    const plan = planes.find((p) => p.id === planId);
-    return Boolean(plan?.aparece_en_hero_banner);
+    const plan = planDeComercio(comercioId);
+    return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
   function nuevo() {
     setEditando("nuevo");
+    setColeccionesSel([]);
     setForm({
       comercio_id: comercio ?? comercios[0]?.id ?? "",
       titulo: "",
@@ -191,10 +203,11 @@ function CuponesAdmin() {
         setError(bloqueo);
         return;
       }
-      await guardarCupon(editando === "nuevo" ? null : editando, {
+      const id = await guardarCupon(editando === "nuevo" ? null : editando, {
         ...form,
         titulo: form.titulo.trim(),
       });
+      await guardarColeccionesDeCupon(id, coleccionesSel);
       setEditando(null);
       setForm(null);
       await cargar();
@@ -302,6 +315,9 @@ function CuponesAdmin() {
                     {new Date(`${c.vigencia_fin}T00:00:00`).toLocaleDateString("es-AR")}
                   </p>
                 </div>
+                <Badge variant="secondary">
+                  Plan {planDeComercio(c.comercio_id)?.nombre ?? "—"}
+                </Badge>
                 <Badge variant={c.activo ? "default" : "outline"}>
                   {c.activo ? "Activa" : "Pausada"}
                 </Badge>
@@ -316,6 +332,7 @@ function CuponesAdmin() {
                   onClick={() => {
                     setEditando(c.id);
                     setForm(formDesde(c));
+                    void getColeccionesDeCupon(c.id).then(setColeccionesSel);
                   }}
                 >
                   Editar
@@ -442,6 +459,28 @@ function CuponesAdmin() {
               <Switch id="activa" checked={form.activo} onCheckedChange={(v) => set("activo", v)} />
               <Label htmlFor="activa">{form.activo ? "Activa" : "Pausada"}</Label>
             </div>
+
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Colecciones de esta promoción (opcional)</Label>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {colecciones.map((col) => (
+                  <label key={col.id} className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={coleccionesSel.includes(col.id)}
+                      onCheckedChange={(v) =>
+                        setColeccionesSel((prev) => (v ? [...prev, col.id] : prev.filter((id) => id !== col.id)))
+                      }
+                    />
+                    {col.nombre}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Dejalo vacío para usar las colecciones del comercio.
+              </p>
+            </div>
+
+
 
             {admiteFavorita(form.comercio_id) && (
               <div className="space-y-1 sm:col-span-2">

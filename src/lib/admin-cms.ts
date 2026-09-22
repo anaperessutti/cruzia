@@ -192,3 +192,93 @@ export function enDiasISO(dias: number): string {
   d.setDate(d.getDate() + dias);
   return d.toISOString().slice(0, 10);
 }
+
+/** Colecciones propias de una promoción (vacío = hereda las del comercio). */
+export async function getColeccionesDeCupon(cuponId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("cupon_colecciones")
+    .select("coleccion_id")
+    .eq("cupon_id", cuponId);
+  if (error) throw error;
+  return (data ?? []).map((r) => r.coleccion_id);
+}
+
+export async function guardarColeccionesDeCupon(cuponId: string, ids: string[]) {
+  const { error: errBorrar } = await supabase
+    .from("cupon_colecciones")
+    .delete()
+    .eq("cupon_id", cuponId);
+  if (errBorrar) throw errBorrar;
+  if (ids.length === 0) return;
+  const { error } = await supabase
+    .from("cupon_colecciones")
+    .insert(ids.map((coleccion_id) => ({ cupon_id: cuponId, coleccion_id })));
+  if (error) throw error;
+}
+
+export type Evento = Database["public"]["Tables"]["eventos"]["Row"];
+
+export type EventoForm = {
+  titulo: string;
+  descripcion: string | null;
+  imagen_url: string | null;
+  fecha_inicio: string;
+  fecha_fin: string;
+  comercio_id: string | null;
+  localidad_id: string | null;
+  lat: number | null;
+  lng: number | null;
+  es_top_slider: boolean;
+  hero_alcance_local: boolean;
+  es_favorita_home: boolean;
+};
+
+export async function getEventosAdmin(): Promise<Evento[]> {
+  const { data, error } = await supabase.from("eventos").select("*").order("fecha_inicio", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function guardarEvento(id: string | null, form: EventoForm): Promise<string> {
+  if (id) {
+    const { error } = await supabase.from("eventos").update(form).eq("id", id);
+    if (error) throw error;
+    return id;
+  }
+  const { data, error } = await supabase.from("eventos").insert(form).select("id").single();
+  if (error) throw error;
+  return data.id;
+}
+
+export async function eliminarEvento(id: string) {
+  const { error } = await supabase.from("eventos").delete().eq("id", id);
+  if (error) throw error;
+}
+
+export async function getColeccionesDeEvento(eventoId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("evento_colecciones")
+    .select("coleccion_id")
+    .eq("evento_id", eventoId);
+  if (error) throw error;
+  return (data ?? []).map((r) => r.coleccion_id);
+}
+
+export async function guardarColeccionesDeEvento(eventoId: string, ids: string[]) {
+  const { error: errBorrar } = await supabase
+    .from("evento_colecciones")
+    .delete()
+    .eq("evento_id", eventoId);
+  if (errBorrar) throw errBorrar;
+  if (ids.length === 0) return;
+  const { error } = await supabase
+    .from("evento_colecciones")
+    .insert(ids.map((coleccion_id) => ({ evento_id: eventoId, coleccion_id })));
+  if (error) throw error;
+}
+
+/** Un evento está activo mientras hoy esté entre sus fechas: no hace falta pausarlo a mano. */
+export function eventoVigente(e: { fecha_inicio: string; fecha_fin: string }): boolean {
+  const hoy = hoyISO();
+  return e.fecha_inicio <= hoy && e.fecha_fin >= hoy;
+}

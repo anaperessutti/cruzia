@@ -36,6 +36,13 @@
       "when": 1790031521341,
       "tag": "0004_cupon_hero_alcance_local",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790052855278,
+      "tag": "0005_cupon_colecciones_y_eventos",
+      "breakpoints": true
     }
   ]
 }

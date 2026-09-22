@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 import type { Coords } from "@/lib/geo";
-import type { Comercio, Cupon, PublicDirectoryData } from "@/lib/public-data";
+import type { Comercio, Cupon, Evento, PublicDirectoryData } from "@/lib/public-data";
 
 export type Filters = {
   localidadIds: string[];
@@ -11,17 +11,18 @@ export type Filters = {
 
 export type GeoStatus = "idle" | "solicitando" | "detectada" | "denegada" | "no-disponible";
 
-/** Una tarjeta de la grilla: o bien una promoción activa, o bien un comercio sin promociones. */
-export type TarjetaGrilla = {
-  key: string;
-  comercio: Comercio;
-  cupon: Cupon | null;
-};
+/** Una tarjeta: una promoción activa, un comercio sin promociones, o un evento vigente. */
+export type TarjetaGrilla =
+  | { tipo: "comercio"; key: string; comercio: Comercio; cupon: Cupon | null }
+  | { tipo: "evento"; key: string; evento: Evento };
 
 export type PublicDirectoryContextValue = {
   data: PublicDirectoryData;
   filteredComercios: Comercio[];
   tarjetas: TarjetaGrilla[];
+  /** Colecciones efectivas de una promoción: las propias si tiene, si no las del comercio. */
+  coleccionesDeCupon: (cupon: Cupon) => string[];
+  coleccionesDeEvento: (eventoId: string) => string[];
   filters: Filters;
   isLoading: boolean;
   geoStatus: GeoStatus;
