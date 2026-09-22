@@ -1,6 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
 
+import { getClimaCosta } from "@/lib/clima.functions";
 import { distanciaAComercio, estaCerca } from "@/lib/geo";
+import { AL_FINAL_MAL_CLIMA, minutosArgentina, ordenarColecciones } from "@/lib/orden-colecciones";
 import { CarruselSeccion } from "./carrusel-seccion";
 import { CommerceCard } from "./commerce-card";
 import { EventoCard } from "./evento-card";
