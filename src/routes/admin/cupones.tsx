@@ -16,18 +16,22 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   eliminarCupon,
   enDiasISO,
   cuponActivadoEsteMes,
   esErrorLimiteMensual,
   getCatalogos,
+  getColeccionesDeCupon,
   getComerciosAdmin,
   getCuponesAdmin,
   getCuposMes,
+  guardarColeccionesDeCupon,
   guardarCupon,
   hoyISO,
   subirImagen,
+  type Coleccion,
   type Comercio,
   type Cupon,
   type CuponForm,

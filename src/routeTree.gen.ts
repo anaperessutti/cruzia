@@ -21,6 +21,7 @@ import { Route as SumateAAunaRouteImport } from './routes/sumate-a-auna'
 import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminCuponesRouteImport } from './routes/admin/cupones'
+import { Route as AdminEventosRouteImport } from './routes/admin/eventos'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
@@ -89,6 +90,11 @@ const AdminCuponesRoute = AdminCuponesRouteImport.update({
   path: '/admin/cupones',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminEventosRoute = AdminEventosRouteImport.update({
+  id: '/admin/eventos',
+  path: '/admin/eventos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
+  '/admin/eventos': typeof AdminEventosRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
+    | '/admin/eventos'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -269,6 +281,7 @@ export interface RootRouteChildren {
   TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminCuponesRoute: typeof AdminCuponesRoute
+  AdminEventosRoute: typeof AdminEventosRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCuponesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/eventos': {
+      id: '/admin/eventos'
+      path: '/admin/eventos'
+      fullPath: '/admin/eventos'
+      preLoaderRoute: typeof AdminEventosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -429,6 +449,7 @@ const rootRouteChildren: RootRouteChildren = {
   TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminCuponesRoute: AdminCuponesRoute,
+  AdminEventosRoute: AdminEventosRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
