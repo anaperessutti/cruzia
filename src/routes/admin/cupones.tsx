@@ -89,6 +89,9 @@ function CuponesAdmin() {
   const [guardando, setGuardando] = useState(false);
   const [subiendo, setSubiendo] = useState(false);
   const [planes, setPlanes] = useState<Plan[]>([]);
+  const [colecciones, setColecciones] = useState<Coleccion[]>([]);
+  /** Colecciones propias de la promoción en edición (vacío = hereda las del comercio). */
+  const [coleccionesSel, setColeccionesSel] = useState<string[]>([]);
 
   const cargar = useCallback(async () => {
     try {
@@ -100,6 +103,7 @@ function CuponesAdmin() {
       setComercios(cs);
       setCupones(lista);
       setPlanes(cat.planes);
+      setColecciones(cat.colecciones);
     } catch {
       setError("No pudimos cargar las promociones.");
     }
@@ -111,18 +115,21 @@ function CuponesAdmin() {
 
   const nombreComercio = (id: string) => comercios.find((c) => c.id === id)?.nombre ?? "—";
 
+  const planDeComercio = (comercioId: string) => {
+    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
+    return planes.find((p) => p.id === planId);
+  };
+
   /** Solo los planes con cupones (Pro y Premium) pueden marcar favoritas de la Costa. */
   const admiteFavorita = (comercioId: string) => {
-    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
-    const plan = planes.find((p) => p.id === planId);
+    const plan = planDeComercio(comercioId);
     return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
-  /** Solo los comercios Premium (con presencia en el Top Slider) pueden postular un cupón. */
+  /** El Top Slider se ofrece a los comercios con promociones (Pro y Premium). */
   const admiteTopSlider = (comercioId: string) => {
-    const planId = comercios.find((c) => c.id === comercioId)?.plan_id;
-    const plan = planes.find((p) => p.id === planId);
-    return Boolean(plan?.aparece_en_hero_banner);
+    const plan = planDeComercio(comercioId);
+    return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
   function nuevo() {
