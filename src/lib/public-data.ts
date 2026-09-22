@@ -61,6 +61,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     // Los eventos vencidos dejan de mostrarse solos: filtro por fechas, sin pausas manuales.
     supabase.from("eventos").select("*").lte("fecha_inicio", hoy).gte("fecha_fin", hoy).order("fecha_inicio"),
     supabase.from("evento_colecciones").select("*"),
+    supabase.from("comercio_sedes").select("*").order("created_at"),
+    supabase.from("cupon_sedes").select("*"),
   ]);
 
   const firstError = [
