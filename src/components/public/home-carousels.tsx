@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { getClimaCosta } from "@/lib/clima.functions";
 import { distanciaAComercio, estaCerca } from "@/lib/geo";
-import { AL_FINAL_MAL_CLIMA, minutosArgentina, ordenarColecciones } from "@/lib/orden-colecciones";
+import { minutosArgentina, ordenarColecciones } from "@/lib/orden-colecciones";
 import { CarruselSeccion } from "./carrusel-seccion";
 import { CommerceCard } from "./commerce-card";
 import { EventoCard } from "./evento-card";
@@ -121,7 +121,6 @@ export function HomeCarousels() {
     filas.map((fila) => ({ ...fila, id: fila.coleccion.id, nombre: fila.coleccion.nombre })),
     { malClima, minutosDelDia },
   );
-  void AL_FINAL_MAL_CLIMA;
 
   if (isLoading) {
     return <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8"><div className="h-72 animate-pulse rounded-md bg-muted" /></div>;
@@ -137,7 +136,7 @@ export function HomeCarousels() {
           imagenes={imagenesDe(favoritos)}
         />
       ) : null}
-      {filas.map(({ coleccion, tarjetas }) => (
+      {filasOrdenadas.map(({ coleccion, tarjetas }) => (
         <CarruselSeccion
           key={coleccion.id}
           titulo={coleccion.nombre}
