@@ -203,10 +203,11 @@ function CuponesAdmin() {
         setError(bloqueo);
         return;
       }
-      await guardarCupon(editando === "nuevo" ? null : editando, {
+      const id = await guardarCupon(editando === "nuevo" ? null : editando, {
         ...form,
         titulo: form.titulo.trim(),
       });
+      await guardarColeccionesDeCupon(id, coleccionesSel);
       setEditando(null);
       setForm(null);
       await cargar();
