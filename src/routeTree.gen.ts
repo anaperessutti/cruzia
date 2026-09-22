@@ -25,6 +25,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
 import { Route as ComercioComercioIdRouteImport } from './routes/comercio.$comercioId'
+import { Route as EventosEventoIdRouteImport } from './routes/eventos.$eventoId'
 import { Route as AdminComerciosIndexRouteImport } from './routes/admin/comercios.index'
 import { Route as AdminComerciosComercioIdRouteImport } from './routes/admin/comercios.$comercioId'
 
@@ -108,6 +109,11 @@ const ComercioComercioIdRoute = ComercioComercioIdRouteImport.update({
   path: '/comercio/$comercioId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventosEventoIdRoute = EventosEventoIdRouteImport.update({
+  id: '/eventos/$eventoId',
+  path: '/eventos/$eventoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminComerciosIndexRoute = AdminComerciosIndexRouteImport.update({
   id: '/admin/comercios/',
   path: '/admin/comercios/',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios': typeof AdminComerciosIndexRoute
 }
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
+  '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesByTo: FileRoutesByTo
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios'
   id:
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/admin/panel'
     | '/admin/setup'
     | '/comercio/$comercioId'
+    | '/eventos/$eventoId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesById: FileRoutesById
@@ -261,6 +273,7 @@ export interface RootRouteChildren {
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
   ComercioComercioIdRoute: typeof ComercioComercioIdRoute
+  EventosEventoIdRoute: typeof EventosEventoIdRoute
   AdminComerciosComercioIdRoute: typeof AdminComerciosComercioIdRoute
   AdminComerciosIndexRoute: typeof AdminComerciosIndexRoute
 }
@@ -379,6 +392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComercioComercioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/eventos/$eventoId': {
+      id: '/eventos/$eventoId'
+      path: '/eventos/$eventoId'
+      fullPath: '/eventos/$eventoId'
+      preLoaderRoute: typeof EventosEventoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/comercios/': {
       id: '/admin/comercios/'
       path: '/admin/comercios'
@@ -413,6 +433,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
   ComercioComercioIdRoute: ComercioComercioIdRoute,
+  EventosEventoIdRoute: EventosEventoIdRoute,
   AdminComerciosComercioIdRoute: AdminComerciosComercioIdRoute,
   AdminComerciosIndexRoute: AdminComerciosIndexRoute,
 }
