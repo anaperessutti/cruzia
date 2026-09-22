@@ -315,6 +315,9 @@ function CuponesAdmin() {
                     {new Date(`${c.vigencia_fin}T00:00:00`).toLocaleDateString("es-AR")}
                   </p>
                 </div>
+                <Badge variant="secondary">
+                  Plan {planDeComercio(c.comercio_id)?.nombre ?? "—"}
+                </Badge>
                 <Badge variant={c.activo ? "default" : "outline"}>
                   {c.activo ? "Activa" : "Pausada"}
                 </Badge>
@@ -329,6 +332,7 @@ function CuponesAdmin() {
                   onClick={() => {
                     setEditando(c.id);
                     setForm(formDesde(c));
+                    void getColeccionesDeCupon(c.id).then(setColeccionesSel);
                   }}
                 >
                   Editar
