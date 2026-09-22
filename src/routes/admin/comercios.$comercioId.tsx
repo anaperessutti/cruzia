@@ -79,6 +79,9 @@ function EditorComercio() {
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [colecciones, setColecciones] = useState<string[]>([]);
+  /** Sedes ADICIONALES (la principal son los campos de la ficha de arriba). */
+  const [sedes, setSedes] = useState<Sede[]>([]);
+  const [guardandoSede, setGuardandoSede] = useState<string | null>(null);
 
   useEffect(() => {
     let activo = true;
@@ -90,11 +93,13 @@ function EditorComercio() {
         if (esNuevo) {
           setForm({ ...VACIO, plan_id: cat.planes.at(-1)?.id ?? cat.planes[0]?.id ?? "" });
         } else {
-          const [c, cols] = await Promise.all([
+          const [c, cols, seds] = await Promise.all([
             getComercio(comercioId),
             getColeccionesDeComercio(comercioId),
+            getSedesDeComercio(comercioId),
           ]);
           if (!activo) return;
+          setSedes(seds);
           if (!c) {
             setError("No encontramos ese comercio.");
           } else {
