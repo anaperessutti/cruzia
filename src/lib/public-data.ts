@@ -13,6 +13,8 @@ export type ComercioColeccion = Database["public"]["Tables"]["comercio_coleccion
 export type CuponColeccion = Database["public"]["Tables"]["cupon_colecciones"]["Row"];
 export type Evento = Database["public"]["Tables"]["eventos"]["Row"];
 export type EventoColeccion = Database["public"]["Tables"]["evento_colecciones"]["Row"];
+export type ComercioSede = Database["public"]["Tables"]["comercio_sedes"]["Row"];
+export type CuponSede = Database["public"]["Tables"]["cupon_sedes"]["Row"];
 
 export type PublicDirectoryData = {
   comercios: Comercio[];
