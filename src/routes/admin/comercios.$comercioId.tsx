@@ -265,25 +265,6 @@ function EditorComercio() {
               </div>
 
               <div className="space-y-2">
-                <Label>Rubro</Label>
-                <Select
-                  value={form.rubro_id ?? ""}
-                  onValueChange={(v) => set("rubro_id", v || null)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Elegí un rubro" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {catalogos?.rubros.map((r) => (
-                      <SelectItem key={r.id} value={r.id}>
-                        {r.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
                 <Label>Localidad</Label>
                 <Select
                   value={form.localidad_id ?? ""}

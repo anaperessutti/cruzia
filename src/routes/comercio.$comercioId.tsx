@@ -37,9 +37,11 @@ function FichaComercio() {
 
   const comercio = data.comercios.find((item) => item.id === comercioId);
   const plan = comercio ? data.planes.find((item) => item.id === comercio.plan_id) : undefined;
-  const rubro = data.rubros.find((item) => item.id === comercio?.rubro_id);
   const localidad = data.localidades.find((item) => item.id === comercio?.localidad_id);
-  const cupones = data.cupones.filter((item) => item.comercio_id === comercioId);
+  const hoy = new Date().toISOString().slice(0, 10);
+  const cupones = data.cupones.filter(
+    (item) => item.comercio_id === comercioId && item.activo && item.vigencia_inicio <= hoy && item.vigencia_fin >= hoy,
+  );
 
   if (isLoading) return <main className="mx-auto max-w-5xl px-4 py-20"><div className="h-80 animate-pulse rounded-md bg-muted" /></main>;
 
@@ -64,24 +66,13 @@ function FichaComercio() {
     <main>
       <section className="border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-          <p className="text-xs font-bold uppercase text-accent">{rubro?.nombre ?? "Comercio local"}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-4xl font-extrabold sm:text-5xl">{comercio.nombre}</h1>
             {exclusivo && plan ? <Badge className="bg-secondary text-secondary-foreground"><Crown className="mr-1 size-3 fill-current" /> {plan.nombre}</Badge> : null}
           </div>
           {localidad ? <p className="mt-3 flex items-center gap-1.5 text-sm opacity-90"><MapPin className="size-4" /> {localidad.nombre}{comercio.direccion ? ` · ${comercio.direccion}` : ""}</p> : null}
         </div>
       </section>
-
-      {conPromocion && cupones.length === 0 ? (
-        <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-          <p className="text-xs font-bold uppercase text-secondary">Módulo de promoción</p>
-          <div className="mt-3 rounded-md border border-dashed border-border bg-muted/40 p-6 text-center">
-            <p className="font-display text-lg font-bold text-primary">Sin promociones activas por el momento.</p>
-            <p className="mt-1 text-sm text-muted-foreground">Volvé pronto: este comercio publica cupones cada tanto.</p>
-          </div>
-        </section>
-      ) : null}
 
       {conPromocion && cupones.length > 0 ? (
         <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">

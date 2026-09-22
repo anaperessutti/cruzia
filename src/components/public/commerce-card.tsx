@@ -3,7 +3,7 @@ import { MapPin, Star, Ticket } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Comercio, Cupon, Localidad, Plan, Rubro } from "@/lib/public-data";
+import type { Comercio, Cupon, Localidad, Plan } from "@/lib/public-data";
 import { cn } from "@/lib/utils";
 
 interface CommerceCardProps {
@@ -11,11 +11,10 @@ interface CommerceCardProps {
   cupon: Cupon | null;
   plan?: Plan | undefined;
   localidad?: Localidad | undefined;
-  rubro?: Rubro | undefined;
   className?: string;
 }
 
-export function CommerceCard({ comercio, cupon, plan, localidad, rubro, className }: CommerceCardProps) {
+export function CommerceCard({ comercio, cupon, plan, localidad, className }: CommerceCardProps) {
   const destacado = (plan?.tiene_modulo_promocion ?? false) && cupon !== null;
   const portada = cupon?.flyer_url ?? comercio.galeria[0] ?? null;
 
@@ -35,8 +34,7 @@ export function CommerceCard({ comercio, cupon, plan, localidad, rubro, classNam
         {cupon ? <Badge className="absolute bottom-3 right-3 bg-accent text-accent-foreground"><Ticket className="mr-1 size-3" /> Cupón activo</Badge> : null}
       </Link>
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <p className="text-xs font-bold uppercase text-secondary">{rubro?.nombre ?? "Comercio local"}</p>
-        <Link to="/comercio/$comercioId" params={{ comercioId: comercio.id }} className="mt-1 font-display text-lg font-bold text-primary hover:underline sm:text-xl">{comercio.nombre}</Link>
+        <Link to="/comercio/$comercioId" params={{ comercioId: comercio.id }} className="font-display text-lg font-bold text-primary hover:underline sm:text-xl">{comercio.nombre}</Link>
         {cupon ? <p className="mt-1 text-sm font-semibold text-foreground">{cupon.titulo}</p> : null}
         {localidad ? <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin className="size-4 shrink-0" />{localidad.nombre}</p> : null}
         {destacado ? (
