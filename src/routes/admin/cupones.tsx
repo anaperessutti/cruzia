@@ -460,6 +460,28 @@ function CuponesAdmin() {
               <Label htmlFor="activa">{form.activo ? "Activa" : "Pausada"}</Label>
             </div>
 
+            <div className="space-y-2 sm:col-span-2">
+              <Label>Colecciones de esta promoción (opcional)</Label>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {colecciones.map((col) => (
+                  <label key={col.id} className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={coleccionesSel.includes(col.id)}
+                      onCheckedChange={(v) =>
+                        setColeccionesSel((prev) => (v ? [...prev, col.id] : prev.filter((id) => id !== col.id)))
+                      }
+                    />
+                    {col.nombre}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Dejalo vacío para usar las colecciones del comercio.
+              </p>
+            </div>
+
+
+
             {admiteFavorita(form.comercio_id) && (
               <div className="space-y-1 sm:col-span-2">
                 <div className="flex items-center gap-3">
