@@ -1,6 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
 
+import { getClimaCosta } from "@/lib/clima.functions";
 import { distanciaAComercio, estaCerca } from "@/lib/geo";
+import { minutosArgentina, ordenarColecciones } from "@/lib/orden-colecciones";
 import { CarruselSeccion } from "./carrusel-seccion";
 import { CommerceCard } from "./commerce-card";
 import { EventoCard } from "./evento-card";
@@ -13,6 +17,17 @@ function vigente(fechaInicio: string, fechaFin: string) {
 
 export function HomeCarousels() {
   const { data, filters, isLoading, userCoords, coleccionesDeCupon, coleccionesDeEvento } = usePublicDirectory();
+  // Clima leído en el servidor (cacheado 20 min) para decidir el orden de las filas.
+  const pedirClima = useServerFn(getClimaCosta);
+  const climaQuery = useQuery({
+    queryKey: ["clima-costa"],
+    queryFn: () => pedirClima(),
+    staleTime: 20 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+  const malClima = climaQuery.data?.malClima ?? false;
+  // Se fija una sola vez por carga del Home: no cambia mientras se navega.
+  const minutosDelDia = useMemo(() => minutosArgentina(), []);
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
@@ -82,8 +97,14 @@ export function HomeCarousels() {
         tarjetas.push({ tipo: "evento", key: `evento-${evento.id}`, evento });
       }
     }
+    // Con mal clima, dentro de "Juegos y Entretenimiento" van primero los lugares bajo techo.
+    const prioridadIndoor = malClima && coleccion.nombre === "Juegos y Entretenimiento";
+    const indoor = (tarjeta: TarjetaGrilla) =>
+      prioridadIndoor && tarjeta.tipo === "comercio" && tarjeta.comercio.es_indoor ? 0 : 1;
     // Primero lo que está dentro del radio de cercanía; después el resto, para no vaciar la fila.
     const ordenadas = tarjetas.slice().sort((a, b) => {
+      const dif = indoor(a) - indoor(b);
+      if (dif !== 0) return dif;
       const cercaA = estaCerca(userCoords, puntoDe(a)) ? 0 : 1;
       const cercaB = estaCerca(userCoords, puntoDe(b)) ? 0 : 1;
       if (cercaA !== cercaB) return cercaA - cercaB;
@@ -94,6 +115,12 @@ export function HomeCarousels() {
     });
     return { coleccion, tarjetas: ordenadas };
   }).filter(({ tarjetas }) => tarjetas.length > 0);
+
+  // Orden dinámico de las filas temáticas: manda el clima; si está bueno, la franja horaria.
+  const filasOrdenadas = ordenarColecciones(
+    filas.map((fila) => ({ ...fila, id: fila.coleccion.id, nombre: fila.coleccion.nombre })),
+    { malClima, minutosDelDia },
+  );
 
   if (isLoading) {
     return <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8"><div className="h-72 animate-pulse rounded-md bg-muted" /></div>;
@@ -109,7 +136,7 @@ export function HomeCarousels() {
           imagenes={imagenesDe(favoritos)}
         />
       ) : null}
-      {filas.map(({ coleccion, tarjetas }) => (
+      {filasOrdenadas.map(({ coleccion, tarjetas }) => (
         <CarruselSeccion
           key={coleccion.id}
           titulo={coleccion.nombre}
