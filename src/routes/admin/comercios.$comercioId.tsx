@@ -186,6 +186,61 @@ function EditorComercio() {
     await aplicarGaleria(g, "Orden de las fotos actualizado.");
   }
 
+  function setSede(id: string, campo: keyof Sede, valor: unknown) {
+    setSedes((prev) => prev.map((s) => (s.id === id ? { ...s, [campo]: valor } : s)));
+  }
+
+  async function onAgregarSede() {
+    setError(null);
+    try {
+      const id = await guardarSede(null, {
+        comercio_id: comercioId,
+        direccion: "",
+        localidad_id: form.localidad_id,
+        lat: null,
+        lng: null,
+        horarios: "",
+      });
+      setSedes(await getSedesDeComercio(comercioId));
+      setAviso("Sede agregada. Completá sus datos y guardala.");
+      return id;
+    } catch {
+      setError("No pudimos agregar la sede.");
+      return null;
+    }
+  }
+
+  async function onGuardarSede(sede: Sede) {
+    setGuardandoSede(sede.id);
+    setError(null);
+    try {
+      await guardarSede(sede.id, {
+        comercio_id: comercioId,
+        direccion: sede.direccion,
+        localidad_id: sede.localidad_id,
+        lat: sede.lat,
+        lng: sede.lng,
+        horarios: sede.horarios,
+      });
+      setAviso("Sede guardada.");
+    } catch {
+      setError("No pudimos guardar la sede.");
+    } finally {
+      setGuardandoSede(null);
+    }
+  }
+
+  async function onEliminarSede(id: string) {
+    if (!window.confirm("¿Eliminar esta sede?")) return;
+    try {
+      await eliminarSede(id);
+      setSedes((prev) => prev.filter((s) => s.id !== id));
+      setAviso("Sede eliminada.");
+    } catch {
+      setError("No pudimos eliminar la sede.");
+    }
+  }
+
   async function onGuardar() {
     if (!form.nombre.trim() || !form.plan_id) {
       setError("El nombre y el plan son obligatorios.");
