@@ -37,7 +37,8 @@ export function PremiumHero() {
   );
   const comerciosConEventoTop = new Set(data.eventos.filter((e) => e.es_top_slider && e.comercio_id).map((e) => e.comercio_id));
 
-  const candidatos: Slide[] = [
+  // Paso 1: pool elegible para ESTE visitante (alcance global + lo local que le queda dentro de los 10 km).
+  const elegiblesParaEsteVisitante: Slide[] = [
     ...data.comercios
       .filter((item) => item.activo && (planById.get(item.plan_id)?.aparece_en_hero_banner ?? false))
       // Si el comercio postuló un evento, su slide es el evento, no la ficha.
@@ -51,10 +52,12 @@ export function PremiumHero() {
     ...eventosTop.map<Slide>((evento) => ({ tipo: "evento", id: evento.id, evento })),
   ];
 
-  const seleccion = candidatos
+  // Paso 2: recién sobre ese pool ya filtrado se sortea y se aplica el tope de 7 slides.
+  const seleccion = elegiblesParaEsteVisitante
     .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
     .slice(0, 7);
   const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : [null];
+
 
   return (
     <section aria-label="Destacados de AUNA" className="bg-primary">
