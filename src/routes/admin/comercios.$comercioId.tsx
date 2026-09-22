@@ -18,14 +18,18 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarComercio,
+  eliminarSede,
   getCatalogos,
   getColeccionesDeComercio,
   getComercio,
+  getSedesDeComercio,
   guardarColeccionesDeComercio,
   guardarComercio,
+  guardarSede,
   subirImagen,
   type CatalogosCms,
   type ComercioForm,
+  type Sede,
 } from "@/lib/admin-cms";
 
 export const Route = createFileRoute("/admin/comercios/$comercioId")({
@@ -75,6 +79,9 @@ function EditorComercio() {
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [colecciones, setColecciones] = useState<string[]>([]);
+  /** Sedes ADICIONALES (la principal son los campos de la ficha de arriba). */
+  const [sedes, setSedes] = useState<Sede[]>([]);
+  const [guardandoSede, setGuardandoSede] = useState<string | null>(null);
 
   useEffect(() => {
     let activo = true;
@@ -86,11 +93,13 @@ function EditorComercio() {
         if (esNuevo) {
           setForm({ ...VACIO, plan_id: cat.planes.at(-1)?.id ?? cat.planes[0]?.id ?? "" });
         } else {
-          const [c, cols] = await Promise.all([
+          const [c, cols, seds] = await Promise.all([
             getComercio(comercioId),
             getColeccionesDeComercio(comercioId),
+            getSedesDeComercio(comercioId),
           ]);
           if (!activo) return;
+          setSedes(seds);
           if (!c) {
             setError("No encontramos ese comercio.");
           } else {
@@ -175,6 +184,61 @@ function EditorComercio() {
     g[indice] = g[destino]!;
     g[destino] = actual;
     await aplicarGaleria(g, "Orden de las fotos actualizado.");
+  }
+
+  function setSede(id: string, campo: keyof Sede, valor: unknown) {
+    setSedes((prev) => prev.map((s) => (s.id === id ? { ...s, [campo]: valor } : s)));
+  }
+
+  async function onAgregarSede() {
+    setError(null);
+    try {
+      const id = await guardarSede(null, {
+        comercio_id: comercioId,
+        direccion: "",
+        localidad_id: form.localidad_id,
+        lat: null,
+        lng: null,
+        horarios: "",
+      });
+      setSedes(await getSedesDeComercio(comercioId));
+      setAviso("Sede agregada. Completá sus datos y guardala.");
+      return id;
+    } catch {
+      setError("No pudimos agregar la sede.");
+      return null;
+    }
+  }
+
+  async function onGuardarSede(sede: Sede) {
+    setGuardandoSede(sede.id);
+    setError(null);
+    try {
+      await guardarSede(sede.id, {
+        comercio_id: comercioId,
+        direccion: sede.direccion,
+        localidad_id: sede.localidad_id,
+        lat: sede.lat,
+        lng: sede.lng,
+        horarios: sede.horarios,
+      });
+      setAviso("Sede guardada.");
+    } catch {
+      setError("No pudimos guardar la sede.");
+    } finally {
+      setGuardandoSede(null);
+    }
+  }
+
+  async function onEliminarSede(id: string) {
+    if (!window.confirm("¿Eliminar esta sede?")) return;
+    try {
+      await eliminarSede(id);
+      setSedes((prev) => prev.filter((s) => s.id !== id));
+      setAviso("Sede eliminada.");
+    } catch {
+      setError("No pudimos eliminar la sede.");
+    }
   }
 
   async function onGuardar() {
@@ -426,6 +490,110 @@ function EditorComercio() {
 
 
 
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Sedes adicionales</CardTitle>
+              <CardDescription>
+                La dirección de arriba es la sede principal. Si el comercio tiene más de un local,
+                sumá acá cada sede con su dirección, localidad y horarios. Es opcional.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {esNuevo ? (
+                <p className="text-sm text-muted-foreground">
+                  Guardá primero la ficha para poder cargar sedes adicionales.
+                </p>
+              ) : (
+                <>
+                  {sedes.length === 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      Este comercio tiene una sola dirección (la principal).
+                    </p>
+                  )}
+                  {sedes.map((sede, i) => (
+                    <div key={sede.id} className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
+                      <p className="text-sm font-medium sm:col-span-2">Sede {i + 2}</p>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label htmlFor={`dir-${sede.id}`}>Dirección</Label>
+                        <Input
+                          id={`dir-${sede.id}`}
+                          value={sede.direccion ?? ""}
+                          onChange={(e) => setSede(sede.id, "direccion", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Localidad</Label>
+                        <Select
+                          value={sede.localidad_id ?? ""}
+                          onValueChange={(v) => setSede(sede.id, "localidad_id", v || null)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Elegí una localidad" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {catalogos?.localidades.map((l) => (
+                              <SelectItem key={l.id} value={l.id}>
+                                {l.nombre}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label htmlFor={`lat-${sede.id}`}>Latitud</Label>
+                          <Input
+                            id={`lat-${sede.id}`}
+                            inputMode="decimal"
+                            value={sede.lat ?? ""}
+                            onChange={(e) =>
+                              setSede(sede.id, "lat", e.target.value === "" ? null : Number(e.target.value))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`lng-${sede.id}`}>Longitud</Label>
+                          <Input
+                            id={`lng-${sede.id}`}
+                            inputMode="decimal"
+                            value={sede.lng ?? ""}
+                            onChange={(e) =>
+                              setSede(sede.id, "lng", e.target.value === "" ? null : Number(e.target.value))
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2 sm:col-span-2">
+                        <Label htmlFor={`hor-${sede.id}`}>Horarios de esta sede</Label>
+                        <Textarea
+                          id={`hor-${sede.id}`}
+                          rows={2}
+                          value={sede.horarios ?? ""}
+                          onChange={(e) => setSede(sede.id, "horarios", e.target.value)}
+                        />
+                      </div>
+                      <div className="flex gap-3 sm:col-span-2">
+                        <Button
+                          size="sm"
+                          onClick={() => void onGuardarSede(sede)}
+                          disabled={guardandoSede === sede.id}
+                        >
+                          {guardandoSede === sede.id ? "Guardando…" : "Guardar sede"}
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => void onEliminarSede(sede.id)}>
+                          Eliminar sede
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  <Button variant="outline" onClick={() => void onAgregarSede()}>
+                    Agregar sede
+                  </Button>
+                </>
+              )}
             </CardContent>
           </Card>
 

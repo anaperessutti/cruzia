@@ -13,6 +13,8 @@ export type ComercioColeccion = Database["public"]["Tables"]["comercio_coleccion
 export type CuponColeccion = Database["public"]["Tables"]["cupon_colecciones"]["Row"];
 export type Evento = Database["public"]["Tables"]["eventos"]["Row"];
 export type EventoColeccion = Database["public"]["Tables"]["evento_colecciones"]["Row"];
+export type ComercioSede = Database["public"]["Tables"]["comercio_sedes"]["Row"];
+export type CuponSede = Database["public"]["Tables"]["cupon_sedes"]["Row"];
 
 export type PublicDirectoryData = {
   comercios: Comercio[];
@@ -26,6 +28,8 @@ export type PublicDirectoryData = {
   cuponColecciones: CuponColeccion[];
   eventos: Evento[];
   eventoColecciones: EventoColeccion[];
+  comercioSedes: ComercioSede[];
+  cuponSedes: CuponSede[];
 };
 
 async function getPublicDirectory(): Promise<PublicDirectoryData> {
@@ -42,6 +46,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones,
     eventos,
     eventoColecciones,
+    comercioSedes,
+    cuponSedes,
   ] = await Promise.all([
     supabase.from("comercios").select("*").order("nombre"),
     supabase.from("cupones").select("*").order("vigencia_fin"),
@@ -55,6 +61,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     // Los eventos vencidos dejan de mostrarse solos: filtro por fechas, sin pausas manuales.
     supabase.from("eventos").select("*").lte("fecha_inicio", hoy).gte("fecha_fin", hoy).order("fecha_inicio"),
     supabase.from("evento_colecciones").select("*"),
+    supabase.from("comercio_sedes").select("*").order("created_at"),
+    supabase.from("cupon_sedes").select("*"),
   ]);
 
   const firstError = [
@@ -69,6 +77,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones.error,
     eventos.error,
     eventoColecciones.error,
+    comercioSedes.error,
+    cuponSedes.error,
   ].find(Boolean);
   if (firstError) throw firstError;
 
@@ -84,6 +94,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones: cuponColecciones.data ?? [],
     eventos: eventos.data ?? [],
     eventoColecciones: eventoColecciones.data ?? [],
+    comercioSedes: comercioSedes.data ?? [],
+    cuponSedes: cuponSedes.data ?? [],
   };
 }
 

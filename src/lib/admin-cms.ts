@@ -277,6 +277,67 @@ export async function guardarColeccionesDeEvento(eventoId: string, ids: string[]
   if (error) throw error;
 }
 
+export type Sede = Database["public"]["Tables"]["comercio_sedes"]["Row"];
+
+export type SedeForm = {
+  comercio_id: string;
+  direccion: string | null;
+  localidad_id: string | null;
+  lat: number | null;
+  lng: number | null;
+  horarios: string | null;
+};
+
+/** Sedes ADICIONALES del comercio (la principal vive en los campos de `comercios`). */
+export async function getSedesDeComercio(comercioId: string): Promise<Sede[]> {
+  const { data, error } = await supabase
+    .from("comercio_sedes")
+    .select("*")
+    .eq("comercio_id", comercioId)
+    .order("created_at");
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function guardarSede(id: string | null, form: SedeForm): Promise<string> {
+  if (id) {
+    const { error } = await supabase.from("comercio_sedes").update(form).eq("id", id);
+    if (error) throw error;
+    return id;
+  }
+  const { data, error } = await supabase.from("comercio_sedes").insert(form).select("id").single();
+  if (error) throw error;
+  return data.id;
+}
+
+export async function eliminarSede(id: string) {
+  const { error } = await supabase.from("comercio_sedes").delete().eq("id", id);
+  if (error) throw error;
+}
+
+/** Sedes a las que aplica una promoción. "principal" representa la sede de la ficha. */
+export const SEDE_PRINCIPAL = "principal";
+
+export async function getSedesDeCupon(cuponId: string): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("cupon_sedes")
+    .select("sede_id")
+    .eq("cupon_id", cuponId);
+  if (error) throw error;
+  return (data ?? []).map((r) => r.sede_id ?? SEDE_PRINCIPAL);
+}
+
+/** Reemplaza las sedes de la promoción. Vacío = aplica a todas las sedes. */
+export async function guardarSedesDeCupon(cuponId: string, ids: string[]) {
+  const { error: errBorrar } = await supabase.from("cupon_sedes").delete().eq("cupon_id", cuponId);
+  if (errBorrar) throw errBorrar;
+  if (ids.length === 0) return;
+  const { error } = await supabase.from("cupon_sedes").insert(
+    ids.map((sede) => ({ cupon_id: cuponId, sede_id: sede === SEDE_PRINCIPAL ? null : sede })),
+  );
+  if (error) throw error;
+}
+
 /** Un evento está activo mientras hoy esté entre sus fechas: no hace falta pausarlo a mano. */
 export function eventoVigente(e: { fecha_inicio: string; fecha_fin: string }): boolean {
   const hoy = hoyISO();

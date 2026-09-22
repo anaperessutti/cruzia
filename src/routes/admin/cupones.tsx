@@ -27,11 +27,16 @@ import {
   getComerciosAdmin,
   getCuponesAdmin,
   getCuposMes,
+  getSedesDeComercio,
+  getSedesDeCupon,
   guardarColeccionesDeCupon,
   guardarCupon,
+  guardarSedesDeCupon,
   hoyISO,
   subirImagen,
+  SEDE_PRINCIPAL,
   type Coleccion,
+  type Sede,
   type Comercio,
   type Cupon,
   type CuponForm,
@@ -92,6 +97,29 @@ function CuponesAdmin() {
   const [colecciones, setColecciones] = useState<Coleccion[]>([]);
   /** Colecciones propias de la promoción en edición (vacío = hereda las del comercio). */
   const [coleccionesSel, setColeccionesSel] = useState<string[]>([]);
+  /** Sedes adicionales del comercio elegido (si no hay, no mostramos el selector). */
+  const [sedes, setSedes] = useState<Sede[]>([]);
+  /** Sedes a las que aplica la promoción (vacío = todas). */
+  const [sedesSel, setSedesSel] = useState<string[]>([]);
+
+  const comercioForm = form?.comercio_id ?? null;
+  useEffect(() => {
+    if (!comercioForm) {
+      setSedes([]);
+      return;
+    }
+    let vivo = true;
+    void getSedesDeComercio(comercioForm)
+      .then((s) => {
+        if (vivo) setSedes(s);
+      })
+      .catch(() => {
+        if (vivo) setSedes([]);
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [comercioForm]);
 
   const cargar = useCallback(async () => {
     try {
@@ -134,6 +162,7 @@ function CuponesAdmin() {
   function nuevo() {
     setEditando("nuevo");
     setColeccionesSel([]);
+    setSedesSel([]);
     setForm({
       comercio_id: comercio ?? comercios[0]?.id ?? "",
       titulo: "",
@@ -207,6 +236,7 @@ function CuponesAdmin() {
         titulo: form.titulo.trim(),
       });
       await guardarColeccionesDeCupon(id, coleccionesSel);
+      await guardarSedesDeCupon(id, sedes.length > 0 ? sedesSel : []);
       setEditando(null);
       setForm(null);
       await cargar();
@@ -331,7 +361,8 @@ function CuponesAdmin() {
                   onClick={() => {
                     setEditando(c.id);
                     setForm(formDesde(c));
-                    void getColeccionesDeCupon(c.id).then(setColeccionesSel);
+                   void getColeccionesDeCupon(c.id).then(setColeccionesSel);
+                    void getSedesDeCupon(c.id).then(setSedesSel);
                   }}
                 >
                   Editar
@@ -479,7 +510,41 @@ function CuponesAdmin() {
               </p>
             </div>
 
-
+            {sedes.length > 0 && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label>¿A qué sede aplica esta promoción?</Label>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={sedesSel.includes(SEDE_PRINCIPAL)}
+                      onCheckedChange={(v) =>
+                        setSedesSel((prev) =>
+                          v ? [...prev, SEDE_PRINCIPAL] : prev.filter((id) => id !== SEDE_PRINCIPAL),
+                        )
+                      }
+                    />
+                    Sede principal{" "}
+                    {comercios.find((c) => c.id === form.comercio_id)?.direccion
+                      ? `· ${comercios.find((c) => c.id === form.comercio_id)?.direccion}`
+                      : ""}
+                  </label>
+                  {sedes.map((s, i) => (
+                    <label key={s.id} className="flex items-center gap-2 text-sm">
+                      <Checkbox
+                        checked={sedesSel.includes(s.id)}
+                        onCheckedChange={(v) =>
+                          setSedesSel((prev) => (v ? [...prev, s.id] : prev.filter((id) => id !== s.id)))
+                        }
+                      />
+                      {s.direccion?.trim() ? s.direccion : `Sede ${i + 2}`}
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Si no marcás ninguna, la promoción aplica a todas las sedes.
+                </p>
+              </div>
+            )}
 
             {admiteFavorita(form.comercio_id) && (
               <div className="space-y-1 sm:col-span-2">

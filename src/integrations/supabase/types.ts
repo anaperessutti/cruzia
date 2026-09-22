@@ -131,6 +131,57 @@ export type Database = {
           },
         ]
       }
+      comercio_sedes: {
+        Row: {
+          comercio_id: string
+          created_at: string
+          direccion: string | null
+          horarios: string | null
+          id: string
+          lat: number | null
+          lng: number | null
+          localidad_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          comercio_id: string
+          created_at?: string
+          direccion?: string | null
+          horarios?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          comercio_id?: string
+          created_at?: string
+          direccion?: string | null
+          horarios?: string | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comercio_sedes_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercio_sedes_localidad_id_fkey"
+            columns: ["localidad_id"]
+            isOneToOne: false
+            referencedRelation: "localidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comercios: {
         Row: {
           activo: boolean
@@ -299,6 +350,42 @@ export type Database = {
             columns: ["cupon_id"]
             isOneToOne: false
             referencedRelation: "cupones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cupon_sedes: {
+        Row: {
+          created_at: string
+          cupon_id: string
+          id: string
+          sede_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          cupon_id: string
+          id?: string
+          sede_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          cupon_id?: string
+          id?: string
+          sede_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cupon_sedes_cupon_id_fkey"
+            columns: ["cupon_id"]
+            isOneToOne: false
+            referencedRelation: "cupones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cupon_sedes_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "comercio_sedes"
             referencedColumns: ["id"]
           },
         ]

@@ -55,6 +55,36 @@ function FichaComercio() {
     );
   }
 
+  // Sedes: la principal son los campos de la ficha; el resto vienen de comercio_sedes.
+  const adicionales = data.comercioSedes.filter((s) => s.comercio_id === comercioId);
+  const sedes = adicionales.length
+    ? [
+        {
+          key: "principal",
+          direccion: comercio.direccion,
+          localidad: localidad?.nombre ?? null,
+          horarios: comercio.horarios,
+          lat: comercio.lat,
+          lng: comercio.lng,
+        },
+        ...adicionales.map((s) => ({
+          key: s.id,
+          direccion: s.direccion,
+          localidad: data.localidades.find((l) => l.id === s.localidad_id)?.nombre ?? null,
+          horarios: s.horarios,
+          lat: s.lat,
+          lng: s.lng,
+        })),
+      ]
+    : [];
+  /** Solo las promociones con sedes elegidas a mano: sin fila, aplican a todas. */
+  const sedesDeCupon = new Map<string, Set<string>>();
+  for (const cs of data.cuponSedes) {
+    const set = sedesDeCupon.get(cs.cupon_id) ?? new Set<string>();
+    set.add(cs.sede_id ?? "principal");
+    sedesDeCupon.set(cs.cupon_id, set);
+  }
+
   const conPromocion = plan?.tiene_modulo_promocion ?? false;
   const exclusivo = plan?.aparece_en_hero_banner ?? false;
   const redes = (comercio.redes_sociales ?? {}) as Record<string, string>;
@@ -125,6 +155,61 @@ function FichaComercio() {
           />
         </div>
       </section>
+
+      {sedes.length > 0 ? (
+        <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6">
+          <h2 className="font-display text-2xl font-extrabold text-primary">Nuestras sedes</h2>
+          <div className="mt-5 grid gap-6 lg:grid-cols-2">
+            {sedes.map((sede) => {
+              const promos = cupones.filter((c) => {
+                const soloEn = sedesDeCupon.get(c.id);
+                return !soloEn || soloEn.has(sede.key);
+              });
+              const parciales = promos.filter((c) => sedesDeCupon.has(c.id));
+              const q =
+                sede.lat != null && sede.lng != null
+                  ? `${sede.lat},${sede.lng}`
+                  : encodeURIComponent(
+                      `${sede.direccion ?? comercio.nombre}, ${sede.localidad ?? "Partido de la Costa"}, Argentina`,
+                    );
+              return (
+                <article key={sede.key} className="overflow-hidden rounded-md border border-border">
+                  <div className="space-y-2 p-4">
+                    <p className="font-semibold text-foreground">
+                      {sede.direccion?.trim() ? sede.direccion : comercio.nombre}
+                    </p>
+                    {sede.localidad ? (
+                      <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPin className="size-4" /> {sede.localidad}
+                      </p>
+                    ) : null}
+                    {sede.horarios ? (
+                      <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Clock className="mt-0.5 size-4" /> {sede.horarios}
+                      </p>
+                    ) : null}
+                    {parciales.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {parciales.map((c) => (
+                          <Badge key={c.id} variant="secondary">
+                            <Ticket className="mr-1 size-3" /> {c.titulo}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                  <iframe
+                    title={`Mapa de ${sede.direccion ?? comercio.nombre}`}
+                    src={`https://www.google.com/maps?q=${q}&output=embed`}
+                    loading="lazy"
+                    className="h-56 w-full border-t border-border"
+                  />
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }
