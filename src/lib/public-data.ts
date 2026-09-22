@@ -77,6 +77,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones.error,
     eventos.error,
     eventoColecciones.error,
+    comercioSedes.error,
+    cuponSedes.error,
   ].find(Boolean);
   if (firstError) throw firstError;
 
@@ -92,6 +94,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones: cuponColecciones.data ?? [],
     eventos: eventos.data ?? [],
     eventoColecciones: eventoColecciones.data ?? [],
+    comercioSedes: comercioSedes.data ?? [],
+    cuponSedes: cuponSedes.data ?? [],
   };
 }
 

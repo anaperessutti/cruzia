@@ -29,6 +29,8 @@ const emptyData: PublicDirectoryData = {
   cuponColecciones: [],
   eventos: [],
   eventoColecciones: [],
+  comercioSedes: [],
+  cuponSedes: [],
 };
 
 
