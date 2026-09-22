@@ -97,6 +97,29 @@ function CuponesAdmin() {
   const [colecciones, setColecciones] = useState<Coleccion[]>([]);
   /** Colecciones propias de la promoción en edición (vacío = hereda las del comercio). */
   const [coleccionesSel, setColeccionesSel] = useState<string[]>([]);
+  /** Sedes adicionales del comercio elegido (si no hay, no mostramos el selector). */
+  const [sedes, setSedes] = useState<Sede[]>([]);
+  /** Sedes a las que aplica la promoción (vacío = todas). */
+  const [sedesSel, setSedesSel] = useState<string[]>([]);
+
+  const comercioForm = form?.comercio_id ?? null;
+  useEffect(() => {
+    if (!comercioForm) {
+      setSedes([]);
+      return;
+    }
+    let vivo = true;
+    void getSedesDeComercio(comercioForm)
+      .then((s) => {
+        if (vivo) setSedes(s);
+      })
+      .catch(() => {
+        if (vivo) setSedes([]);
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [comercioForm]);
 
   const cargar = useCallback(async () => {
     try {
