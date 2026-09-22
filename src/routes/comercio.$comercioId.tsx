@@ -125,6 +125,61 @@ function FichaComercio() {
           />
         </div>
       </section>
+
+      {sedes.length > 0 ? (
+        <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6">
+          <h2 className="font-display text-2xl font-extrabold text-primary">Nuestras sedes</h2>
+          <div className="mt-5 grid gap-6 lg:grid-cols-2">
+            {sedes.map((sede) => {
+              const promos = cupones.filter((c) => {
+                const soloEn = sedesDeCupon.get(c.id);
+                return !soloEn || soloEn.has(sede.key);
+              });
+              const parciales = promos.filter((c) => sedesDeCupon.has(c.id));
+              const q =
+                sede.lat != null && sede.lng != null
+                  ? `${sede.lat},${sede.lng}`
+                  : encodeURIComponent(
+                      `${sede.direccion ?? comercio.nombre}, ${sede.localidad ?? "Partido de la Costa"}, Argentina`,
+                    );
+              return (
+                <article key={sede.key} className="overflow-hidden rounded-md border border-border">
+                  <div className="space-y-2 p-4">
+                    <p className="font-semibold text-foreground">
+                      {sede.direccion?.trim() ? sede.direccion : comercio.nombre}
+                    </p>
+                    {sede.localidad ? (
+                      <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPin className="size-4" /> {sede.localidad}
+                      </p>
+                    ) : null}
+                    {sede.horarios ? (
+                      <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Clock className="mt-0.5 size-4" /> {sede.horarios}
+                      </p>
+                    ) : null}
+                    {parciales.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {parciales.map((c) => (
+                          <Badge key={c.id} variant="secondary">
+                            <Ticket className="mr-1 size-3" /> {c.titulo}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                  <iframe
+                    title={`Mapa de ${sede.direccion ?? comercio.nombre}`}
+                    src={`https://www.google.com/maps?q=${q}&output=embed`}
+                    loading="lazy"
+                    className="h-56 w-full border-t border-border"
+                  />
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }
