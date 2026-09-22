@@ -43,11 +43,13 @@ export function PremiumHero() {
       .filter((item) => item.activo && (planById.get(item.plan_id)?.aparece_en_hero_banner ?? false))
       // Si el comercio postuló un evento, su slide es el evento, no la ficha.
       .filter((item) => !comerciosConEventoTop.has(item.id))
-      // El alcance se define en el anuncio postulado al Top Slider, no en el comercio.
+      // El alcance sale del anuncio postulado a mano; si no hay ninguno, del propio comercio.
       .filter((item) => {
         const promo = cuponTop(item.id);
-        return !promo?.hero_alcance_local || estaCerca(userCoords, item);
+        const soloLocal = promo ? promo.hero_alcance_local : item.hero_alcance_local;
+        return !soloLocal || estaCerca(userCoords, item);
       })
+
       .map<Slide>((comercio) => ({ tipo: "comercio", id: comercio.id, comercio, promo: cuponTop(comercio.id) })),
     ...eventosTop.map<Slide>((evento) => ({ tipo: "evento", id: evento.id, evento })),
   ];
