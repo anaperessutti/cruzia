@@ -402,6 +402,30 @@ function EditorComercio() {
                 <span>Es un lugar bajo techo (indoor)</span>
               </label>
 
+              {/* Solo Premium: alcance del Hero cuando se muestra la ficha general
+                  (es decir, cuando NO hay ninguna promoción ni evento postulado a mano). */}
+              {esPremium ? (
+                <div className="space-y-2 rounded-lg border p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <Label htmlFor="alcance-ficha">Alcance de la ficha en el Hero</Label>
+                    <Switch
+                      id="alcance-ficha"
+                      checked={!form.hero_alcance_local}
+                      onCheckedChange={(v) => set("hero_alcance_local", !v)}
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {form.hero_alcance_local
+                      ? "Solo cerca del comercio (10 km)."
+                      : "Mostrar en todas las localidades."}{" "}
+                    Se aplica únicamente cuando el Hero muestra la ficha general de este comercio,
+                    es decir cuando no hay ninguna promoción ni evento postulado al Top Slider.
+                  </p>
+                </div>
+              ) : null}
+
+
+
             </CardContent>
           </Card>
 
