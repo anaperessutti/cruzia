@@ -43,6 +43,13 @@
       "when": 1790052855278,
       "tag": "0005_cupon_colecciones_y_eventos",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790055626302,
+      "tag": "0006_comercio_sedes_y_cupon_sedes",
+      "breakpoints": true
     }
   ]
 }
