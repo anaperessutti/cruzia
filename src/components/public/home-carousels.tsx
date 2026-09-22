@@ -17,6 +17,17 @@ function vigente(fechaInicio: string, fechaFin: string) {
 
 export function HomeCarousels() {
   const { data, filters, isLoading, userCoords, coleccionesDeCupon, coleccionesDeEvento } = usePublicDirectory();
+  // Clima leído en el servidor (cacheado 20 min) para decidir el orden de las filas.
+  const pedirClima = useServerFn(getClimaCosta);
+  const climaQuery = useQuery({
+    queryKey: ["clima-costa"],
+    queryFn: () => pedirClima(),
+    staleTime: 20 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+  const malClima = climaQuery.data?.malClima ?? false;
+  // Se fija una sola vez por carga del Home: no cambia mientras se navega.
+  const minutosDelDia = useMemo(() => minutosArgentina(), []);
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
