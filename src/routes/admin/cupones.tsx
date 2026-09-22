@@ -126,11 +126,10 @@ function CuponesAdmin() {
     return Boolean(plan && plan.max_cupones_activos > 0);
   };
 
-  /** El Top Slider se ofrece a los comercios con promociones (Pro y Premium). */
-  const admiteTopSlider = (comercioId: string) => {
-    const plan = planDeComercio(comercioId);
-    return Boolean(plan && plan.max_cupones_activos > 0);
-  };
+  /** El Top Slider es exclusivo de Premium (planes con presencia en el Hero). */
+  const admiteTopSlider = (comercioId: string) =>
+    Boolean(planDeComercio(comercioId)?.aparece_en_hero_banner);
+
 
   function nuevo() {
     setEditando("nuevo");
