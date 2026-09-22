@@ -55,6 +55,36 @@ function FichaComercio() {
     );
   }
 
+  // Sedes: la principal son los campos de la ficha; el resto vienen de comercio_sedes.
+  const adicionales = data.comercioSedes.filter((s) => s.comercio_id === comercioId);
+  const sedes = adicionales.length
+    ? [
+        {
+          key: "principal",
+          direccion: comercio.direccion,
+          localidad: localidad?.nombre ?? null,
+          horarios: comercio.horarios,
+          lat: comercio.lat,
+          lng: comercio.lng,
+        },
+        ...adicionales.map((s) => ({
+          key: s.id,
+          direccion: s.direccion,
+          localidad: data.localidades.find((l) => l.id === s.localidad_id)?.nombre ?? null,
+          horarios: s.horarios,
+          lat: s.lat,
+          lng: s.lng,
+        })),
+      ]
+    : [];
+  /** Solo las promociones con sedes elegidas a mano: sin fila, aplican a todas. */
+  const sedesDeCupon = new Map<string, Set<string>>();
+  for (const cs of data.cuponSedes) {
+    const set = sedesDeCupon.get(cs.cupon_id) ?? new Set<string>();
+    set.add(cs.sede_id ?? "principal");
+    sedesDeCupon.set(cs.cupon_id, set);
+  }
+
   const conPromocion = plan?.tiene_modulo_promocion ?? false;
   const exclusivo = plan?.aparece_en_hero_banner ?? false;
   const redes = (comercio.redes_sociales ?? {}) as Record<string, string>;
