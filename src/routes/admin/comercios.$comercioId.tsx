@@ -18,14 +18,18 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   eliminarComercio,
+  eliminarSede,
   getCatalogos,
   getColeccionesDeComercio,
   getComercio,
+  getSedesDeComercio,
   guardarColeccionesDeComercio,
   guardarComercio,
+  guardarSede,
   subirImagen,
   type CatalogosCms,
   type ComercioForm,
+  type Sede,
 } from "@/lib/admin-cms";
 
 export const Route = createFileRoute("/admin/comercios/$comercioId")({
