@@ -134,6 +134,7 @@ function CuponesAdmin() {
 
   function nuevo() {
     setEditando("nuevo");
+    setColeccionesSel([]);
     setForm({
       comercio_id: comercio ?? comercios[0]?.id ?? "",
       titulo: "",
