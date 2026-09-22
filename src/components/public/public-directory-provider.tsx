@@ -26,6 +26,9 @@ const emptyData: PublicDirectoryData = {
   rubros: [],
   colecciones: [],
   comercioColecciones: [],
+  cuponColecciones: [],
+  eventos: [],
+  eventoColecciones: [],
 };
 
 
@@ -110,15 +113,64 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     runGeolocation();
   }, [data.localidades, runGeolocation]);
 
+  // Colecciones por comercio, por promoción y por evento.
+  const coleccionesPorComercio = useMemo(() => {
+    const mapa = new Map<string, string[]>();
+    for (const rel of data.comercioColecciones) {
+      const lista = mapa.get(rel.comercio_id);
+      if (lista) lista.push(rel.coleccion_id);
+      else mapa.set(rel.comercio_id, [rel.coleccion_id]);
+    }
+    return mapa;
+  }, [data.comercioColecciones]);
+
+  const coleccionesPropiasDeCupon = useMemo(() => {
+    const mapa = new Map<string, string[]>();
+    for (const rel of data.cuponColecciones) {
+      const lista = mapa.get(rel.cupon_id);
+      if (lista) lista.push(rel.coleccion_id);
+      else mapa.set(rel.cupon_id, [rel.coleccion_id]);
+    }
+    return mapa;
+  }, [data.cuponColecciones]);
+
+  const coleccionesPorEvento = useMemo(() => {
+    const mapa = new Map<string, string[]>();
+    for (const rel of data.eventoColecciones) {
+      const lista = mapa.get(rel.evento_id);
+      if (lista) lista.push(rel.coleccion_id);
+      else mapa.set(rel.evento_id, [rel.coleccion_id]);
+    }
+    return mapa;
+  }, [data.eventoColecciones]);
+
+  /** Si la promoción tiene colecciones propias, mandan ellas; si no, hereda las del comercio. */
+  const coleccionesDeCupon = useCallback(
+    (cupon: Cupon) => coleccionesPropiasDeCupon.get(cupon.id) ?? coleccionesPorComercio.get(cupon.comercio_id) ?? [],
+    [coleccionesPropiasDeCupon, coleccionesPorComercio],
+  );
+  const coleccionesDeEvento = useCallback(
+    (eventoId: string) => coleccionesPorEvento.get(eventoId) ?? [],
+    [coleccionesPorEvento],
+  );
+
   const filteredComercios = useMemo(() => {
     const cuponCommerceIds = new Set(data.cupones.map((cupon) => cupon.comercio_id));
     const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
-    const comerciosColeccion = filters.coleccionIds.length > 0
-      ? new Set(data.comercioColecciones.filter((item) => filters.coleccionIds.includes(item.coleccion_id)).map((item) => item.comercio_id))
-      : null;
+    const coincideColeccion = (comercio: Comercio) => {
+      if (filters.coleccionIds.length === 0) return true;
+      const propias = coleccionesPorComercio.get(comercio.id) ?? [];
+      if (propias.some((id) => filters.coleccionIds.includes(id))) return true;
+      // También entra si alguna de sus promociones tiene colecciones propias que coinciden.
+      return data.cupones.some(
+        (cupon) =>
+          cupon.comercio_id === comercio.id &&
+          coleccionesDeCupon(cupon).some((id) => filters.coleccionIds.includes(id)),
+      );
+    };
     const base = data.comercios
       .filter((item) => filters.localidadIds.length === 0 || (item.localidad_id && filters.localidadIds.includes(item.localidad_id)))
-      .filter((item) => !comerciosColeccion || comerciosColeccion.has(item.id))
+      .filter(coincideColeccion)
       .filter((item) => !filters.soloCupon || cuponCommerceIds.has(item.id))
       .filter((item) => planById.get(item.plan_id)?.aparece_en_grilla ?? false);
 
@@ -127,9 +179,10 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     return filters.soloCupon
       ? base.slice().sort((a, b) => (planById.get(a.plan_id)?.prioridad_orden ?? 99) - (planById.get(b.plan_id)?.prioridad_orden ?? 99))
       : base.slice().sort((a, b) => a.created_at.localeCompare(b.created_at));
-  }, [data, filters]);
+  }, [data, filters, coleccionesPorComercio, coleccionesDeCupon]);
 
   // Una tarjeta por promoción activa; los comercios sin promociones aparecen una sola vez.
+  // Los eventos vigentes de esas colecciones se mezclan con el resto.
   const tarjetas = useMemo<TarjetaGrilla[]>(() => {
     const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
     const cuponesPorComercio = new Map<string, Cupon[]>();
@@ -138,25 +191,36 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
       if (lista) lista.push(cupon);
       else cuponesPorComercio.set(cupon.comercio_id, [cupon]);
     }
+    const enColeccion = (ids: string[]) =>
+      filters.coleccionIds.length === 0 || ids.some((id) => filters.coleccionIds.includes(id));
 
     const items: TarjetaGrilla[] = [];
     for (const comercio of filteredComercios) {
-      const cupones = cuponesPorComercio.get(comercio.id) ?? [];
+      const cupones = (cuponesPorComercio.get(comercio.id) ?? []).filter((cupon) => enColeccion(coleccionesDeCupon(cupon)));
       if (cupones.length === 0) {
-        if (!filters.soloCupon) items.push({ key: comercio.id, comercio, cupon: null });
+        const propias = coleccionesPorComercio.get(comercio.id) ?? [];
+        if (!filters.soloCupon && enColeccion(propias)) items.push({ tipo: "comercio", key: comercio.id, comercio, cupon: null });
         continue;
       }
-      for (const cupon of cupones) items.push({ key: cupon.id, comercio, cupon });
+      for (const cupon of cupones) items.push({ tipo: "comercio", key: cupon.id, comercio, cupon });
     }
 
-    // Mezcla estable: nunca agrupamos a propósito por comercio_id.
+    if (!filters.soloCupon) {
+      for (const evento of data.eventos) {
+        if (filters.localidadIds.length > 0 && !(evento.localidad_id && filters.localidadIds.includes(evento.localidad_id))) continue;
+        if (!enColeccion(coleccionesDeEvento(evento.id))) continue;
+        items.push({ tipo: "evento", key: `evento-${evento.id}`, evento });
+      }
+    }
+
+    // Mezcla estable: nunca agrupamos a propósito por comercio_id ni por tipo.
     const barajado = (key: string) => {
       let h = 0;
       for (let i = 0; i < key.length; i += 1) h = (h * 31 + key.charCodeAt(i)) % 100003;
       return h;
     };
     return items.sort((a, b) => {
-      if (filters.soloCupon) {
+      if (filters.soloCupon && a.tipo === "comercio" && b.tipo === "comercio") {
         const diff =
           (planById.get(a.comercio.plan_id)?.prioridad_orden ?? 99) -
           (planById.get(b.comercio.plan_id)?.prioridad_orden ?? 99);
@@ -164,7 +228,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
       }
       return barajado(a.key) - barajado(b.key);
     });
-  }, [data.cupones, data.planes, filteredComercios, filters.soloCupon]);
+  }, [data.cupones, data.planes, data.eventos, filteredComercios, filters, coleccionesDeCupon, coleccionesDeEvento, coleccionesPorComercio]);
 
   const setLocalidadIds = useCallback((localidadIds: string[]) => {
     manualSelectionRef.current = true;
@@ -183,6 +247,8 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     data,
     filteredComercios,
     tarjetas,
+    coleccionesDeCupon,
+    coleccionesDeEvento,
     filters,
     isLoading: query.isLoading,
     geoStatus,
@@ -192,7 +258,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     setLocalidadIds,
     setColeccionIds,
     setSoloCupon,
-  }), [data, filteredComercios, tarjetas, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon]);
+  }), [data, filteredComercios, tarjetas, coleccionesDeCupon, coleccionesDeEvento, filters, query.isLoading, geoStatus, userCoords, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon]);
 
   return <PublicDirectoryContext.Provider value={value}>{children}</PublicDirectoryContext.Provider>;
 }
