@@ -46,6 +46,8 @@ async function getPublicDirectory(): Promise<PublicDirectoryData> {
     cuponColecciones,
     eventos,
     eventoColecciones,
+    comercioSedes,
+    cuponSedes,
   ] = await Promise.all([
     supabase.from("comercios").select("*").order("nombre"),
     supabase.from("cupones").select("*").order("vigencia_fin"),
