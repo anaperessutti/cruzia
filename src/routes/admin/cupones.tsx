@@ -162,6 +162,7 @@ function CuponesAdmin() {
   function nuevo() {
     setEditando("nuevo");
     setColeccionesSel([]);
+    setSedesSel([]);
     setForm({
       comercio_id: comercio ?? comercios[0]?.id ?? "",
       titulo: "",
@@ -235,6 +236,7 @@ function CuponesAdmin() {
         titulo: form.titulo.trim(),
       });
       await guardarColeccionesDeCupon(id, coleccionesSel);
+      await guardarSedesDeCupon(id, sedes.length > 0 ? sedesSel : []);
       setEditando(null);
       setForm(null);
       await cargar();
@@ -359,7 +361,8 @@ function CuponesAdmin() {
                   onClick={() => {
                     setEditando(c.id);
                     setForm(formDesde(c));
-                    void getColeccionesDeCupon(c.id).then(setColeccionesSel);
+                   void getColeccionesDeCupon(c.id).then(setColeccionesSel);
+                    void getSedesDeCupon(c.id).then(setSedesSel);
                   }}
                 >
                   Editar
