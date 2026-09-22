@@ -15,7 +15,6 @@ export function HomeCarousels() {
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
-  const rubroById = useMemo(() => new Map(data.rubros.map((item) => [item.id, item])), [data.rubros]);
   const cuponesActivos = useMemo(
     () => data.cupones.filter((cupon) => cupon.activo && vigente(cupon.vigencia_inicio, cupon.vigencia_fin)),
     [data.cupones],
@@ -39,7 +38,6 @@ export function HomeCarousels() {
       cupon={cupon}
       plan={planById.get(comercio.plan_id)}
       localidad={localidadById.get(comercio.localidad_id ?? "")}
-      rubro={rubroById.get(comercio.rubro_id ?? "")}
     />
   );
   const imagenesDe = (tarjetas: TarjetaGrilla[]) => tarjetas.map(({ comercio, cupon }) => cupon?.flyer_url ?? comercio.galeria[0] ?? null);
