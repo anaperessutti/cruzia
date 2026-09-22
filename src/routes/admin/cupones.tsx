@@ -510,7 +510,41 @@ function CuponesAdmin() {
               </p>
             </div>
 
-
+            {sedes.length > 0 && (
+              <div className="space-y-2 sm:col-span-2">
+                <Label>¿A qué sede aplica esta promoción?</Label>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={sedesSel.includes(SEDE_PRINCIPAL)}
+                      onCheckedChange={(v) =>
+                        setSedesSel((prev) =>
+                          v ? [...prev, SEDE_PRINCIPAL] : prev.filter((id) => id !== SEDE_PRINCIPAL),
+                        )
+                      }
+                    />
+                    Sede principal{" "}
+                    {comercios.find((c) => c.id === form.comercio_id)?.direccion
+                      ? `· ${comercios.find((c) => c.id === form.comercio_id)?.direccion}`
+                      : ""}
+                  </label>
+                  {sedes.map((s, i) => (
+                    <label key={s.id} className="flex items-center gap-2 text-sm">
+                      <Checkbox
+                        checked={sedesSel.includes(s.id)}
+                        onCheckedChange={(v) =>
+                          setSedesSel((prev) => (v ? [...prev, s.id] : prev.filter((id) => id !== s.id)))
+                        }
+                      />
+                      {s.direccion?.trim() ? s.direccion : `Sede ${i + 2}`}
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Si no marcás ninguna, la promoción aplica a todas las sedes.
+                </p>
+              </div>
+            )}
 
             {admiteFavorita(form.comercio_id) && (
               <div className="space-y-1 sm:col-span-2">
