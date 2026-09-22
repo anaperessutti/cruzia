@@ -1,4 +1,6 @@
-# Orden automático de las filas temáticas del Inicio
+
+
+## ClimaOrden automático de las filas temáticas del Inicio
 
 Las 12 filas de categorías del Inicio se reordenan solas según el clima del momento y la hora local. El banner de arriba y "Favoritos de la Costa" no se tocan: siguen siempre fijos en las dos primeras posiciones.
 
@@ -7,8 +9,6 @@ Las 12 filas de categorías del Inicio se reordenan solas según el clima del mo
 Una sola lectura para toda la app, tomada en **Santa Teresita: -36.5416, -56.6906**.
 
 Es la referencia que pediste y funciona bien como punto medio de la franja costera. Si preferís algo todavía más central entre San Clemente y Punta Médanos, la alternativa sería -36.64 / -56.67 (mar abierto frente a Aguas Verdes). Decime si querés esa en su lugar.
-
-## Clima
 
 - La consulta a OpenWeatherMap se hace desde el servidor, con la clave guardada como secreto. Nunca viaja al navegador ni queda en el código.
 - El resultado se guarda en caché **20 minutos**: la primera visita después de ese lapso refresca la lectura y el resto de las visitas la reutilizan.
