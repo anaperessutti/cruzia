@@ -40,7 +40,7 @@ export async function crearPedidoGiftbox(pedido: NuevoPedido): Promise<number> {
     p_formato: pedido.formato,
     p_nombre: pedido.nombre,
     p_whatsapp: pedido.whatsapp,
-    p_device_id: pedido.deviceId ?? undefined,
+    ...(pedido.deviceId ? { p_device_id: pedido.deviceId } : {}),
   });
   if (error) throw error;
   return Number((data as { total?: number } | null)?.total ?? 0);
