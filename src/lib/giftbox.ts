@@ -25,31 +25,25 @@ export async function getGiftboxItems(): Promise<GiftboxItem[]> {
 export type NuevoPedido = {
   items: GiftboxItem[];
   formato: GiftboxFormato;
-  total: number;
   nombre: string;
   whatsapp: string;
   deviceId: string | null;
 };
 
 /**
- * Inserta el pedido. IMPORTANTE: nunca encadenar .select() acá:
- * la tabla sólo permite INSERT anónimo, no SELECT.
+ * Crea el pedido vía función del servidor: sólo se envían los IDs de los items.
+ * El precio total se calcula en la base con los precios reales. Devuelve ese total.
  */
-export async function crearPedidoGiftbox(pedido: NuevoPedido): Promise<void> {
-  const { error } = await supabase.from("giftbox_pedidos").insert({
-    items_seleccionados: pedido.items.map((item) => ({
-      id: item.id,
-      nombre: item.nombre,
-      categoria: item.categoria,
-      precio: item.precio,
-    })),
-    formato: pedido.formato,
-    precio_total: pedido.total,
-    contacto_nombre: pedido.nombre,
-    contacto_whatsapp: pedido.whatsapp,
-    device_id: pedido.deviceId,
+export async function crearPedidoGiftbox(pedido: NuevoPedido): Promise<number> {
+  const { data, error } = await supabase.rpc("crear_pedido_giftbox", {
+    p_item_ids: pedido.items.map((item) => item.id),
+    p_formato: pedido.formato,
+    p_nombre: pedido.nombre,
+    p_whatsapp: pedido.whatsapp,
+    ...(pedido.deviceId ? { p_device_id: pedido.deviceId } : {}),
   });
   if (error) throw error;
+  return Number((data as { total?: number } | null)?.total ?? 0);
 }
 
 export function formatearPrecio(valor: number) {
