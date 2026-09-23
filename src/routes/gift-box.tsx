@@ -77,15 +77,14 @@ function GiftBoxPage() {
     setError(null);
     setEnviando(true);
     try {
-      await crearPedidoGiftbox({
+      const totalVerificado = await crearPedidoGiftbox({
         items: elegidos,
         formato,
-        total,
         nombre: nombre.trim(),
         whatsapp: whatsapp.trim(),
         deviceId: getDeviceId(),
       });
-      setConfirmado({ items: elegidos, total, formato });
+      setConfirmado({ items: elegidos, total: totalVerificado, formato });
       setSeleccion({});
       setNombre("");
       setWhatsapp("");
