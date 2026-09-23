@@ -927,6 +927,16 @@ export type Database = {
         Args: { p_cupon_id: string; p_device_id: string; p_qr_codigo: string }
         Returns: Json
       }
+      crear_pedido_giftbox: {
+        Args: {
+          p_device_id?: string
+          p_formato: Database["public"]["Enums"]["giftbox_formato"]
+          p_item_ids: string[]
+          p_nombre: string
+          p_whatsapp: string
+        }
+        Returns: Json
+      }
       cupon_activado_este_mes: {
         Args: { p_cupon_id: string }
         Returns: boolean

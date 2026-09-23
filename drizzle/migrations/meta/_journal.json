@@ -50,6 +50,13 @@
       "when": 1790055626302,
       "tag": "0006_comercio_sedes_y_cupon_sedes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790188795728,
+      "tag": "0007_giftbox_pedido_precio_servidor",
+      "breakpoints": true
     }
   ]
 }
