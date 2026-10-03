@@ -53,10 +53,10 @@ export const Route = createFileRoute("/admin/cupones")({
   }),
   head: () => ({
     meta: [
-      { title: "Promociones | Panel AUNA" },
-      { name: "description", content: "Edición rápida de cupones y promociones de AUNA." },
-      { property: "og:title", content: "Promociones | Panel AUNA" },
-      { property: "og:description", content: "Edición rápida de cupones y promociones de AUNA." },
+      { title: "Promociones | Panel Cruzia" },
+      { name: "description", content: "Edición rápida de cupones y promociones de Cruzia." },
+      { property: "og:title", content: "Promociones | Panel Cruzia" },
+      { property: "og:description", content: "Edición rápida de cupones y promociones de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

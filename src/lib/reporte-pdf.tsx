@@ -118,14 +118,14 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
 
   return (
     <Document
-      title={`AUNA Reporte ${metrica.comercio} ${nombreMes(metrica.mes)}`}
-      author="AUNA — Comunidad del Partido de la Costa"
+      title={`Cruzia Reporte ${metrica.comercio} ${nombreMes(metrica.mes)}`}
+      author="Cruzia — Comunidad del Partido de la Costa"
     >
       <Page size="A4" style={s.page}>
         <View style={[s.header, { backgroundColor: v.header }]}>
           <View style={s.selloFila}>
             <View>
-              <Text style={s.marca}>AUNA</Text>
+              <Text style={s.marca}>Cruzia</Text>
               <Text style={s.marcaSub}>Cupones y beneficios del Partido de la Costa</Text>
             </View>
             <View>
@@ -192,8 +192,8 @@ function ReporteDoc({ reporte }: { reporte: ReporteComercio }) {
         </View>
 
         <View style={s.footer} fixed>
-          <Text>AUNA · Reporte de {nombreMes(metrica.mes)}</Text>
-          <Text>auna.comunidad@gmail.com · @somos_auna</Text>
+          <Text>Cruzia · Reporte de {nombreMes(metrica.mes)}</Text>
+          <Text>somoscruzia@gmail.com · @cruzia.ar</Text>
         </View>
       </Page>
     </Document>
@@ -207,7 +207,7 @@ export function nombreArchivo(reporte: ReporteComercio): string {
     .replace(/[^a-zA-Z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .toLowerCase();
-  return `AUNA-reporte-${slug}-${reporte.metrica.mes.slice(0, 7)}.pdf`;
+  return `Cruzia-reporte-${slug}-${reporte.metrica.mes.slice(0, 7)}.pdf`;
 }
 
 export async function generarReportePdf(reporte: ReporteComercio): Promise<Blob> {

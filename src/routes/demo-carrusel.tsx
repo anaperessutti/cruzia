@@ -5,8 +5,8 @@ import { CarruselSeccion } from "@/components/public/carrusel-seccion";
 
 export const Route = createFileRoute("/demo-carrusel")({
   head: () => ({ meta: [
-    { title: "Demo carrusel | AUNA" }, { name: "description", content: "Demo temporal del componente de carrusel horizontal del Home." },
-    { property: "og:title", content: "Demo carrusel | AUNA" }, { property: "og:description", content: "Demo temporal del componente de carrusel horizontal del Home." },
+    { title: "Demo carrusel | Cruzia" }, { name: "description", content: "Demo temporal del componente de carrusel horizontal del Home." },
+    { property: "og:title", content: "Demo carrusel | Cruzia" }, { property: "og:description", content: "Demo temporal del componente de carrusel horizontal del Home." },
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: DemoCarruselPage,

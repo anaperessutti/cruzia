@@ -13,9 +13,9 @@ import { EMAIL_AUNA, enviarLeadComercio, linkWhatsappAuna } from "@/lib/formular
 export const Route = createFileRoute("/contacto")({
   head: () => ({
     meta: [
-      { title: "Contacto | AUNA" },
-      { name: "description", content: "Escribinos: sumá tu comercio a AUNA o mandanos tu consulta como usuario del Partido de la Costa." },
-      { property: "og:title", content: "Contacto | AUNA" },
+      { title: "Contacto | Cruzia" },
+      { name: "description", content: "Escribinos: sumá tu comercio a Cruzia o mandanos tu consulta como usuario del Partido de la Costa." },
+      { property: "og:title", content: "Contacto | Cruzia" },
       { property: "og:description", content: "Estamos para escucharte." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -50,7 +50,7 @@ function Page() {
       whatsapp: comercio.whatsapp.trim(),
     };
     const url = linkWhatsappAuna(
-      `Hola AUNA, quiero sumar mi comercio.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`,
+      `Hola Cruzia, quiero sumar mi comercio.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`,
     );
     try {
       await enviarLeadComercio(payload);
@@ -65,7 +65,7 @@ function Page() {
   function onSubmitUsuario(event: FormEvent) {
     event.preventDefault();
     const cuerpo = `Nombre: ${usuario.nombre}\nEmail: ${usuario.email}\nLocalidad: ${usuario.localidad || "-"}\n\n${usuario.mensaje}`;
-    const url = `mailto:${EMAIL_AUNA}?subject=${encodeURIComponent(`Consulta de ${usuario.nombre} desde AUNA`)}&body=${encodeURIComponent(cuerpo)}`;
+    const url = `mailto:${EMAIL_AUNA}?subject=${encodeURIComponent(`Consulta de ${usuario.nombre} desde Cruzia`)}&body=${encodeURIComponent(cuerpo)}`;
     setLinkFinal(url);
     setEstado("ok");
     window.location.href = url;
@@ -83,7 +83,7 @@ function Page() {
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2">
           {([
-            { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a AUNA" },
+            { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a Cruzia" },
             { key: "usuario" as const, icon: User, titulo: "Soy un Usuario", texto: "Tengo una consulta o una sugerencia." },
           ]).map((opcion) => (
             <button
@@ -111,7 +111,7 @@ function Page() {
             </p>
             <Button asChild size="lg" className="mt-6">
               <a href={linkFinal} target={perfil === "comercio" ? "_blank" : undefined} rel="noreferrer">
-                {perfil === "comercio" ? "Abrir WhatsApp de AUNA" : "Abrir mi correo"} <ArrowRight />
+                {perfil === "comercio" ? "Abrir WhatsApp de Cruzia" : "Abrir mi correo"} <ArrowRight />
               </a>
             </Button>
           </div>
@@ -177,10 +177,10 @@ function Page() {
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Email</p>
             <p className="mt-1 font-display text-lg font-bold text-primary">{EMAIL_AUNA}</p>
           </a>
-          <a href="https://www.instagram.com/somos_auna/" target="_blank" rel="noreferrer" className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
+          <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
             <Instagram className="text-secondary" />
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Instagram</p>
-            <p className="mt-1 font-display text-lg font-bold text-primary">@somos_auna</p>
+            <p className="mt-1 font-display text-lg font-bold text-primary">@cruzia.ar</p>
           </a>
         </div>
       </section>

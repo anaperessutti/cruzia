@@ -8,13 +8,13 @@ export const Route = createFileRoute("/admin/confirmado")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Email confirmado | AUNA" },
+      { title: "Email confirmado | Cruzia" },
       {
         name: "description",
-        content: "Confirmación de la cuenta de administradora de AUNA, cupones del Partido de la Costa.",
+        content: "Confirmación de la cuenta de administradora de Cruzia, cupones del Partido de la Costa.",
       },
-      { property: "og:title", content: "Email confirmado | AUNA" },
-      { property: "og:description", content: "Confirmación de la cuenta de administradora de AUNA." },
+      { property: "og:title", content: "Email confirmado | Cruzia" },
+      { property: "og:description", content: "Confirmación de la cuenta de administradora de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
