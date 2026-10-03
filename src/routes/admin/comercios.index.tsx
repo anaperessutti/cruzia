@@ -18,10 +18,10 @@ export const Route = createFileRoute("/admin/comercios/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Comercios | Panel AUNA" },
-      { name: "description", content: "Alta y edición de comercios de AUNA." },
-      { property: "og:title", content: "Comercios | Panel AUNA" },
-      { property: "og:description", content: "Alta y edición de comercios de AUNA." },
+      { title: "Comercios | Panel Cruzia" },
+      { name: "description", content: "Alta y edición de comercios de Cruzia." },
+      { property: "og:title", content: "Comercios | Panel Cruzia" },
+      { property: "og:description", content: "Alta y edición de comercios de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

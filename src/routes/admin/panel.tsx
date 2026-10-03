@@ -28,10 +28,10 @@ export const Route = createFileRoute("/admin/panel")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Panel de administración | AUNA" },
-      { name: "description", content: "Métricas por comercio y reportes en PDF de AUNA." },
-      { property: "og:title", content: "Panel de administración | AUNA" },
-      { property: "og:description", content: "Métricas por comercio y reportes en PDF de AUNA." },
+      { title: "Panel de administración | Cruzia" },
+      { name: "description", content: "Métricas por comercio y reportes en PDF de Cruzia." },
+      { property: "og:title", content: "Panel de administración | Cruzia" },
+      { property: "og:description", content: "Métricas por comercio y reportes en PDF de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -190,7 +190,7 @@ function AdminPanel() {
       <header className="border-b bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
           <div>
-            <p className="font-display text-2xl font-bold">AUNA · Panel</p>
+            <p className="font-display text-2xl font-bold">Cruzia · Panel</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
           <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
@@ -238,7 +238,7 @@ function AdminPanel() {
           <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>
             <CardDescription>
-              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de AUNA,
+              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de Cruzia,
               listo para reenviar por WhatsApp.
             </CardDescription>
           </CardHeader>

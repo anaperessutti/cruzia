@@ -21,9 +21,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/gift-box")({
   head: () => ({
     meta: [
-      { title: "Gift Box | AUNA" },
-      { name: "description", content: "Regalá experiencias del Partido de la Costa con Gift Box de AUNA." },
-      { property: "og:title", content: "Gift Box | AUNA" },
+      { title: "Gift Box | Cruzia" },
+      { name: "description", content: "Regalá experiencias del Partido de la Costa con Gift Box de Cruzia." },
+      { property: "og:title", content: "Gift Box | Cruzia" },
       { property: "og:description", content: "Una caja llena de experiencias locales." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

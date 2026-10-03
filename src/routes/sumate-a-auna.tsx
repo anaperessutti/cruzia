@@ -13,9 +13,9 @@ import type { Plan } from "@/lib/public-data";
 export const Route = createFileRoute("/sumate-a-auna")({
   head: () => ({
     meta: [
-      { title: "Sumate a AUNA | Sumá tu comercio a AUNA" },
-      { name: "description", content: "Sumá tu comercio a AUNA y conectá con quienes eligen el Partido de la Costa. Conocé los planes Básico, Pro y Premium." },
-      { property: "og:title", content: "Sumate a AUNA | Sumá tu comercio a AUNA" },
+      { title: "Sumate a Cruzia | Sumá tu comercio a Cruzia" },
+      { name: "description", content: "Sumá tu comercio a Cruzia y conectá con quienes eligen el Partido de la Costa. Conocé los planes Básico, Pro y Premium." },
+      { property: "og:title", content: "Sumate a Cruzia | Sumá tu comercio a Cruzia" },
       { property: "og:description", content: "Vidriera digital, cupones destacados y alto impacto para tu negocio en La Costa." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -61,7 +61,7 @@ function Page() {
       localidad: form.localidad || null,
       whatsapp: form.whatsapp.trim(),
     };
-    const mensaje = `Hola AUNA!, quiero sumar mi comercio a la app.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`;
+    const mensaje = `Hola Cruzia!, quiero sumar mi comercio a la app.\n\nLocal: ${payload.nombre_local}\nRubro: ${payload.rubro ?? "-"}\nLocalidad: ${payload.localidad ?? "-"}\nWhatsApp: ${payload.whatsapp}`;
     const url = linkWhatsappAuna(mensaje);
     try {
       await enviarLeadComercio(payload);
@@ -80,14 +80,14 @@ function Page() {
           <p className="text-xs font-bold uppercase text-accent">Comercios de La Costa</p>
           <h1 className="mt-4 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] sm:text-6xl">Hacé que más personas descubran tu negocio.</h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-primary-foreground/75 sm:text-lg">
-            Impulsamos el encuentro entre los comercios que le dan vida a la Costa y las personas que la disfrutan. AUNA es la red que consolida la oferta local para potenciar el comercio de nuestras localidades, ofreciendo siempre las mejores opciones de precios, eventos y experiencias exclusivas durante todo el año.
+            Impulsamos el encuentro entre los comercios que le dan vida a la Costa y las personas que la disfrutan. Cruzia es la red que consolida la oferta local para potenciar el comercio de nuestras localidades, ofreciendo siempre las mejores opciones de precios, eventos y experiencias exclusivas durante todo el año.
           </p>
           <Button asChild size="lg" variant="secondary" className="mt-8"><a href="#sumarme">Quiero sumarme <ArrowRight /></a></Button>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <h2 className="font-display text-3xl font-extrabold text-primary">Tres formas de estar en AUNA</h2>
+        <h2 className="font-display text-3xl font-extrabold text-primary">Tres formas de estar en Cruzia</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {planes.map((plan) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
@@ -123,7 +123,7 @@ function Page() {
             <div className="rounded-3xl bg-card p-8">
               <h3 className="font-display text-2xl font-extrabold text-primary">¡Listo, {form.nombre_local}!</h3>
               <p className="mt-3 leading-7 text-muted-foreground">Guardamos tus datos y abrimos WhatsApp con el mensaje listo para enviar. Si no se abrió solo, tocá el botón:</p>
-              <Button asChild size="lg" className="mt-6"><a href={linkWa} target="_blank" rel="noreferrer">Abrir WhatsApp de AUNA <ArrowRight /></a></Button>
+              <Button asChild size="lg" className="mt-6"><a href={linkWa} target="_blank" rel="noreferrer">Abrir WhatsApp de Cruzia <ArrowRight /></a></Button>
             </div>
           ) : (
             <form onSubmit={onSubmit} className="rounded-3xl bg-card p-6 sm:p-8">

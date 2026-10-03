@@ -6,9 +6,9 @@ import { PremiumHero } from "@/components/public/premium-hero";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "AUNA | Cupones y beneficios en La Costa" },
-    { name: "description", content: "Descubrí comercios, cupones y experiencias en el Partido de la Costa con AUNA." },
-    { property: "og:title", content: "AUNA | Beneficios en La Costa" },
+    { title: "Cruzia | Cupones y beneficios en La Costa" },
+    { name: "description", content: "Descubrí comercios, cupones y experiencias en el Partido de la Costa con Cruzia." },
+    { property: "og:title", content: "Cruzia | Beneficios en La Costa" },
     { property: "og:description", content: "Todo lo bueno del Partido de la Costa, más cerca." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },

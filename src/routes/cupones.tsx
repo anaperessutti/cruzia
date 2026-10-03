@@ -15,8 +15,8 @@ export const Route = createFileRoute("/cupones")({
     coleccion: typeof search["coleccion"] === "string" ? search["coleccion"] : undefined,
   }),
   head: () => ({ meta: [
-    { title: "Cupones activos | AUNA" }, { name: "description", content: "Encontrá promociones y cupones vigentes en comercios del Partido de la Costa." },
-    { property: "og:title", content: "Cupones activos | AUNA" }, { property: "og:description", content: "Beneficios vigentes para disfrutar La Costa." },
+    { title: "Cupones activos | Cruzia" }, { name: "description", content: "Encontrá promociones y cupones vigentes en comercios del Partido de la Costa." },
+    { property: "og:title", content: "Cupones activos | Cruzia" }, { property: "og:description", content: "Beneficios vigentes para disfrutar La Costa." },
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: CuponesPage,

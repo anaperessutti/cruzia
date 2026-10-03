@@ -9,9 +9,9 @@ import type { Comercio, Evento, Localidad } from "@/lib/public-data";
 export const Route = createFileRoute("/eventos/$eventoId")({
   head: () => ({
     meta: [
-      { title: "Evento | AUNA" },
+      { title: "Evento | Cruzia" },
       { name: "description", content: "Detalle del evento: fechas, lugar y de qué se trata, en el Partido de la Costa." },
-      { property: "og:title", content: "Evento | AUNA" },
+      { property: "og:title", content: "Evento | Cruzia" },
       { property: "og:description", content: "Detalle del evento en el Partido de la Costa." },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -67,7 +67,7 @@ function EventoPage() {
         <div className="aspect-[16/7] w-full overflow-hidden bg-muted">
           {evento.imagen_url
             ? <img src={evento.imagen_url} alt={evento.titulo} className="size-full object-cover" />
-            : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-primary/20">AUNA</span></div>}
+            : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-primary/20">Cruzia</span></div>}
         </div>
       </section>
       <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">

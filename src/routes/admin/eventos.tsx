@@ -33,10 +33,10 @@ export const Route = createFileRoute("/admin/eventos")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Eventos | Panel AUNA" },
-      { name: "description", content: "Alta y edición de eventos con fecha de inicio y fin de AUNA." },
-      { property: "og:title", content: "Eventos | Panel AUNA" },
-      { property: "og:description", content: "Alta y edición de eventos de AUNA." },
+      { title: "Eventos | Panel Cruzia" },
+      { name: "description", content: "Alta y edición de eventos con fecha de inicio y fin de Cruzia." },
+      { property: "og:title", content: "Eventos | Panel Cruzia" },
+      { property: "og:description", content: "Alta y edición de eventos de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -170,7 +170,7 @@ function EventosAdmin() {
     }
   }
 
-  const nombreComercio = (id: string | null) => comercios.find((c) => c.id === id)?.nombre ?? "Independiente (AUNA)";
+  const nombreComercio = (id: string | null) => comercios.find((c) => c.id === id)?.nombre ?? "Independiente (Cruzia)";
 
   return (
     <AdminShell titulo="Eventos">
@@ -257,7 +257,7 @@ function EventosAdmin() {
               >
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ninguno">Sin comercio (evento de AUNA)</SelectItem>
+                  <SelectItem value="ninguno">Sin comercio (evento de Cruzia)</SelectItem>
                   {comercios.map((c) => (
                     <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
                   ))}

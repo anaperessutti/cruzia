@@ -1,4 +1,4 @@
-# Medidas de imágenes recomendadas — AUNA
+# Medidas de imágenes recomendadas — Cruzia
 
 Guía rápida para cargar imágenes desde el panel de administración
 (`/admin/comercios`). Todas las medidas están en píxeles (px) y pensadas para

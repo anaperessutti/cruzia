@@ -14,8 +14,8 @@ export const Route = createFileRoute("/categorias")({
     localidades: typeof search["localidades"] === "string" ? search["localidades"] : undefined,
   }),
   head: () => ({ meta: [
-    { title: "Categorías | AUNA" }, { name: "description", content: "Explorá las 12 categorías de experiencias, comercios y servicios del Partido de la Costa." },
-    { property: "og:title", content: "Categorías de comercios | AUNA" }, { property: "og:description", content: "Todo lo que buscás en el Partido de la Costa, por categoría." },
+    { title: "Categorías | Cruzia" }, { name: "description", content: "Explorá las 12 categorías de experiencias, comercios y servicios del Partido de la Costa." },
+    { property: "og:title", content: "Categorías de comercios | Cruzia" }, { property: "og:description", content: "Todo lo que buscás en el Partido de la Costa, por categoría." },
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
   ] }),
   component: CategoriasPage,

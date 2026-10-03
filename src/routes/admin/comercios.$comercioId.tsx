@@ -36,10 +36,10 @@ export const Route = createFileRoute("/admin/comercios/$comercioId")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Editar comercio | Panel AUNA" },
-      { name: "description", content: "Formulario de carga y edición de comercios de AUNA." },
-      { property: "og:title", content: "Editar comercio | Panel AUNA" },
-      { property: "og:description", content: "Formulario de carga y edición de comercios de AUNA." },
+      { title: "Editar comercio | Panel Cruzia" },
+      { name: "description", content: "Formulario de carga y edición de comercios de Cruzia." },
+      { property: "og:title", content: "Editar comercio | Panel Cruzia" },
+      { property: "og:description", content: "Formulario de carga y edición de comercios de Cruzia." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

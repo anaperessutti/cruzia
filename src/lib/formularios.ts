@@ -5,9 +5,9 @@ import type { Database } from "@/integrations/supabase/types";
 
 export type FaseSolidaria = Database["public"]["Tables"]["huella_solidaria_fases"]["Row"];
 
-/** WhatsApp Business de AUNA (solo dígitos, formato internacional). */
+/** WhatsApp Business de Cruzia (solo dígitos, formato internacional). */
 export const WHATSAPP_AUNA = "5492227405370";
-export const EMAIL_AUNA = "auna.comunidad@gmail.com";
+export const EMAIL_AUNA = "somoscruzia@gmail.com";
 
 export function linkWhatsappAuna(mensaje: string) {
   return `https://wa.me/${WHATSAPP_AUNA}?text=${encodeURIComponent(mensaje)}`;
