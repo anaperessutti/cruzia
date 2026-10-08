@@ -6,7 +6,7 @@ import { getClimaCosta } from "@/lib/clima.functions";
 import { distanciaAComercio, estaCerca } from "@/lib/geo";
 import { minutosArgentina, ordenarColecciones } from "@/lib/orden-colecciones";
 import { CarruselSeccion } from "./carrusel-seccion";
-import { CommerceCard } from "./commerce-card";
+import { CommerceCard, nivelDeTarjeta } from "./commerce-card";
 import { EventoCard } from "./evento-card";
 import { usePublicDirectory, type TarjetaGrilla } from "./public-directory-provider";
 
@@ -30,6 +30,7 @@ export function HomeCarousels() {
   const minutosDelDia = useMemo(() => minutosArgentina(), []);
   const planById = useMemo(() => new Map(data.planes.map((plan) => [plan.id, plan])), [data.planes]);
   const comercioById = useMemo(() => new Map(data.comercios.map((comercio) => [comercio.id, comercio])), [data.comercios]);
+  const rubroById = useMemo(() => new Map(data.rubros.map((item) => [item.id, item])), [data.rubros]);
   const localidadById = useMemo(() => new Map(data.localidades.map((item) => [item.id, item])), [data.localidades]);
   const cuponesActivos = useMemo(
     () => data.cupones.filter((cupon) => cupon.activo && vigente(cupon.vigencia_inicio, cupon.vigencia_fin)),
@@ -62,6 +63,7 @@ export function HomeCarousels() {
         cupon={tarjeta.cupon}
         plan={planById.get(tarjeta.comercio.plan_id)}
         localidad={localidadById.get(tarjeta.comercio.localidad_id ?? "")}
+        rubro={rubroById.get(tarjeta.comercio.rubro_id ?? "")}
       />
     );
   const imagenesDe = (tarjetas: TarjetaGrilla[]) =>
@@ -70,6 +72,9 @@ export function HomeCarousels() {
         ? tarjeta.evento.imagen_url
         : tarjeta.cupon?.flyer_url ?? tarjeta.comercio.galeria[0] ?? null,
     );
+  /** Premium con cupón activo: va ~6% más ancha. */
+  const anchasDe = (tarjetas: TarjetaGrilla[]) =>
+    tarjetas.slice(0, 10).map((t) => t.tipo === "comercio" && nivelDeTarjeta(planById.get(t.comercio.plan_id), t.cupon) === "premium");
   /** Coordenadas usadas para el orden por cercanía de cada tarjeta. */
   const puntoDe = (tarjeta: TarjetaGrilla) =>
     tarjeta.tipo === "evento" ? { lat: tarjeta.evento.lat, lng: tarjeta.evento.lng } : tarjeta.comercio;
@@ -123,14 +128,17 @@ export function HomeCarousels() {
   );
 
   if (isLoading) {
-    return <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8"><div className="h-72 animate-pulse rounded-md bg-muted" /></div>;
+    return <div className="mx-auto max-w-7xl space-y-4 px-4 py-12 sm:px-6 lg:px-8"><div className="glass h-8 w-56 animate-pulse rounded-full" /><div className="flex gap-3 overflow-hidden">{[0, 1, 2, 3].map((i) => <div key={i} className="glass aspect-[4/5] w-[72%] shrink-0 animate-pulse rounded-[32px] sm:w-[44%] lg:w-[23%]" />)}</div></div>;
   }
 
   return (
-    <div className="space-y-12 py-10 sm:space-y-16 sm:py-14">
+    <div className="space-y-10 py-10 sm:space-y-14 sm:py-14">
       {favoritos.length > 0 ? (
         <CarruselSeccion
           titulo="Favoritos de la Costa"
+          rotulo="Elegidos para vos"
+          destacada
+          anchas={anchasDe(favoritos)}
           destinoUrl={`/cupones?soloCupon=true&favoritos=true${localidadesQuery}`}
           tarjetas={favoritos.map(renderTarjeta)}
           imagenes={imagenesDe(favoritos)}
@@ -140,6 +148,8 @@ export function HomeCarousels() {
         <CarruselSeccion
           key={coleccion.id}
           titulo={coleccion.nombre}
+          rotulo="Colección"
+          anchas={anchasDe(tarjetas)}
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
           tarjetas={tarjetas.map(renderTarjeta)}
           imagenes={imagenesDe(tarjetas)}

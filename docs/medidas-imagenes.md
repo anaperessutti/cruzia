@@ -24,6 +24,8 @@ pantallas de alta densidad (se suben al doble del tamaño visible).
 - **Peso:** el bucket acepta hasta 10 MB por archivo, pero conviene no pasar de
   400 KB para que la app cargue rápido en datos móviles.
 - **Nada de capturas de pantalla ni fotos con marcas de agua de terceros.**
+- **Zona segura de flyers (4:5, 1080 × 1350 px):** el texto importante va en el
+  65% superior. El 35% inferior queda reservado para el panel de la tarjeta.
 - **Texto dentro de la imagen:** solo en flyers de cupones; en el resto el texto
   va en los campos del formulario (se ve mejor y funciona para el buscador).
 
