@@ -8,7 +8,7 @@ import { usePublicDirectory } from "./public-directory-provider";
 
 export function StickyFilters() {
   const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon } = usePublicDirectory();
-  const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${filters.localidadIds.length} localidades`;
+  const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "Localidades"} +${filters.localidadIds.length - 1}`;
   const coleccionLabel = filters.coleccionIds.length === 0
     ? "Todas las categorías"
     : filters.coleccionIds.length === 1
