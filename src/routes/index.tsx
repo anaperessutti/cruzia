@@ -12,8 +12,8 @@ export const Route = createFileRoute("/")({
     { property: "og:description", content: "Todo lo bueno del Partido de la Costa, más cerca." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
-    { property: "og:image", content: "https://ola-costa-deals.lovable.app/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
-    { name: "twitter:image", content: "https://ola-costa-deals.lovable.app/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
+    { property: "og:image", content: "https://www.cruzia.ar/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
+    { name: "twitter:image", content: "https://www.cruzia.ar/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
   ] }),
   component: Index,
 });

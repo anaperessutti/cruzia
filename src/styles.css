@@ -282,3 +282,37 @@
 
 @utility font-serif-editorial { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; }
 @utility transition-chrome { transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
+
+/* ───────── Scroll-driven animations (CSS nativo) ─────────
+   Estado base SIEMPRE visible. Solo transform + opacity.
+   Con soporte: animation-timeline. Sin soporte: fade por IntersectionObserver (html.sd-io). */
+:root { --sd-y: 16px; --sd-y-card: 24px; --sd-end: 60%; }
+main.theme-gift { --sd-y: 32px; --sd-y-card: 24px; --sd-end: 95%; }
+
+@keyframes sd-up { from { opacity: 0; transform: translate3d(0, var(--sd-y), 0); } to { opacity: 1; transform: none; } }
+@keyframes sd-card { from { opacity: 0; transform: translate3d(0, var(--sd-y-card), 0) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes sd-inline { 0% { opacity: 0.6; transform: scale(0.92); } 35%, 65% { opacity: 1; transform: scale(1); } 100% { opacity: 0.6; transform: scale(0.92); } }
+@keyframes sd-parallax { from { transform: translate3d(0, -4%, 0); } to { transform: translate3d(0, 4%, 0); } }
+@keyframes sd-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sd-drift-a { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(6vw, 18vh, 0); } }
+@keyframes sd-drift-b { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-5vw, -14vh, 0); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .sd-reveal-text, .sd-reveal, main.theme-gift section > * {
+      animation: sd-up linear both; animation-timeline: view(); animation-range: entry 0% entry var(--sd-end);
+    }
+    .sd-reveal-card { animation: sd-card linear both; animation-timeline: view(); animation-range: entry 0% entry var(--sd-end); }
+    /* Escalonado desplazando el rango (no animation-delay). */
+    .sd-reveal-card:nth-child(3n+2) { animation-range: entry 8% entry calc(var(--sd-end) + 10%); }
+    .sd-reveal-card:nth-child(3n) { animation-range: entry 16% entry calc(var(--sd-end) + 20%); }
+    .sd-card-inline { animation: sd-inline linear both; animation-timeline: view(inline); animation-range: cover; }
+    .sd-parallax { animation: sd-parallax linear both; animation-timeline: view(); animation-range: cover; }
+    .sd-header-layer { animation: sd-fade-in linear both; animation-timeline: scroll(root); animation-range: 0 120px; }
+    .sd-drift-a { animation: sd-drift-a linear both; animation-timeline: scroll(root); }
+    .sd-drift-b { animation: sd-drift-b linear both; animation-timeline: scroll(root); }
+  }
+  /* Alternativa sin soporte: oculto solo hasta que entra en pantalla. */
+  html.sd-io :is(.sd-reveal-text, .sd-reveal, .sd-reveal-card, main.theme-gift section > *):not(.sd-in) { opacity: 0; transform: translate3d(0, var(--sd-y), 0); }
+  html.sd-io :is(.sd-reveal-text, .sd-reveal, .sd-reveal-card, main.theme-gift section > *) { transition: opacity 600ms ease-out, transform 600ms ease-out; }
+}

@@ -41,7 +41,9 @@ export function SiteHeader() {
   const { data } = usePublicDirectory();
   const { scrolled, hidden } = useScrollState();
   const oscuro = useRouterState({ select: (st) => st.location.pathname.startsWith("/gift-box") });
-  const pill = cn("transition-chrome flex h-14 items-center rounded-full text-chrome-fg", oscuro ? "glass-dark" : scrolled ? "glass-strong" : "glass");
+  const pill = cn("transition-chrome relative isolate flex h-14 items-center rounded-full text-chrome-fg", oscuro ? "glass-dark" : "glass");
+  // Capa más opaca superpuesta: solo cambia su opacidad (CSS scroll(); sin soporte, por estado).
+  const capa = oscuro ? null : <span aria-hidden="true" className={cn("sd-header-layer glass-strong pointer-events-none absolute inset-0 -z-10 rounded-full transition-opacity duration-300", scrolled ? "opacity-100" : "opacity-0")} />;
   const item = "flex items-center justify-between rounded-full px-5 py-3 font-display text-xl font-light transition-colors";
   const itemColor = oscuro ? "text-chrome-fg hover:bg-primary-foreground/10" : "text-foreground hover:bg-foreground/5";
   const activo = { className: oscuro ? "bg-chrome-fg !text-chrome-bg" : "bg-foreground !text-background" };
@@ -55,8 +57,9 @@ export function SiteHeader() {
     >
       {/* Dos grupos flotantes independientes: entre ellos se ve el hero. */}
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-        <div className={cn(pill, "px-4 sm:px-5")}><BrandMark inverse={oscuro} /></div>
+        <div className={cn(pill, "px-4 sm:px-5")}>{capa}<BrandMark inverse={oscuro} /></div>
         <div className={cn(pill, "gap-0.5 px-1.5")}>
+          {capa}
           <SearchDialog />
           <Button asChild variant="ghost" size="icon" className="rounded-full"><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet>
