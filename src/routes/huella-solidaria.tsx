@@ -33,7 +33,7 @@ function Fotos({ fase }: { fase: FaseSolidaria }) {
   return (
     <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
       {fase.fotos.map((foto) => (
-        <img key={foto} src={foto} alt={`Foto de ${fase.titulo}`} loading="lazy" className="h-28 w-40 flex-none rounded-2xl object-cover" />
+        <img key={foto} src={foto} alt={`Foto de ${fase.titulo}`} loading="lazy" className="h-32 w-44 flex-none rounded-[28px_12px_28px_12px] object-cover shadow-warm" />
       ))}
     </div>
   );
@@ -82,11 +82,11 @@ function Page() {
   return (
     <main>
       {/* Manifiesto */}
-      <section className="bg-muted">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
+      <section>
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
           <div>
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
-            <h1 className="mt-5 max-w-3xl font-display text-4xl font-light italic leading-[1.08] text-foreground sm:text-5xl">
+            <h1 className="font-serif-editorial mt-5 max-w-3xl text-[2.75rem] italic leading-[1.02] text-foreground sm:text-6xl">
               Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
@@ -99,8 +99,8 @@ function Page() {
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
               { icon: Sparkles, titulo: "Compartido", texto: "Vecinos y comercios trabajando juntos." },
             ].map((item) => (
-               <div key={item.titulo} className="rounded-md border border-secondary/15 bg-card p-5">
-                <item.icon className="size-5 text-secondary" />
+               <div key={item.titulo} className="glass rounded-[28px] p-5">
+                <span className="grid size-10 place-items-center rounded-full bg-foreground text-background"><item.icon className="size-4" /></span>
                 <p className="mt-3 font-display text-lg font-bold text-foreground">{item.titulo}</p>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.texto}</p>
               </div>
@@ -114,8 +114,8 @@ function Page() {
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           {actual ? (
             <>
-              <h2 className="font-display text-2xl font-extrabold text-foreground">Nuestro próximo aporte</h2>
-              <div className="mt-8 rounded-3xl border-2 border-secondary/40 bg-card p-6 shadow-premium sm:p-8">
+              <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground"><span className="font-light">Nuestro próximo </span><span className="font-bold">aporte</span></h2>
+              <div className="glass mt-8 rounded-[32px] p-6 shadow-glow-pro sm:p-8">
                 <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
                   <Sparkles className="size-3.5" /> En marcha
                 </span>
@@ -129,11 +129,11 @@ function Page() {
 
           {historial.length > 0 ? (
             <div className={actual ? "mt-14" : ""}>
-              <h2 className="font-display text-2xl font-extrabold text-foreground">Proyectos que acompañamos</h2>
-              <ol className="mt-6 space-y-8 border-l-2 border-border pl-6">
+              <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground"><span className="font-light">Proyectos que </span><span className="font-bold">acompañamos</span></h2>
+              <ol className="relative mt-8 space-y-6 pl-8 before:absolute before:bottom-4 before:left-[7px] before:top-4 before:w-[2px] before:rounded-full before:bg-linear-to-b before:from-primary before:via-glow-amber before:to-transparent">
                 {historial.map((fase) => (
-                  <li key={fase.id} className="relative">
-                    <span className="absolute -left-[31px] top-2 size-3 rounded-full bg-accent ring-4 ring-background" />
+                  <li key={fase.id} className="glass relative rounded-[28px] p-5 sm:p-6">
+                    <span className="absolute -left-[31px] top-7 size-3.5 rounded-full bg-primary ring-4 ring-background" />
                     <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
                     <h4 className="mt-1 font-display text-xl font-bold text-foreground">{fase.titulo}</h4>
                     {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
@@ -147,7 +147,7 @@ function Page() {
       ) : null}
 
       {/* Postulación */}
-       <section className="bg-muted">
+       <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
              <p className="text-xs font-bold uppercase text-secondary">Postulá una causa</p>
@@ -156,7 +156,7 @@ function Page() {
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>
           </div>
-          <form onSubmit={onSubmit} className="rounded-3xl bg-card p-6 text-foreground sm:p-8">
+          <form onSubmit={onSubmit} className="glass rounded-[32px] p-6 text-foreground sm:p-8">
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="hs-nombre">Tu Nombre</Label>

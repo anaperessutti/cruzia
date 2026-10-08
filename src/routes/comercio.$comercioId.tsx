@@ -94,19 +94,22 @@ function FichaComercio() {
 
   return (
     <main>
-      <section className="border-b border-border bg-ink text-ink-foreground">
-        <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-4xl font-extrabold sm:text-5xl">{comercio.nombre}</h1>
-            {exclusivo && plan ? <Badge className="bg-secondary text-secondary-foreground"><Crown className="mr-1 size-3 fill-current" /> {plan.nombre}</Badge> : null}
-          </div>
-          {localidad ? <p className="mt-3 flex items-center gap-1.5 text-sm opacity-90"><MapPin className="size-4" /> {localidad.nombre}{comercio.direccion ? ` · ${comercio.direccion}` : ""}</p> : null}
+      {/* Galería a sangre completa; el header flota encima y el borde inferior se disuelve en el lienzo. */}
+      <section className="mask-fade-bottom relative h-[62svh] min-h-[420px] max-h-[640px] w-full overflow-hidden bg-ink text-primary-foreground">
+        {comercio.galeria[0] ? <img src={comercio.galeria[0]} alt={`Foto de ${comercio.nombre}`} className="absolute inset-0 size-full object-cover" /> : <div className="bg-orb absolute inset-0 opacity-80" />}
+        {comercio.galeria[0] ? <img src={comercio.galeria[0]} alt="" aria-hidden="true" className="glass-progressive absolute inset-0 size-full object-cover" /> : null}
+        <div className="absolute inset-0 bg-linear-to-t from-ink/30 via-transparent to-ink/25" />
+        <div className="text-shadow-soft relative mx-auto flex h-full max-w-5xl flex-col justify-end px-5 pb-24 sm:px-6 sm:pb-28">
+          {exclusivo && plan ? <span className="mb-4 inline-flex w-fit items-center gap-1 rounded-full bg-card px-3 py-1 text-pill text-foreground [text-shadow:none]"><Crown className="size-3 fill-current" /> {plan.nombre}</span> : null}
+          <h1 className="font-display text-[2.6rem] font-bold leading-[1.02] tracking-[-0.035em] sm:text-6xl">{comercio.nombre}</h1>
+          {localidad ? <p className="mt-3 flex items-center gap-1.5 text-sm text-primary-foreground/90"><MapPin className="size-4" /> {localidad.nombre}{comercio.direccion ? ` · ${comercio.direccion}` : ""}</p> : null}
         </div>
       </section>
 
       {conPromocion && cupones.length > 0 ? (
-        <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-          <p className="text-xs font-bold uppercase text-secondary">Módulo de promoción</p>
+        <section className="relative z-10 mx-auto -mt-16 max-w-5xl px-4 sm:px-6">
+          <div className="glass rounded-[32px] p-4 sm:p-6">
+          <p className="text-pill text-primary">Módulo de promoción</p>
           <div className="mt-3 grid gap-4">
             {cupones.map((cupon) => (
               <CuponCard
@@ -117,14 +120,15 @@ function FichaComercio() {
               />
             ))}
           </div>
+          </div>
         </section>
       ) : null}
 
-      {comercio.galeria.length > 0 ? (
+      {comercio.galeria.length > 1 ? (
         <section className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
           <div className="grid gap-3 sm:grid-cols-3">
-            {comercio.galeria.map((url) => (
-              <img key={url} src={url} alt={`Foto de ${comercio.nombre}`} loading="lazy" className="aspect-[4/3] w-full rounded-md object-cover" />
+            {comercio.galeria.slice(1).map((url) => (
+              <img key={url} src={url} alt={`Foto de ${comercio.nombre}`} loading="lazy" className="aspect-[4/3] w-full rounded-[28px] object-cover shadow-warm" />
             ))}
           </div>
         </section>
@@ -146,12 +150,12 @@ function FichaComercio() {
             {cupones.length > 0 && conPromocion ? <Button asChild variant="ghost"><Link to="/cupones" search={{}}><Ticket className="mr-1.5 size-4" /> Ver más cupones</Link></Button> : null}
           </div>
         </div>
-        <div className="overflow-hidden rounded-md border border-border">
+        <div className="glass overflow-hidden rounded-[32px] p-1.5">
           <iframe
             title={`Mapa de ${comercio.nombre}`}
             src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
             loading="lazy"
-            className="h-72 w-full"
+            className="h-72 w-full rounded-[26px]"
           />
         </div>
       </section>

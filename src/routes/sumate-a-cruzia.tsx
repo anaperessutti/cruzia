@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Check, Crown, Store, Ticket } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
+import { PageIntro } from "@/components/public/page-intro";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,27 +76,26 @@ function Page() {
 
   return (
     <main>
-      <section className="bg-ink text-ink-foreground">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <p className="text-xs font-bold uppercase text-accent">Comercios de La Costa</p>
-          <h1 className="mt-4 max-w-4xl font-display text-4xl font-extrabold leading-[1.05] sm:text-6xl">Hacé que más personas descubran tu negocio.</h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-primary-foreground/75 sm:text-lg">
+      <PageIntro rotulo="Comercios de La Costa" titulo="Hacé que más personas descubran tu negocio." negrita="descubran" intro={<>
             Impulsamos el encuentro entre los comercios que le dan vida a la Costa y las personas que la disfrutan. Cruzia es la red que consolida la oferta local para potenciar el comercio de nuestras localidades, ofreciendo siempre las mejores opciones de precios, eventos y experiencias exclusivas durante todo el año.
-          </p>
-          <Button asChild size="lg" variant="secondary" className="mt-8"><a href="#sumarme">Quiero sumarme <ArrowRight /></a></Button>
-        </div>
-      </section>
+        </>}>
+        <a href="#sumarme" className="group mt-8 inline-flex items-center gap-3 rounded-full bg-foreground py-1.5 pl-5 pr-1.5 text-sm font-semibold text-background">Quiero sumarme <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:translate-x-1"><ArrowRight className="size-4" /></span></a>
+      </PageIntro>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <h2 className="font-display text-3xl font-extrabold text-foreground">Tres formas de estar en Cruzia</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {planes.map((plan) => {
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+        <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground sm:text-4xl"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2>
+        <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-0">
+          {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
+            // Escalonadas y levemente superpuestas en desktop.
+            const escalon = ["md:mt-16", "md:mt-8 md:-mx-4", "md:mt-0"][index] ?? "";
             return (
-              <article key={plan.id} className={`flex flex-col rounded-3xl border border-border bg-card p-6${plan.aparece_en_hero_banner ? " shadow-premium border-secondary/40" : ""}`}>
-                <Icono className={`size-6 ${plan.aparece_en_hero_banner ? "text-secondary" : "text-accent-foreground"}`} />
-                <p className="mt-4 text-xs font-bold uppercase text-muted-foreground">Plan {plan.nombre}</p>
-                <h3 className="mt-1 font-display text-2xl font-extrabold text-foreground">{titulo}</h3>
+              <article key={plan.id} className={`glass relative flex flex-col rounded-[32px] p-6 sm:p-7 ${escalon} ${plan.aparece_en_hero_banner ? "z-10 shadow-glow-premium" : index === 1 ? "z-[5]" : ""}`}>
+                <div className="flex items-center justify-between">
+                  <span className="rounded-full bg-card/70 px-3 py-1 text-pill text-foreground">Plan {plan.nombre}</span>
+                  <span className={`grid size-11 place-items-center rounded-full ${plan.aparece_en_hero_banner ? "bg-primary text-primary-foreground" : "bg-foreground text-background"}`}><Icono className="size-5" /></span>
+                </div>
+                <h3 className="mt-6 font-display text-2xl font-bold text-foreground">{titulo}</h3>
                 <ul className="mt-5 flex-1 space-y-3">
                   {beneficiosPlan(plan).map((beneficio) => (
                     <li key={beneficio} className="flex gap-2 text-sm leading-6 text-foreground/80">
@@ -104,29 +104,29 @@ function Page() {
                     </li>
                   ))}
                 </ul>
-                <Button asChild size="lg" className="mt-6 bg-accent text-accent-foreground hover:bg-accent/90 hover:brightness-90 hover:shadow-premium transition-all"><a href="#sumarme">Me interesa</a></Button>
+                <Button asChild size="lg" className="mt-6 rounded-full bg-foreground text-background hover:bg-foreground/90"><a href="#sumarme">Me interesa</a></Button>
               </article>
             );
           })}
         </div>
       </section>
 
-      <section id="sumarme" className="bg-muted">
+      <section id="sumarme" className="scroll-mt-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
-            <h2 className="font-display text-3xl font-extrabold text-foreground">Dejanos tus datos</h2>
+            <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground sm:text-4xl"><span className="font-light">Dejanos tus </span><span className="font-bold">datos</span></h2>
             <p className="mt-4 max-w-lg leading-7 text-muted-foreground">
               Sabemos que cada comercio es un mundo. Diseñamos campañas flexibles que se adaptan a tu presupuesto y objetivo, dejanos tu consulta y te enviamos una propuesta personalizada para tu negocio.
             </p>
           </div>
           {estado === "ok" ? (
-            <div className="rounded-3xl bg-card p-8">
+            <div className="glass rounded-[32px] p-8">
               <h3 className="font-display text-2xl font-extrabold text-foreground">¡Listo, {form.nombre_local}!</h3>
               <p className="mt-3 leading-7 text-muted-foreground">Guardamos tus datos y abrimos WhatsApp con el mensaje listo para enviar. Si no se abrió solo, tocá el botón:</p>
               <Button asChild size="lg" className="mt-6"><a href={linkWa} target="_blank" rel="noreferrer">Abrir WhatsApp de Cruzia <ArrowRight /></a></Button>
             </div>
           ) : (
-            <form onSubmit={onSubmit} className="rounded-3xl bg-card p-6 sm:p-8">
+            <form onSubmit={onSubmit} className="glass rounded-[32px] p-6 sm:p-8">
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="sl-nombre">Nombre del Local</Label>

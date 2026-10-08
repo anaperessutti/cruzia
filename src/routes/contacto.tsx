@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, Instagram, Mail, Store, User } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
+import { PageIntro } from "@/components/public/page-intro";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,15 +74,10 @@ function Page() {
 
   return (
     <main>
-      <section className="bg-ink text-ink-foreground">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-          <p className="text-xs font-bold uppercase text-accent">Hablemos</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl">Estamos a un clic de distancia.</h1>
-        </div>
-      </section>
+      <PageIntro rotulo="Hablemos" titulo="Estamos a un clic de distancia." negrita="un clic" />
 
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-4 sm:grid-cols-2">
+      <section className="relative mx-auto -mt-12 max-w-3xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div role="tablist" aria-label="¿Quién sos?" className="glass grid grid-cols-2 gap-1 rounded-full p-1.5">
           {([
             { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a Cruzia" },
             { key: "usuario" as const, icon: User, titulo: "Soy un Usuario", texto: "Tengo una consulta o una sugerencia." },
@@ -90,17 +86,19 @@ function Page() {
               key={opcion.key}
               type="button"
               onClick={() => elegir(opcion.key)}
-              className={`rounded-3xl border p-6 text-left transition-colors ${perfil === opcion.key ? "border-secondary bg-card shadow-premium" : "border-border bg-card hover:border-secondary/60"}`}
+              role="tab"
+              aria-selected={perfil === opcion.key}
+              title={opcion.texto}
+              className={`flex h-12 items-center justify-center gap-2 rounded-full text-sm font-semibold transition-colors duration-300 ${perfil === opcion.key ? "bg-foreground text-background" : "bg-card/60 text-foreground hover:bg-card"}`}
             >
-              <opcion.icon className={perfil === opcion.key ? "size-6 text-secondary" : "size-6 text-accent-foreground"} />
-              <p className="mt-4 font-display text-xl font-bold text-foreground">{opcion.titulo}</p>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">{opcion.texto}</p>
+              <opcion.icon className="size-4" />
+              {opcion.titulo}
             </button>
           ))}
         </div>
 
         {perfil && estado === "ok" ? (
-          <div className="mt-8 rounded-3xl border border-border bg-card p-8">
+          <div className="mt-8 glass rounded-[32px] p-8">
             <h2 className="font-display text-2xl font-extrabold text-foreground">
               {perfil === "comercio" ? "¡Listo! Abrimos WhatsApp" : "¡Listo! Abrimos tu correo"}
             </h2>
@@ -118,7 +116,7 @@ function Page() {
         ) : null}
 
         {perfil === "comercio" && estado !== "ok" ? (
-          <form onSubmit={onSubmitComercio} className="mt-8 grid gap-4 rounded-3xl border border-border bg-card p-6 sm:p-8">
+          <form onSubmit={onSubmitComercio} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
             <div className="grid gap-2">
               <Label htmlFor="ct-local">Nombre del local</Label>
               <Input id="ct-local" required value={comercio.nombre_local} onChange={(e) => setComercio({ ...comercio, nombre_local: e.target.value })} placeholder="Ej: Panadería La Ribera" />
@@ -147,7 +145,7 @@ function Page() {
         ) : null}
 
         {perfil === "usuario" && estado !== "ok" ? (
-          <form onSubmit={onSubmitUsuario} className="mt-8 grid gap-4 rounded-3xl border border-border bg-card p-6 sm:p-8">
+          <form onSubmit={onSubmitUsuario} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
             <div className="grid gap-2">
               <Label htmlFor="ct-nombre">Tu nombre</Label>
               <Input id="ct-nombre" required value={usuario.nombre} onChange={(e) => setUsuario({ ...usuario, nombre: e.target.value })} placeholder="Nombre y apellido" />
@@ -172,13 +170,13 @@ function Page() {
         ) : null}
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
-          <a href={`mailto:${EMAIL_AUNA}`} className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
-            <Mail className="text-secondary" />
+          <a href={`mailto:${EMAIL_AUNA}`} className="glass rounded-[32px] p-6 transition-transform hover:-translate-y-1">
+            <span className="grid size-10 place-items-center rounded-full bg-foreground text-background"><Mail className="size-4" /></span>
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Email</p>
             <p className="mt-1 font-display text-lg font-bold text-foreground">{EMAIL_AUNA}</p>
           </a>
-          <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
-            <Instagram className="text-secondary" />
+          <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="glass rounded-[32px] p-6 transition-transform hover:-translate-y-1">
+            <span className="grid size-10 place-items-center rounded-full bg-foreground text-background"><Instagram className="size-4" /></span>
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Instagram</p>
             <p className="mt-1 font-display text-lg font-bold text-foreground">@cruzia.ar</p>
           </a>

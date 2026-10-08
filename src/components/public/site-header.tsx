@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Instagram, Menu } from "lucide-react";
 import { Fragment, useEffect, useRef, useState } from "react";
 
@@ -40,7 +40,11 @@ function useScrollState() {
 export function SiteHeader() {
   const { data } = usePublicDirectory();
   const { scrolled, hidden } = useScrollState();
-  const pill = cn("flex h-14 items-center rounded-full transition-all duration-500", scrolled ? "glass-strong" : "glass");
+  const oscuro = useRouterState({ select: (st) => st.location.pathname.startsWith("/gift-box") });
+  const pill = cn("transition-chrome flex h-14 items-center rounded-full text-chrome-fg", oscuro ? "glass-dark" : scrolled ? "glass-strong" : "glass");
+  const item = "flex items-center justify-between rounded-full px-5 py-3 font-display text-xl font-light transition-colors";
+  const itemColor = oscuro ? "text-chrome-fg hover:bg-primary-foreground/10" : "text-foreground hover:bg-foreground/5";
+  const activo = { className: oscuro ? "bg-chrome-fg !text-chrome-bg" : "bg-foreground !text-background" };
 
   return (
     <header
@@ -51,21 +55,21 @@ export function SiteHeader() {
     >
       {/* Dos grupos flotantes independientes: entre ellos se ve el hero. */}
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-        <div className={cn(pill, "px-4 sm:px-5")}><BrandMark /></div>
+        <div className={cn(pill, "px-4 sm:px-5")}><BrandMark inverse={oscuro} /></div>
         <div className={cn(pill, "gap-0.5 px-1.5")}>
           <SearchDialog />
           <Button asChild variant="ghost" size="icon" className="rounded-full"><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
-            <SheetContent className="flex w-[88%] flex-col border-l-0 bg-ink text-ink-foreground sm:max-w-md [&]:bg-ink">
-              <SheetHeader className="pb-6 text-left"><SheetTitle><BrandMark inverse /></SheetTitle><SheetDescription className="text-primary-foreground/65">Todo lo bueno de La Costa, más cerca.</SheetDescription></SheetHeader>
+            <SheetContent className={cn("transition-chrome flex w-[88%] flex-col border-l-0 sm:max-w-md", oscuro ? "theme-gift glass-dark" : "text-foreground")}>
+              <SheetHeader className="pb-6 text-left"><SheetTitle><BrandMark inverse={oscuro} /></SheetTitle><SheetDescription className="text-chrome-muted">Todo lo bueno de La Costa, más cerca.</SheetDescription></SheetHeader>
               <nav className="flex flex-1 flex-col justify-center gap-1" aria-label="Navegación principal">
                 {links.map((item, index) => {
                   const numerados = data.giftBoxVisible && index > 2 ? index + 2 : index + 1;
                   return (
                     <Fragment key={item.to}>
-                      <SheetClose asChild><Link to={item.to} activeProps={{ className: "bg-primary-foreground text-foreground" }} className="flex items-center justify-between rounded-full px-5 py-3 font-display text-xl font-light text-primary-foreground transition-colors hover:bg-primary-foreground/10"><span>{item.label}</span><span className="text-xs opacity-50">{String(numerados).padStart(2, "0")}</span></Link></SheetClose>
-                      {index === 2 && data.giftBoxVisible ? <SheetClose asChild><Link to="/gift-box" activeProps={{ className: "bg-primary-foreground text-foreground" }} className="flex items-center justify-between rounded-full px-5 py-3 font-display text-xl font-light text-primary-foreground transition-colors hover:bg-primary-foreground/10"><span>Gift Box</span><span className="text-xs opacity-50">04</span></Link></SheetClose> : null}
+                      <SheetClose asChild><Link to={item.to} activeProps={activo} className={cn(item, itemColor)}><span>{item.label}</span><span className="text-xs opacity-50">{String(numerados).padStart(2, "0")}</span></Link></SheetClose>
+                      {index === 2 && data.giftBoxVisible ? <SheetClose asChild><Link to="/gift-box" activeProps={activo} className={cn(item, itemColor)}><span>Gift Box</span><span className="text-xs opacity-50">04</span></Link></SheetClose> : null}
                     </Fragment>
                   );
                 })}
