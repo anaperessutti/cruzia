@@ -70,7 +70,7 @@ function TarjetaDemo({ nombre, etiqueta }: { nombre: string; etiqueta: string })
       />
       <div className="p-3">
         <p className="text-[11px] font-bold uppercase tracking-wide text-secondary">{etiqueta}</p>
-        <h3 className="mt-1 font-display text-sm font-bold text-primary">{nombre}</h3>
+        <h3 className="mt-1 font-display text-sm font-bold text-foreground">{nombre}</h3>
       </div>
     </article>
   );

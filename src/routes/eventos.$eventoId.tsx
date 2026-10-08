@@ -52,7 +52,7 @@ function EventoPage() {
   if (!data) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl font-extrabold text-primary">Este evento ya no está disponible.</h1>
+        <h1 className="font-display text-3xl font-extrabold text-foreground">Este evento ya no está disponible.</h1>
         <p className="mt-3 text-muted-foreground">Puede que haya terminado. Mirá todo lo que está pasando ahora.</p>
         <Button asChild className="mt-6"><Link to="/">Volver al inicio</Link></Button>
       </main>
@@ -67,12 +67,12 @@ function EventoPage() {
         <div className="aspect-[16/7] w-full overflow-hidden bg-muted">
           {evento.imagen_url
             ? <img src={evento.imagen_url} alt={evento.titulo} className="size-full object-cover" />
-            : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-primary/20">Cruzia</span></div>}
+            : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-foreground/15">Cruzia</span></div>}
         </div>
       </section>
       <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <p className="text-xs font-bold uppercase text-secondary">Evento</p>
-        <h1 className="mt-2 font-display text-3xl font-extrabold text-primary sm:text-5xl">{evento.titulo}</h1>
+        <h1 className="mt-2 font-display text-3xl font-extrabold text-foreground sm:text-5xl">{evento.titulo}</h1>
         <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <CalendarDays className="size-4" />
           {evento.fecha_inicio === evento.fecha_fin ? fecha(evento.fecha_inicio) : `Del ${fecha(evento.fecha_inicio)} al ${fecha(evento.fecha_fin)}`}
@@ -82,7 +82,7 @@ function EventoPage() {
         {comercio ? (
           <div className="mt-8 rounded-md border border-border p-5">
             <p className="flex items-center gap-2 text-sm text-muted-foreground"><Store className="size-4" /> Organiza</p>
-            <p className="mt-1 font-display text-xl font-bold text-primary">{comercio.nombre}</p>
+            <p className="mt-1 font-display text-xl font-bold text-foreground">{comercio.nombre}</p>
             <Button asChild variant="outline" className="mt-4">
               <Link to="/comercio/$comercioId" params={{ comercioId: comercio.id }}>Ver el comercio</Link>
             </Button>

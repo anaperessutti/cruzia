@@ -187,7 +187,7 @@ function AdminPanel() {
 
   return (
     <main className="min-h-screen bg-background">
-      <header className="border-b bg-primary text-primary-foreground">
+      <header className="border-b bg-ink text-ink-foreground">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
           <div>
             <p className="font-display text-2xl font-bold">Cruzia · Panel</p>

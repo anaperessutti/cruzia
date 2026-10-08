@@ -29,7 +29,7 @@ export function SearchDialog() {
         <div className="relative"><Search className="absolute left-3 top-3 size-4 text-muted-foreground" /><Input autoFocus value={term} onChange={(event) => setTerm(event.target.value)} placeholder="Probá con cenas y tragos, Mar de Ajó..." className="h-11 pl-10" /></div>
         <div className="max-h-[45vh] space-y-1 overflow-y-auto">
           {normalized.length >= 2 && results.length === 0 ? <p className="py-8 text-center text-sm text-muted-foreground">No encontramos coincidencias.</p> : null}
-          {results.map((result) => <Button key={`${result.kind}-${result.id}`} asChild variant="ghost" className="h-auto w-full justify-start px-3 py-3"><Link to={result.to} onClick={() => { result.action(); setOpen(false); setTerm(""); }}><result.icon className="size-5 shrink-0 text-primary" /><span className="min-w-0 text-left"><span className="block truncate font-semibold">{result.label}</span><span className="block text-xs text-muted-foreground">{result.kind}</span></span></Link></Button>)}
+          {results.map((result) => <Button key={`${result.kind}-${result.id}`} asChild variant="ghost" className="h-auto w-full justify-start px-3 py-3"><Link to={result.to} onClick={() => { result.action(); setOpen(false); setTerm(""); }}><result.icon className="size-5 shrink-0 text-foreground" /><span className="min-w-0 text-left"><span className="block truncate font-semibold">{result.label}</span><span className="block text-xs text-muted-foreground">{result.kind}</span></span></Link></Button>)}
         </div>
       </DialogContent>
     </Dialog>

@@ -73,7 +73,7 @@ function Page() {
 
   return (
     <main>
-      <section className="bg-primary text-primary-foreground">
+      <section className="bg-ink text-ink-foreground">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
           <p className="text-xs font-bold uppercase text-accent">Hablemos</p>
           <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl">Estamos a un clic de distancia.</h1>
@@ -93,7 +93,7 @@ function Page() {
               className={`rounded-3xl border p-6 text-left transition-colors ${perfil === opcion.key ? "border-secondary bg-card shadow-premium" : "border-border bg-card hover:border-secondary/60"}`}
             >
               <opcion.icon className={perfil === opcion.key ? "size-6 text-secondary" : "size-6 text-accent-foreground"} />
-              <p className="mt-4 font-display text-xl font-bold text-primary">{opcion.titulo}</p>
+              <p className="mt-4 font-display text-xl font-bold text-foreground">{opcion.titulo}</p>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">{opcion.texto}</p>
             </button>
           ))}
@@ -101,7 +101,7 @@ function Page() {
 
         {perfil && estado === "ok" ? (
           <div className="mt-8 rounded-3xl border border-border bg-card p-8">
-            <h2 className="font-display text-2xl font-extrabold text-primary">
+            <h2 className="font-display text-2xl font-extrabold text-foreground">
               {perfil === "comercio" ? "¡Listo! Abrimos WhatsApp" : "¡Listo! Abrimos tu correo"}
             </h2>
             <p className="mt-3 leading-7 text-muted-foreground">
@@ -175,12 +175,12 @@ function Page() {
           <a href={`mailto:${EMAIL_AUNA}`} className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
             <Mail className="text-secondary" />
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Email</p>
-            <p className="mt-1 font-display text-lg font-bold text-primary">{EMAIL_AUNA}</p>
+            <p className="mt-1 font-display text-lg font-bold text-foreground">{EMAIL_AUNA}</p>
           </a>
           <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="rounded-3xl border border-border bg-card p-6 hover:border-secondary">
             <Instagram className="text-secondary" />
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Instagram</p>
-            <p className="mt-1 font-display text-lg font-bold text-primary">@cruzia.ar</p>
+            <p className="mt-1 font-display text-lg font-bold text-foreground">@cruzia.ar</p>
           </a>
         </div>
       </section>

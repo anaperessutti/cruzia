@@ -18,6 +18,7 @@ import { Route as GiftBoxRouteImport } from './routes/gift-box'
 import { Route as HuellaSolidariaRouteImport } from './routes/huella-solidaria'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
 import { Route as SumateAAunaRouteImport } from './routes/sumate-a-auna'
+import { Route as SumateACruziaRouteImport } from './routes/sumate-a-cruzia'
 import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promociones'
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminCuponesRouteImport } from './routes/admin/cupones'
@@ -73,6 +74,11 @@ const PrivacidadRoute = PrivacidadRouteImport.update({
 const SumateAAunaRoute = SumateAAunaRouteImport.update({
   id: '/sumate-a-auna',
   path: '/sumate-a-auna',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SumateACruziaRoute = SumateACruziaRouteImport.update({
+  id: '/sumate-a-cruzia',
+  path: '/sumate-a-cruzia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerminosPromocionesRoute = TerminosPromocionesRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
   '/sumate-a-auna': typeof SumateAAunaRoute
+  '/sumate-a-cruzia': typeof SumateACruziaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
   '/sumate-a-auna': typeof SumateAAunaRoute
+  '/sumate-a-cruzia': typeof SumateACruziaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
   '/sumate-a-auna': typeof SumateAAunaRoute
+  '/sumate-a-cruzia': typeof SumateACruziaRoute
   '/terminos-promociones': typeof TerminosPromocionesRoute
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/huella-solidaria'
     | '/privacidad'
     | '/sumate-a-auna'
+    | '/sumate-a-cruzia'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/huella-solidaria'
     | '/privacidad'
     | '/sumate-a-auna'
+    | '/sumate-a-cruzia'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/huella-solidaria'
     | '/privacidad'
     | '/sumate-a-auna'
+    | '/sumate-a-cruzia'
     | '/terminos-promociones'
     | '/admin/confirmado'
     | '/admin/cupones'
@@ -278,6 +290,7 @@ export interface RootRouteChildren {
   HuellaSolidariaRoute: typeof HuellaSolidariaRoute
   PrivacidadRoute: typeof PrivacidadRoute
   SumateAAunaRoute: typeof SumateAAunaRoute
+  SumateACruziaRoute: typeof SumateACruziaRoute
   TerminosPromocionesRoute: typeof TerminosPromocionesRoute
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminCuponesRoute: typeof AdminCuponesRoute
@@ -354,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/sumate-a-auna'
       fullPath: '/sumate-a-auna'
       preLoaderRoute: typeof SumateAAunaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sumate-a-cruzia': {
+      id: '/sumate-a-cruzia'
+      path: '/sumate-a-cruzia'
+      fullPath: '/sumate-a-cruzia'
+      preLoaderRoute: typeof SumateACruziaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terminos-promociones': {
@@ -446,6 +466,7 @@ const rootRouteChildren: RootRouteChildren = {
   HuellaSolidariaRoute: HuellaSolidariaRoute,
   PrivacidadRoute: PrivacidadRoute,
   SumateAAunaRoute: SumateAAunaRoute,
+  SumateACruziaRoute: SumateACruziaRoute,
   TerminosPromocionesRoute: TerminosPromocionesRoute,
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminCuponesRoute: AdminCuponesRoute,

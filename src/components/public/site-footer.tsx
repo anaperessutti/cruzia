@@ -1,13 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Mail } from "lucide-react";
 
-import { BrandMark } from "./brand-mark";
+import { Logo } from "@/components/brand/logo";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 bg-primary text-primary-foreground">
+    <footer className="mt-20 bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1fr_auto] lg:px-8">
-        <div><BrandMark inverse /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/70">Beneficios, experiencias y comunidad en el Partido de la Costa.</p></div>
+        <div><Logo variant="lockup" tone="dark" height={88} /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/70">Beneficios, experiencias y comunidad en el Partido de la Costa.</p></div>
         <div className="grid gap-3 text-sm">
           <a className="flex items-center gap-2 hover:text-accent" href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer"><Instagram className="size-4" /> @cruzia.ar</a>
           <a className="flex items-center gap-2 hover:text-accent" href="mailto:somoscruzia@gmail.com"><Mail className="size-4" /> somoscruzia@gmail.com</a>

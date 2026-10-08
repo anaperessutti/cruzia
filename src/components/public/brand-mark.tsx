@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 
+import { Logo } from "@/components/brand/logo";
+
 export function BrandMark({ inverse = false }: { inverse?: boolean }) {
   return (
-    <Link to="/" aria-label="Cruzia — Inicio" className="group inline-flex items-center gap-2">
-      <span className={inverse ? "font-display text-3xl font-extrabold text-primary-foreground" : "font-display text-3xl font-extrabold text-primary"}>Cruzia</span>
-      <span className={inverse ? "hidden text-[10px] font-bold uppercase text-primary-foreground/70 sm:block" : "hidden text-[10px] font-bold uppercase text-muted-foreground sm:block"}>Beneficios<br />de la costa</span>
+    <Link to="/" aria-label="Cruzia — Inicio" className="inline-flex items-center rounded-full p-1">
+      <Logo variant="wordmark" tone={inverse ? "dark" : "light"} height={28} decorative />
     </Link>
   );
 }

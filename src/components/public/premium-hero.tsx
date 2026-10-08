@@ -62,7 +62,7 @@ export function PremiumHero() {
 
 
   return (
-    <section aria-label="Destacados de Cruzia" className="bg-primary">
+    <section aria-label="Destacados de Cruzia" className="bg-ink">
       <Carousel opts={{ loop: slides.length > 1 }} className="mx-auto max-w-[1600px]">
         <CarouselContent className="ml-0">
           {slides.map((slide, index) => {
@@ -86,7 +86,7 @@ export function PremiumHero() {
                         ? <Link to="/eventos/$eventoId" params={{ eventoId: slide.evento.id }}>Ver evento<ArrowRight /></Link>
                         : slide
                           ? <Link to="/comercio/$comercioId" params={{ comercioId: slide.comercio.id }}>{slide.promo ? "Ver promoción" : "Ver comercio"}<ArrowRight /></Link>
-                          : <Link to="/sumate-a-auna">Sumate a Cruzia<ArrowRight /></Link>}
+                          : <Link to="/sumate-a-cruzia">Sumate a Cruzia<ArrowRight /></Link>}
                     </Button>
                   </div>
                 </div>
