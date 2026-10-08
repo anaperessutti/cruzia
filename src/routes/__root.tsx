@@ -121,7 +121,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
-  const isHome = useRouterState({ select: (state) => state.location.pathname === "/" });
+  const isHome = useRouterState({ select: (state) => state.location.pathname === "/" || state.location.pathname.startsWith("/comercio/") });
 
   return (
     <QueryClientProvider client={queryClient}>
