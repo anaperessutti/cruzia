@@ -9,13 +9,13 @@ export function SiteFooter() {
   return (
     <footer
       className={cn(
-        "transition-chrome relative mt-20 overflow-hidden rounded-t-[40px] bg-chrome-bg text-chrome-fg",
-        oscuro ? "theme-gift border-t border-chrome-border" : "",
+        "transition-chrome relative overflow-hidden rounded-t-[40px] bg-chrome-bg text-chrome-fg",
+        oscuro ? "theme-gift border-t border-chrome-border" : "mt-20",
       )}
     >
       {/* Degradado que une el footer con el lienzo. */}
       {!oscuro ? <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-background/70 to-transparent" /> : null}
-      <Logo variant="isotype" tone={oscuro ? "dark" : "light"} height={320} decorative className="pointer-events-none absolute -bottom-10 -right-16 opacity-5" />
+      <Logo variant="isotype" tone={oscuro ? "dark" : "light"} height={320} decorative className="pointer-events-none absolute -bottom-10 -right-16 !opacity-[0.05]" />
       <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-14 sm:px-8 md:grid-cols-[1fr_auto]">
         <div>
           <Logo variant="lockup" tone={oscuro ? "dark" : "light"} height={96} />
