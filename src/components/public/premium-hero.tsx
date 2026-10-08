@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { ArrowRight, Star } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 import heroImage from "@/assets/auna-costa-hero.jpg";
-import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Logo } from "@/components/brand/logo";
 import { estaCerca } from "@/lib/geo";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";
+import { cn } from "@/lib/utils";
 import { usePublicDirectory } from "./public-directory-provider";
 
 function vigente(inicio: string, fin: string) {
@@ -18,9 +18,34 @@ type Slide =
   | { tipo: "comercio"; id: string; comercio: Comercio; promo: Cupon | null }
   | { tipo: "evento"; id: string; evento: Evento };
 
+/** Título editorial: liviano, con la(s) última(s) palabra(s) en Bold. */
+function TituloEditorial({ texto }: { texto: string }) {
+  const palabras = texto.trim().split(/\s+/);
+  const enNegrita = palabras.length >= 5 ? 2 : 1;
+  const corte = Math.max(palabras.length - enNegrita, 0);
+  return (
+    <>
+      <span className="font-light">{palabras.slice(0, corte).join(" ")} </span>
+      <span className="font-bold">{palabras.slice(corte).join(" ")}</span>
+    </>
+  );
+}
+
+function BotonFlecha({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-3 rounded-full bg-card py-1.5 pl-5 pr-1.5 text-sm font-semibold text-foreground shadow-warm transition-transform group-hover:-translate-y-0.5">
+      {children}
+      <span className="grid size-9 place-items-center rounded-full bg-foreground text-background"><ArrowRight className="size-4" /></span>
+    </span>
+  );
+}
+
+const AUTOPLAY_MS = 6000;
+
 export function PremiumHero() {
   const { data, userCoords } = usePublicDirectory();
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
+  const localidadById = new Map(data.localidades.map((l) => [l.id, l.nombre]));
   const ordenAleatorio = useMemo(
     () => new Map([...data.comercios.map((item) => [item.id, Math.random()] as const), ...data.eventos.map((item) => [item.id, Math.random()] as const)]),
     [data.comercios, data.eventos],
@@ -49,7 +74,6 @@ export function PremiumHero() {
         const soloLocal = promo ? promo.hero_alcance_local : item.hero_alcance_local;
         return !soloLocal || estaCerca(userCoords, item);
       })
-
       .map<Slide>((comercio) => ({ tipo: "comercio", id: comercio.id, comercio, promo: cuponTop(comercio.id) })),
     ...eventosTop.map<Slide>((evento) => ({ tipo: "evento", id: evento.id, evento })),
   ];
@@ -60,43 +84,103 @@ export function PremiumHero() {
     .slice(0, 7);
   const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : [null];
 
+  // Fundido cruzado con autoplay, pausa al tocar y swipe.
+  const [activo, setActivo] = useState(0);
+  const [pausado, setPausado] = useState(false);
+  const toqueX = useRef<number | null>(null);
+  const total = slides.length;
+  useEffect(() => { if (activo >= total) setActivo(0); }, [activo, total]);
+  useEffect(() => {
+    if (pausado || total < 2) return;
+    const id = window.setTimeout(() => setActivo((i) => (i + 1) % total), AUTOPLAY_MS);
+    return () => window.clearTimeout(id);
+  }, [activo, pausado, total]);
+  const ir = (paso: number) => setActivo((i) => (i + paso + total) % total);
 
   return (
-    <section aria-label="Destacados de Cruzia" className="bg-ink">
-      <Carousel opts={{ loop: slides.length > 1 }} className="mx-auto max-w-[1600px]">
-        <CarouselContent className="ml-0">
-          {slides.map((slide, index) => {
-            const esEvento = slide?.tipo === "evento";
-            const imagen = (esEvento ? slide.evento.imagen_url : slide?.promo?.flyer_url ?? slide?.comercio.galeria[0]) ?? heroImage;
-            const titulo = (esEvento ? slide.evento.titulo : slide?.promo?.titulo ?? slide?.comercio.nombre) ?? "Beneficios que te llevan más lejos.";
-            const texto = (esEvento ? slide.evento.descripcion : slide?.promo?.descripcion ?? slide?.comercio.descripcion)
-              ?? "Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.";
-            const etiqueta = esEvento ? "Evento destacado" : slide?.promo ? slide.comercio.nombre : slide ? "Elegido Premium" : "Viví La Costa";
-            return (
-              <CarouselItem key={slide?.id ?? `brand-${index}`} className="relative h-[68vh] min-h-[430px] max-h-[680px] pl-0">
-                <img src={imagen} alt={titulo} width={1600} height={900} className="absolute inset-0 size-full object-cover" />
-                <div className="absolute inset-0 bg-hero-overlay" />
-                <div className="relative mx-auto flex h-full max-w-7xl items-end px-4 pb-14 sm:px-6 sm:pb-20 lg:px-8">
-                  <div className="max-w-2xl text-primary-foreground">
-                    <div className="mb-4 inline-flex items-center gap-2 border-l-2 border-accent pl-3 text-xs font-bold uppercase"><Star className="size-4 fill-current" />{etiqueta}</div>
-                    <h1 className="font-display text-4xl font-extrabold leading-[1.05] sm:text-6xl">{titulo}</h1>
-                    <p className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p>
-                    <Button asChild size="lg" className="mt-7 bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                      {slide?.tipo === "evento"
-                        ? <Link to="/eventos/$eventoId" params={{ eventoId: slide.evento.id }}>Ver evento<ArrowRight /></Link>
-                        : slide
-                          ? <Link to="/comercio/$comercioId" params={{ comercioId: slide.comercio.id }}>{slide.promo ? "Ver promoción" : "Ver comercio"}<ArrowRight /></Link>
-                          : <Link to="/sumate-a-cruzia">Sumate a Cruzia<ArrowRight /></Link>}
-                    </Button>
-                  </div>
-                </div>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-        <CarouselPrevious className="bottom-5 left-auto right-16 top-auto z-10 translate-y-0 border-primary-foreground/40 bg-primary/35 text-primary-foreground hover:bg-primary hover:text-primary-foreground" />
-        <CarouselNext className="bottom-5 right-5 top-auto z-10 translate-y-0 border-primary-foreground/40 bg-primary/35 text-primary-foreground hover:bg-primary hover:text-primary-foreground" />
-      </Carousel>
+    <section
+      aria-label="Destacados de Cruzia"
+      aria-roledescription="carrusel"
+      className="mask-fade-bottom relative h-[82svh] min-h-[520px] max-h-[760px] w-full overflow-hidden bg-ink"
+      onTouchStart={(e) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
+      onTouchEnd={(e) => {
+        const inicio = toqueX.current;
+        const fin = e.changedTouches[0]?.clientX;
+        if (inicio !== null && fin !== undefined && Math.abs(fin - inicio) > 40) ir(fin < inicio ? 1 : -1);
+        toqueX.current = null;
+        setPausado(false);
+      }}
+      onMouseEnter={() => setPausado(true)}
+      onMouseLeave={() => setPausado(false)}
+    >
+      {slides.map((slide, index) => {
+        const visible = index === activo;
+        if (!slide) return <SlideInstitucional key="brand" visible={visible} />;
+        const esEvento = slide.tipo === "evento";
+        const imagen = (esEvento ? slide.evento.imagen_url : slide.promo?.flyer_url ?? slide.comercio.galeria[0]) ?? heroImage;
+        const titulo = (esEvento ? slide.evento.titulo : slide.promo?.titulo ?? slide.comercio.nombre) ?? "";
+        const texto = esEvento ? slide.evento.descripcion : slide.promo?.descripcion ?? slide.comercio.descripcion;
+        const localidad = localidadById.get((esEvento ? slide.evento.localidad_id : slide.comercio.localidad_id) ?? "");
+        const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
+        return (
+          <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
+            <img src={imagen} alt={titulo} width={1600} height={900} className={cn("absolute inset-0 size-full object-cover transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
+            {/* Desenfoque progresivo teñido con la propia imagen. */}
+            <img src={imagen} alt="" aria-hidden="true" className="glass-progressive absolute inset-0 size-full object-cover" />
+            <div className="absolute inset-0 bg-linear-to-t from-ink/25 via-transparent to-ink/20" />
+            <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-40 sm:px-8 sm:pb-44">
+              <div className="max-w-2xl text-primary-foreground">
+                <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
+                <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-[-0.035em] sm:text-7xl"><TituloEditorial texto={titulo} /></h1>
+                {texto ? <p className="mt-4 line-clamp-2 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p> : null}
+                <Link
+                  tabIndex={visible ? 0 : -1}
+                  className="group mt-7 inline-block"
+                  {...(esEvento
+                    ? { to: "/eventos/$eventoId" as const, params: { eventoId: slide.evento.id } }
+                    : { to: "/comercio/$comercioId" as const, params: { comercioId: slide.comercio.id } })}
+                >
+                  <BotonFlecha>{esEvento ? "Ver evento" : slide.promo ? "Ver promoción" : "Ver comercio"}</BotonFlecha>
+                </Link>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {total > 1 ? (
+        <div className="glass-dark absolute bottom-28 right-5 z-20 flex items-center gap-1.5 rounded-full px-3 py-2 sm:right-8 sm:bottom-32">
+          {slides.map((slide, index) => (
+            <button
+              key={slide?.id ?? `brand-${index}`}
+              type="button"
+              aria-label={`Ir al destacado ${index + 1}`}
+              aria-current={index === activo}
+              onClick={() => setActivo(index)}
+              className={cn("h-1.5 rounded-full transition-all duration-500", index === activo ? "w-6 bg-primary" : "w-1.5 bg-primary-foreground/50")}
+            />
+          ))}
+        </div>
+      ) : null}
     </section>
+  );
+}
+
+/** Slide institucional: orbe nítido parcialmente cubierto por vidrio + isotipo como marca de agua. */
+function SlideInstitucional({ visible }: { visible: boolean }) {
+  return (
+    <div aria-hidden={!visible} className={cn("absolute inset-0 overflow-hidden bg-ink transition-opacity duration-1000", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
+      <div className="bg-orb absolute -right-24 top-[18%] size-[22rem] rounded-full sm:right-[8%] sm:size-[32rem]" />
+      <div className="glass-dark absolute -right-10 top-[38%] h-[45%] w-[70%] rounded-[2.5rem] sm:right-[2%] sm:w-[38%]" />
+      <Logo variant="isotype" tone="dark" height={260} decorative className="absolute -left-10 top-24 opacity-[0.06]" />
+      <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-40 sm:px-8 sm:pb-44">
+        <div className="max-w-2xl text-primary-foreground">
+          <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">Viví La Costa</div>
+          <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-[-0.035em] sm:text-7xl"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
+          <p className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.</p>
+          <Link to="/sumate-a-cruzia" tabIndex={visible ? 0 : -1} className="group mt-7 inline-block"><BotonFlecha>Sumate a Cruzia</BotonFlecha></Link>
+        </div>
+      </div>
+    </div>
   );
 }
