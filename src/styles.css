@@ -253,3 +253,15 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Tarjetas inmersivas */
+@utility shadow-glow-pro { box-shadow: 0 22px 40px -22px rgb(223 59 37 / 0.45); }
+@utility shadow-glow-premium { box-shadow: 0 30px 60px -20px rgb(223 59 37 / 0.55), 0 10px 30px -18px rgb(242 156 90 / 0.6); }
+@utility text-shadow-soft { text-shadow: 0 1px 12px rgb(0 0 0 / 0.25); }
+@utility bg-premium-ring {
+  background: linear-gradient(120deg, var(--primary), var(--glow-amber), var(--primary), var(--glow-amber));
+  background-size: 300% 300%;
+  animation: ring-drift 9s linear infinite;
+}
+@keyframes ring-drift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+@utility halo-accent { background: radial-gradient(closest-side, hsl(7 74% 51% / 0.22), transparent); }

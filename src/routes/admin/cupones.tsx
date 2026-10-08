@@ -381,9 +381,9 @@ function CuponesAdmin() {
           <CardHeader>
             <CardTitle>{editando === "nuevo" ? "Nueva promoción" : "Editar promoción"}</CardTitle>
             <CardDescription>
-              Flyer recomendado: 1200 × 800 px (3:2, horizontal), hasta 300 KB — la misma medida
-              que la foto de portada de los comercios, porque el flyer se usa como portada de la
-              tarjeta en la grilla.
+              Flyer recomendado: 1080 × 1350 px (4:5, vertical), hasta 300 KB. Zona segura: poné
+              el texto importante en el 65% superior; el 35% inferior queda tapado por el panel de
+              la tarjeta (nombre, botón).
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
