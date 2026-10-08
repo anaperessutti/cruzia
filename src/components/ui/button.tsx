@@ -13,7 +13,7 @@ const buttonVariants = cva(
         default: "bg-primary text-primary-foreground shadow-soft hover:bg-primary-hover md:hover:-translate-y-px",
         destructive: "bg-destructive text-destructive-foreground shadow-soft hover:bg-destructive/90",
         outline: "border border-border bg-card/60 text-foreground hover:bg-surface-sand",
-        secondary: "bg-ink text-ink-foreground shadow-soft hover:bg-ink/90 md:hover:-translate-y-px",
+        secondary: "bg-card text-foreground shadow-soft hover:bg-card/90 md:hover:-translate-y-px",
         ghost: "hover:bg-surface-sand hover:text-foreground",
         link: "text-foreground underline underline-offset-4 decoration-primary hover:decoration-2",
         "pill-primary": "h-12 px-6 bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover md:hover:-translate-y-px",
