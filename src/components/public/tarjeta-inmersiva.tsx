@@ -12,13 +12,13 @@ interface TarjetaInmersivaProps {
   alt: string;
   nivel: NivelTarjeta;
   titulo: string;
-  descripcion?: string | null;
+  descripcion?: string | null | undefined;
   pildoras?: string[];
-  ubicacion?: string | null;
-  etiquetaSuperior?: string | null;
-  insignia?: ReactNode;
+  ubicacion?: string | null | undefined;
+  etiquetaSuperior?: string | null | undefined;
+  insignia?: ReactNode | undefined;
   boton?: string | null;
-  className?: string;
+  className?: string | undefined;
 }
 
 /** Pieza inmersiva 4:5: foto a sangre + panel inferior teñido con la propia imagen. */
