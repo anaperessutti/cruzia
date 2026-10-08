@@ -68,9 +68,9 @@ function Page() {
     return (
       <main className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-4 py-20 text-center">
         <HeartHandshake className="size-12 text-secondary" />
-        <h1 className="mt-6 font-display text-3xl font-extrabold text-primary">Gracias, {form.nombre.split(" ")[0]}.</h1>
+        <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground">Gracias, {form.nombre.split(" ")[0]}.</h1>
         <p className="mt-4 leading-7 text-muted-foreground">
-          Recibimos tu postulación por <strong className="text-primary">{form.causa}</strong>. La vamos a leer con atención y, si avanzamos, te escribimos para conocernos.
+          Recibimos tu postulación por <strong className="text-foreground">{form.causa}</strong>. La vamos a leer con atención y, si avanzamos, te escribimos para conocernos.
         </p>
         <Button className="mt-8" variant="outline" onClick={() => { setForm({ nombre: "", causa: "", localidad: "", descripcion: "" }); setEstado("idle"); }}>
           Postular otra causa
@@ -86,7 +86,7 @@ function Page() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
           <div>
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
-            <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-[1.08] text-primary sm:text-5xl">
+            <h1 className="mt-5 max-w-3xl font-display text-4xl font-light italic leading-[1.08] text-foreground sm:text-5xl">
               Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
@@ -101,7 +101,7 @@ function Page() {
             ].map((item) => (
                <div key={item.titulo} className="rounded-md border border-secondary/15 bg-card p-5">
                 <item.icon className="size-5 text-secondary" />
-                <p className="mt-3 font-display text-lg font-bold text-primary">{item.titulo}</p>
+                <p className="mt-3 font-display text-lg font-bold text-foreground">{item.titulo}</p>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.texto}</p>
               </div>
             ))}
@@ -114,12 +114,12 @@ function Page() {
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           {actual ? (
             <>
-              <h2 className="font-display text-2xl font-extrabold text-primary">Nuestro próximo aporte</h2>
+              <h2 className="font-display text-2xl font-extrabold text-foreground">Nuestro próximo aporte</h2>
               <div className="mt-8 rounded-3xl border-2 border-secondary/40 bg-card p-6 shadow-premium sm:p-8">
                 <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
                   <Sparkles className="size-3.5" /> En marcha
                 </span>
-                <h3 className="mt-4 font-display text-2xl font-extrabold text-primary">{actual.titulo}</h3>
+                <h3 className="mt-4 font-display text-2xl font-extrabold text-foreground">{actual.titulo}</h3>
                 <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> {formatearFecha(actual.fecha)}</p>
                 {actual.descripcion ? <p className="mt-4 leading-7 text-foreground/80">{actual.descripcion}</p> : null}
                 <Fotos fase={actual} />
@@ -129,13 +129,13 @@ function Page() {
 
           {historial.length > 0 ? (
             <div className={actual ? "mt-14" : ""}>
-              <h2 className="font-display text-2xl font-extrabold text-primary">Proyectos que acompañamos</h2>
+              <h2 className="font-display text-2xl font-extrabold text-foreground">Proyectos que acompañamos</h2>
               <ol className="mt-6 space-y-8 border-l-2 border-border pl-6">
                 {historial.map((fase) => (
                   <li key={fase.id} className="relative">
                     <span className="absolute -left-[31px] top-2 size-3 rounded-full bg-accent ring-4 ring-background" />
                     <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
-                    <h4 className="mt-1 font-display text-xl font-bold text-primary">{fase.titulo}</h4>
+                    <h4 className="mt-1 font-display text-xl font-bold text-foreground">{fase.titulo}</h4>
                     {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
                     <Fotos fase={fase} />
                   </li>
@@ -151,7 +151,7 @@ function Page() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
              <p className="text-xs font-bold uppercase text-secondary">Postulá una causa</p>
-             <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight text-primary sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
+             <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight text-foreground sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
              <p className="mt-5 max-w-lg leading-7 text-muted-foreground">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>

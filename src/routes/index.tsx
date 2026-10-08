@@ -12,6 +12,8 @@ export const Route = createFileRoute("/")({
     { property: "og:description", content: "Todo lo bueno del Partido de la Costa, más cerca." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
+    { property: "og:image", content: "https://ola-costa-deals.lovable.app/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
+    { name: "twitter:image", content: "https://ola-costa-deals.lovable.app/__l5e/assets-v1/21f65caf-705c-4c29-96a6-099b342a4202/cruzia-og.jpg" },
   ] }),
   component: Index,
 });
@@ -31,5 +33,16 @@ function Index() {
   }, [navigate]);
 
   // La Barra de Filtros Sticky no se muestra en el Home; el GPS igual corre en el proveedor.
-  return <main><PremiumHero /><HomeCarousels /></main>;
+  return (
+    <main className="relative isolate overflow-hidden">
+      {/* Atmósfera: halos cálidos muy suaves detrás del contenido. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -left-32 top-[60vh] size-[28rem] rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute -right-24 top-[110vh] size-[32rem] rounded-full bg-glow-amber/25 blur-3xl" />
+        <div className="absolute left-1/3 top-[180vh] size-[24rem] rounded-full bg-primary/15 blur-3xl" />
+      </div>
+      <PremiumHero />
+      <HomeCarousels />
+    </main>
+  );
 }

@@ -66,7 +66,7 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, imagenes = [], c
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <a
           href={destinoUrl}
-          className="group inline-flex items-center gap-1 font-display text-xl font-extrabold text-primary transition-colors hover:text-secondary sm:text-2xl"
+          className="group inline-flex items-center gap-1 font-display text-xl font-extrabold text-foreground transition-colors hover:text-secondary sm:text-2xl"
         >
           {titulo}
           <ChevronRight className="size-5 shrink-0 text-secondary transition-transform group-hover:translate-x-0.5" />
@@ -132,7 +132,7 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, imagenes = [], c
               size="icon"
               onClick={() => desplazar(-1)}
               aria-label="Ver tarjetas anteriores"
-              className="pointer-events-auto rounded-full text-primary hover:bg-background/80"
+              className="pointer-events-auto rounded-full text-foreground hover:bg-background/80"
             >
               <ChevronLeft className="size-6" />
             </Button>
@@ -147,7 +147,7 @@ export function CarruselSeccion({ titulo, destinoUrl, tarjetas, imagenes = [], c
               size="icon"
               onClick={() => desplazar(1)}
               aria-label="Ver más tarjetas"
-              className="pointer-events-auto rounded-full text-primary hover:bg-background/80"
+              className="pointer-events-auto rounded-full text-foreground hover:bg-background/80"
             >
               <ChevronRight className="size-6" />
             </Button>

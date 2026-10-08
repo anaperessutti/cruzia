@@ -48,7 +48,7 @@ function FichaComercio() {
   if (!comercio) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-24 text-center">
-        <h1 className="font-display text-3xl font-extrabold text-primary">No encontramos este comercio.</h1>
+        <h1 className="font-display text-3xl font-extrabold text-foreground">No encontramos este comercio.</h1>
         <p className="mt-3 text-muted-foreground">Puede que ya no esté publicado.</p>
         <Button asChild className="mt-6"><Link to="/">Volver al inicio</Link></Button>
       </main>
@@ -94,7 +94,7 @@ function FichaComercio() {
 
   return (
     <main>
-      <section className="border-b border-border bg-primary text-primary-foreground">
+      <section className="border-b border-border bg-ink text-ink-foreground">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-4xl font-extrabold sm:text-5xl">{comercio.nombre}</h1>
@@ -158,7 +158,7 @@ function FichaComercio() {
 
       {sedes.length > 0 ? (
         <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6">
-          <h2 className="font-display text-2xl font-extrabold text-primary">Nuestras sedes</h2>
+          <h2 className="font-display text-2xl font-extrabold text-foreground">Nuestras sedes</h2>
           <div className="mt-5 grid gap-6 lg:grid-cols-2">
             {sedes.map((sede) => {
               const promos = cupones.filter((c) => {

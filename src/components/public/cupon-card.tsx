@@ -105,7 +105,7 @@ export function CuponCard({
 
   return (
     <article className="rounded-md border-2 border-secondary bg-card p-6 shadow-premium">
-      <h2 className="font-display text-2xl font-bold text-primary">{cupon.titulo}</h2>
+      <h2 className="font-display text-2xl font-bold text-foreground">{cupon.titulo}</h2>
       {cupon.descripcion ? <p className="mt-2 text-sm text-muted-foreground">{cupon.descripcion}</p> : null}
       <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
         <CalendarClock className="size-4" /> Vigente del {formatFecha(cupon.vigencia_inicio)} al {formatFecha(cupon.vigencia_fin)}
@@ -114,7 +114,7 @@ export function CuponCard({
       {exito ? (
         <div className="mt-5 rounded-md border border-accent bg-accent/10 p-5 text-center">
           <CheckCircle2 className="mx-auto size-8 text-accent" />
-          <p className="mt-2 font-display text-2xl font-extrabold text-primary">¡Ya es tuyo, disfrutalo!</p>
+          <p className="mt-2 font-display text-2xl font-extrabold text-foreground">¡Ya es tuyo, disfrutalo!</p>
           <p className="mt-1 text-sm text-muted-foreground">Tu próximo cupón se habilitará en {exito.cooldown} días.</p>
           <p className="mt-2 text-xs text-muted-foreground">Mostrale esta pantalla a la persona que te atiende.</p>
         </div>
