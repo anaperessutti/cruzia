@@ -118,10 +118,21 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
+  const isHome = useRouterState({ select: (state) => state.location.pathname === "/" });
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isAdmin ? <Outlet /> : <PublicDirectoryProvider><div className="flex min-h-screen flex-col"><SiteHeader /><div className="flex-1"><Outlet /></div><SiteFooter /></div></PublicDirectoryProvider>}
+      {isAdmin ? <Outlet /> : (
+        <PublicDirectoryProvider>
+          {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
+          <div className="bg-canvas relative flex min-h-screen flex-col">
+            <div aria-hidden="true" className="bg-grain pointer-events-none fixed inset-0 z-[60] opacity-[0.035] mix-blend-multiply" />
+            <SiteHeader />
+            <div className={isHome ? "flex-1" : "flex-1 pt-24"}><Outlet /></div>
+            <SiteFooter />
+          </div>
+        </PublicDirectoryProvider>
+      )}
     </QueryClientProvider>
   );
 }

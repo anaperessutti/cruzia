@@ -8,7 +8,7 @@ import { usePublicDirectory } from "./public-directory-provider";
 
 export function StickyFilters() {
   const { data, filters, geoStatus, detectedLocalidadId, detectLocation, setLocalidadIds, setColeccionIds, setSoloCupon } = usePublicDirectory();
-  const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${filters.localidadIds.length} localidades`;
+  const localityLabel = filters.localidadIds.length === 0 ? "Toda La Costa" : filters.localidadIds.length === 1 ? data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "1 localidad" : `${data.localidades.find((item) => item.id === filters.localidadIds[0])?.nombre ?? "Localidades"} +${filters.localidadIds.length - 1}`;
   const coleccionLabel = filters.coleccionIds.length === 0
     ? "Todas las categorías"
     : filters.coleccionIds.length === 1
@@ -23,10 +23,10 @@ export function StickyFilters() {
       : null;
 
   return (
-    <div className="sticky top-16 z-30 border-y border-border/70 bg-background/95 shadow-sm backdrop-blur">
-      <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 sm:px-6 lg:px-8">
+    <div className="sticky top-20 z-30 px-3 sm:px-6">
+      <div className="glass mx-auto flex max-w-7xl gap-2 overflow-x-auto rounded-full p-1.5">
         <Popover>
-          <PopoverTrigger asChild><Button variant="outline" className="h-10 shrink-0 justify-between gap-3"><MapPin className="text-secondary" /><span>{localityLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
+          <PopoverTrigger asChild><Button variant="ghost" className="h-11 shrink-0 justify-between gap-2 rounded-full bg-card/60 pl-1.5 pr-4"><span className="grid size-8 place-items-center rounded-full bg-foreground text-background"><MapPin className="size-4" /></span><span>{localityLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="w-[min(22rem,calc(100vw-2rem))] p-2">
             <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Localidades</p>{filters.localidadIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setLocalidadIds([])}>Ver todas</Button> : null}</div>
             <Button variant="ghost" size="sm" className="mb-1 w-full justify-start gap-2" onClick={detectLocation} disabled={geoStatus === "solicitando"}>
@@ -42,7 +42,7 @@ export function StickyFilters() {
           </PopoverContent>
         </Popover>
         <Popover>
-          <PopoverTrigger asChild><Button variant="outline" className="h-10 shrink-0 justify-between gap-3"><Tag className="text-secondary" /><span>{coleccionLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
+          <PopoverTrigger asChild><Button variant="ghost" className="h-11 shrink-0 justify-between gap-2 rounded-full bg-card/60 pl-1.5 pr-4"><span className="grid size-8 place-items-center rounded-full bg-foreground text-background"><Tag className="size-4" /></span><span>{coleccionLabel}</span><ChevronDown className="text-muted-foreground" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="max-h-80 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto p-2">
             <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Categorías</p>{filters.coleccionIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setColeccionIds([])}>Ver todas</Button> : null}</div>
             <div className="max-h-72 space-y-1 overflow-y-auto">
@@ -53,7 +53,7 @@ export function StickyFilters() {
             </div>
           </PopoverContent>
         </Popover>
-        <label className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-semibold"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} /><span>⭐ Solo con Cupón</span></label>
+        <label className="flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} /><span>⭐ Solo con Cupón</span></label>
       </div>
     </div>
   );
