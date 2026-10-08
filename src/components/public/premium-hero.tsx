@@ -124,9 +124,11 @@ export function PremiumHero() {
         const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
+            <div className="sd-parallax absolute inset-x-0 -top-[4%] h-[108%]">
             <img src={imagen} alt={titulo} width={1600} height={900} className={cn("absolute inset-0 size-full object-cover transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
             {/* Desenfoque progresivo teñido con la propia imagen. */}
             <img src={imagen} alt="" aria-hidden="true" className="glass-progressive absolute inset-0 size-full object-cover" />
+            </div>
             <div className="absolute inset-0 bg-linear-to-t from-ink/25 via-transparent to-ink/20" />
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-40 sm:px-8 sm:pb-44">
               <div className="max-w-2xl text-primary-foreground">

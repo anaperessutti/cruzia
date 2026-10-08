@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PublicDirectoryProvider } from "@/components/public/public-directory-provider";
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
+import { ScrollRevealFallback } from "@/components/public/scroll-reveal-fallback";
 
 function NotFoundComponent() {
   return (
@@ -128,7 +129,9 @@ function RootComponent() {
       {isAdmin ? <Outlet /> : (
         <PublicDirectoryProvider>
           {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
-          <div className="bg-canvas relative flex min-h-screen flex-col">
+          <div className="bg-canvas relative isolate flex min-h-screen flex-col overflow-x-clip">
+            <ScrollRevealFallback />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"><div className="sd-drift-a halo-accent absolute -left-40 top-[15%] size-[44rem]" /><div className="sd-drift-b halo-accent absolute -right-40 top-[55%] size-[40rem] opacity-70" /></div>
             <div aria-hidden="true" className="bg-grain pointer-events-none fixed inset-0 z-[60] opacity-[0.035] mix-blend-multiply" />
             <SiteHeader />
             <div className={isHome ? "flex-1" : "flex-1 pt-24"}><Outlet /></div>

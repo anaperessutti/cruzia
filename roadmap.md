@@ -15,3 +15,7 @@
 - [x] Unificar la navegación y los filtros públicos con las 12 colecciones
 
 - [x] Colecciones propias por promoción, sección de Eventos y Top Slider unificado (promo o evento)
+- [x] Animaciones ligadas al scroll (CSS nativo) con alternativa para navegadores sin soporte
+- [x] og:image con dominio propio
+- [ ] Íconos en círculo en los campos de formularios
+- [ ] Isotipo como indicador de carga

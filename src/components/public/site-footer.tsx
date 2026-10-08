@@ -16,7 +16,7 @@ export function SiteFooter() {
       {/* Degradado que une el footer con el lienzo. */}
       {!oscuro ? <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-background/70 to-transparent" /> : null}
       <Logo variant="isotype" tone={oscuro ? "dark" : "light"} height={320} decorative className="pointer-events-none absolute -bottom-10 -right-16 !opacity-[0.05]" />
-      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-14 sm:px-8 md:grid-cols-[1fr_auto]">
+      <div className="sd-reveal relative mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-14 sm:px-8 md:grid-cols-[1fr_auto]">
         <div>
           <Logo variant="lockup" tone={oscuro ? "dark" : "light"} height={96} />
           <p className="mt-5 max-w-sm text-sm leading-6 text-chrome-muted">Beneficios, experiencias y comunidad en el Partido de la Costa.</p>
