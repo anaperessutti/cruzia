@@ -35,14 +35,11 @@ function Index() {
   // La Barra de Filtros Sticky no se muestra en el Home; el GPS igual corre en el proveedor.
   return (
     <main className="relative isolate overflow-hidden">
-      {/* Atmósfera: halos cálidos muy suaves detrás del contenido. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-32 top-[60vh] size-[28rem] rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute -right-24 top-[110vh] size-[32rem] rounded-full bg-glow-amber/25 blur-3xl" />
-        <div className="absolute left-1/3 top-[180vh] size-[24rem] rounded-full bg-primary/15 blur-3xl" />
-      </div>
       <PremiumHero />
-      <HomeCarousels />
+      {/* Las filas suben sobre el hero que se disuelve: sin cortes entre ambos. */}
+      <div className="relative z-10 -mt-12">
+        <HomeCarousels />
+      </div>
     </main>
   );
 }
