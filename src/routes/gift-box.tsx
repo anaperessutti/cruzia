@@ -62,7 +62,7 @@ function GiftBoxPage() {
     const el = centinela.current;
     if (!el || typeof IntersectionObserver === "undefined") { setBarraVisible(true); return; }
     // Visible cuando el inicio de la sección entra en el 70% inferior de la pantalla (o ya pasó hacia arriba).
-    const obs = new IntersectionObserver(([e]) => setBarraVisible(e.isIntersecting), { rootMargin: "0px 0px -30% 0px" });
+    const obs = new IntersectionObserver(([e]) => setBarraVisible(Boolean(e?.isIntersecting)), { rootMargin: "0px 0px -30% 0px" });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
