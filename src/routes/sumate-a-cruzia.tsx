@@ -84,13 +84,15 @@ function Page() {
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
         <h2 className="text-subtitulo text-foreground"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-0">
+        <div className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch"> 
           {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
-            // Escalonadas y levemente superpuestas en desktop.
-            const escalon = ["md:mt-16", "md:mt-8 md:-mx-4", "md:mt-0"][index] ?? "";
+            // Tres fichas iguales; la del medio (recomendada) lleva etiqueta y un resaltado sutil.
+            const recomendado = index === 1;
             return (
-              <article key={plan.id} className={`glass relative flex flex-col rounded-[32px] p-6 sm:p-7 ${escalon} ${plan.aparece_en_hero_banner ? "z-10 shadow-glow-premium" : index === 1 ? "z-[5]" : ""}`}>
+              <div key={plan.id} className="flex flex-col">
+              <p className={`mb-3 flex h-4 items-center justify-center text-sobretitulo font-medium text-foreground ${recomendado ? "" : "max-md:hidden"}`}>{recomendado ? "Recomendado" : null}</p>
+              <article className={`glass relative flex flex-1 flex-col rounded-[32px] p-6 sm:p-7 ${recomendado ? "!border-[1.5px] !border-primary-foreground/80 shadow-[0_28px_60px_-24px_rgb(0_0_0/0.35)]" : ""}`}>
                 <div className="flex items-center justify-between">
                   <span className="rounded-full bg-card/70 px-3 py-1 text-pill text-foreground">Plan {plan.nombre}</span>
                   <span className={`grid size-11 place-items-center rounded-full ${plan.aparece_en_hero_banner ? "bg-primary text-primary-foreground" : "bg-foreground text-background"}`}><Icono className="size-5" /></span>
@@ -106,6 +108,7 @@ function Page() {
                 </ul>
                 <Button asChild size="lg" className="mt-6 rounded-full bg-foreground text-background hover:bg-foreground/90"><a href="#sumarme">Me interesa</a></Button>
               </article>
+              </div>
             );
           })}
         </div>

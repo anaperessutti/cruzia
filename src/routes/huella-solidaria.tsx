@@ -148,7 +148,7 @@ function Page() {
 
       {/* Postulación */}
        <section>
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[1.2fr_1fr] lg:px-8">
           <div>
              <p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p>
              <h2 className="mt-4 text-subtitulo text-foreground">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
