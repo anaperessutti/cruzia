@@ -163,12 +163,10 @@ export function PremiumHero() {
   );
 }
 
-/** Slide institucional: orbe nítido parcialmente cubierto por vidrio + isotipo como marca de agua. */
+/** Slide institucional: isotipo como marca de agua. */
 function SlideInstitucional({ visible }: { visible: boolean }) {
   return (
     <div aria-hidden={!visible} className={cn("mask-hero absolute inset-0 overflow-clip bg-ink transition-opacity duration-1000", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
-      <div className="bg-orb absolute -right-24 top-[18%] size-[22rem] rounded-full sm:right-[8%] sm:size-[32rem]" />
-      <div className="glass-dark absolute -right-10 top-[38%] h-[45%] w-[70%] rounded-[2.5rem] sm:right-[2%] sm:w-[38%]" />
       <Logo variant="isotype" tone="dark" height={260} decorative className="absolute -left-10 top-24 opacity-[0.06]" />
       <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
         <div className="max-w-2xl text-primary-foreground">

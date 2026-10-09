@@ -35,18 +35,18 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
       <article className="relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] bg-ink text-primary-foreground">
         {imagen ? (
           <>
-            <img src={imagen} alt={alt} loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
-            <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /></div>
+            <img src={imagen} alt={alt} loading="lazy" className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
+            <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
           </>
-        ) : <div className="bg-orb absolute inset-0 opacity-90" />}
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-linear-to-t from-ink/25 to-transparent" />
+        ) : <div className="frost-neutral frost-grain absolute inset-0" />}
+        <div aria-hidden="true" className="pblur-shade" />
 
-        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
+        <div className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
           {insignia ?? <span />}
           {etiquetaSuperior ? <span className="rounded-full bg-ink/20 px-2.5 py-1 text-[11px] font-medium backdrop-blur-md">{etiquetaSuperior}</span> : null}
         </div>
 
-        <div className="text-shadow-soft relative p-4">
+        <div className="text-shadow-soft relative z-10 p-4">
           <h3 className="text-[17px] font-semibold leading-tight">{titulo}</h3>
           {descripcion ? <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-primary-foreground/90">{descripcion}</p> : null}
           {pildoras.length > 0 || ubicacion ? (
