@@ -64,11 +64,9 @@ function EventoPage() {
   return (
     <main>
       <section className="relative">
-        <div className="aspect-[16/7] w-full overflow-hidden bg-muted">
-          {evento.imagen_url
-            ? <img src={evento.imagen_url} alt={evento.titulo} className="size-full object-cover" />
-            : <div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-foreground/15">Cruzia</span></div>}
-        </div>
+        {evento.imagen_url
+          ? <div className="relative -mb-14 h-[52svh] min-h-[360px] max-h-[560px] w-full overflow-clip"><FadeOrganic src={evento.imagen_url} alt={evento.titulo} /></div>
+          : <div className="aspect-[16/7] w-full overflow-hidden"><div className="flex size-full items-center justify-center bg-wave-pattern"><span className="font-display text-6xl font-extrabold text-foreground/15">Cruzia</span></div></div>}
       </section>
       <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
         <p className="text-xs font-bold uppercase text-secondary">Evento</p>
