@@ -27,10 +27,7 @@ function TituloFila({ texto }: { texto: string }) {
   const palabras = texto.trim().split(/\s+/);
   const corte = Math.max(palabras.length - 1, 0);
   return (
-    <>
-      {corte > 0 ? <span className="font-light">{palabras.slice(0, corte).join(" ")} </span> : null}
-      <span className="font-bold">{palabras.slice(corte).join(" ")}</span>
-    </>
+    <>{palabras.slice(0, corte).concat(palabras.slice(corte)).join(" ")}</>
   );
 }
 

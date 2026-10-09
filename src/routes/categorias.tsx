@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { StickyFilters } from "@/components/public/sticky-filters";
 
 type CategoriasSearch = { coleccion?: string | undefined; localidades?: string | undefined };
 
@@ -34,5 +33,5 @@ function CategoriasPage() {
     : undefined;
   const tituloGrilla = coleccionSeleccionada?.nombre ?? "Elegí tu mejor opción";
   const mostrarCategorias = !search.coleccion && filters.coleccionIds.length === 0;
-  return <main>{mostrarCategorias ? <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase text-secondary">Explorá a tu manera</p><h1 className="mt-3 max-w-3xl font-display text-4xl font-extrabold text-foreground sm:text-6xl">Todo lo que te gusta, cerca.</h1><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.colecciones.map((item, index) => <Link key={item.id} to="/categorias" search={{ coleccion: item.id }} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">{String(index + 1).padStart(2, "0")}</span><span className="mt-2 block font-display text-xl font-bold text-foreground">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</div></section> : null}<StickyFilters /><CommerceGrid title={tituloGrilla} /></main>;
+  return <main>{mostrarCategorias ? <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><p className="text-xs font-bold uppercase text-secondary">Explorá a tu manera</p><h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold tracking-[-0.03em] text-foreground sm:text-6xl">Todo lo que te gusta, cerca.</h1><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.colecciones.map((item, index) => <Link key={item.id} to="/categorias" search={{ coleccion: item.id }} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">{String(index + 1).padStart(2, "0")}</span><span className="mt-2 block font-display text-xl font-bold text-foreground">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</div></section> : null}<CommerceGrid title={tituloGrilla} /></main>;
 }

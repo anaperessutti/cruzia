@@ -23,12 +23,8 @@ function TituloEditorial({ texto }: { texto: string }) {
   const palabras = texto.trim().split(/\s+/);
   const enNegrita = palabras.length >= 5 ? 2 : 1;
   const corte = Math.max(palabras.length - enNegrita, 0);
-  return (
-    <>
-      <span className="font-light">{palabras.slice(0, corte).join(" ")} </span>
-      <span className="font-bold">{palabras.slice(corte).join(" ")}</span>
-    </>
-  );
+  void corte;
+  return <>{texto}</>;
 }
 
 function BotonFlecha({ children }: { children: React.ReactNode }) {
