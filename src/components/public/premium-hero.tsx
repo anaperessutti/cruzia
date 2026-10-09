@@ -1,3 +1,4 @@
+import { FadeOrganic } from "@/components/public/fade-organic";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
