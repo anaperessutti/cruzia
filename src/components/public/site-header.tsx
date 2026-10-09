@@ -74,12 +74,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8">
         <Link to="/" aria-label="Cruzia — Inicio" className="shrink-0">
-          {conFiltros ? (
-            <>
-              <Logo variant="isotype" tone={tono} height={26} decorative className="sm:hidden" />
-              <Logo variant="wordmark" tone={tono} height={28} decorative className="hidden sm:block" />
-            </>
-          ) : <Logo variant="wordmark" tone={tono} height={28} decorative />}
+          <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
 
         <div className="flex min-w-0 items-center gap-1">

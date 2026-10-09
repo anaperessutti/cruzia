@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Ajustes puntuales: logotipo con filtros, sobretítulo del slider, halo y etiqueta Pro, nombres Gift Box; verificar 360/390/768/1280.
+
 - [x] Crear sistema visual y marco público global sin afectar `/admin/*`
 - [x] Conectar navegación, búsqueda, Gift Box condicional y footer
 - [x] Implementar carrusel Premium independiente de ubicación
