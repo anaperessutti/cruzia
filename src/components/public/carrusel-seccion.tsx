@@ -97,9 +97,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
           ))}
 
           <div data-carousel-card="ver-todo" className={cn("shrink-0 snap-start", ancho)}>
-            <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="group relative isolate flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] bg-ink p-5 text-primary-foreground shadow-warm transition-transform duration-500 hover:-translate-y-1">
-              <span aria-hidden="true" className="bg-orb absolute -right-10 top-8 size-48 rounded-full" />
-              <span aria-hidden="true" className="glass-dark absolute -right-6 top-24 h-40 w-[70%] rounded-[28px]" />
+            <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="frost frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1">
               <span className="relative text-xl font-semibold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
               <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
             </a>

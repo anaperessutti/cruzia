@@ -79,7 +79,7 @@ function Page() {
       <PageIntro rotulo="Comercios de La Costa" titulo="Hacé que más personas descubran tu negocio." negrita="descubran" intro={<>
             Impulsamos el encuentro entre los comercios que le dan vida a la Costa y las personas que la disfrutan. Cruzia es la red que consolida la oferta local para potenciar el comercio de nuestras localidades, ofreciendo siempre las mejores opciones de precios, eventos y experiencias exclusivas durante todo el año.
         </>}>
-        <a href="#sumarme" className="group mt-8 inline-flex items-center gap-3 rounded-full bg-foreground py-1.5 pl-5 pr-1.5 text-sm font-semibold text-background">Quiero sumarme <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:translate-x-1"><ArrowRight className="size-4" /></span></a>
+        <a href="#sumarme" className="btn-contorno group mt-8 inline-flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 text-sm font-semibold text-[#1F1E1E] transition-colors">Quiero sumarme <span className="grid size-9 place-items-center rounded-full bg-[#DF3B25] text-primary-foreground transition-transform group-hover:translate-x-1"><ArrowRight className="size-4" /></span></a>
       </PageIntro>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">

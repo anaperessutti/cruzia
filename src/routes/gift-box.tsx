@@ -217,13 +217,10 @@ function GiftBoxPage() {
         </div>
       </section>
 
-       <div className="border-t border-gift-accent/25 bg-gift sm:sticky sm:bottom-0 sm:z-30 sm:bg-gift/95 sm:backdrop-blur">
+       <div className="barra-gift sm:sticky sm:bottom-0 sm:z-30">
         <div className="mx-auto max-w-7xl space-y-4 px-4 py-5 sm:px-6 lg:px-8">
            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative isolate">
-              {/* Orbe parcialmente cubierto por vidrio detrás del total. */}
-              <span aria-hidden="true" className="bg-orb absolute -left-6 -top-6 -z-10 size-24 rounded-full opacity-90" />
-              <span aria-hidden="true" className="glass-dark absolute -inset-y-2 left-6 -right-4 -z-10 rounded-[24px]" />
               <p className="text-xs uppercase tracking-widest text-primary-foreground/60">
                 {elegidos.length} {elegidos.length === 1 ? "experiencia elegida" : "experiencias elegidas"}
               </p>
