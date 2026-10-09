@@ -88,7 +88,7 @@ export function SiteHeader() {
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
-            <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift theme-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
+            <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
               <SheetHeader className="relative z-10 pb-4 text-left">
                 <SheetTitle><Logo variant="isotype" tone={gift ? "dark" : "light"} height={28} decorative /><span className="sr-only">Menú</span></SheetTitle>
                 <SheetDescription className="sr-only">Secciones de Cruzia</SheetDescription>

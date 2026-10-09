@@ -379,7 +379,7 @@ main.theme-gift { --sd-y: 32px; --sd-y-card: 24px; --sd-end: 95%; }
 .fondo-fijo.fondo-gift::after { opacity: .28; }
 .fondo-fijo.fondo-gift > * { display: none; }
 
-/* Menú lateral */
+/* Menú lateral (nunca llevar .theme-gift: su position:relative rompe el panel fijo) */
 .menu-panel {
   background-color: rgba(236,233,230,.38);
   backdrop-filter: blur(32px) saturate(1.4);
