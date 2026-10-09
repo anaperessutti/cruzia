@@ -99,7 +99,7 @@ export function SiteHeader() {
                   if (e.to === "rubros") {
                     return (
                       <div key="rubros" className="menu-item" style={estilo}>
-                        <button type="button" aria-expanded={rubrosAbiertos} onClick={() => setRubrosAbiertos((v) => !v)} className={item}>
+                        <button type="button" aria-expanded={rubrosAbiertos} onClick={() => setRubrosAbiertos((v) => !v)} className={cn(item, "text-left")}>
                           <span>{e.label}</span>
                           <ChevronDown className={cn("size-5 transition-transform", rubrosAbiertos && "rotate-180")} />
                         </button>
