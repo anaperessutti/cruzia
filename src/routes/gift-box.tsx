@@ -41,7 +41,7 @@ const PASOS = [
 
 function Page() {
   const { data, isLoading } = usePublicDirectory();
-  if (isLoading) return <main className="min-h-[60vh] bg-muted" />;
+  if (isLoading) return <main className="min-h-[60vh]" />;
   if (!data.giftBoxVisible) return <Navigate to="/" replace />;
   return <GiftBoxPage />;
 }
