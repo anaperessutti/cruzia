@@ -355,3 +355,6 @@ main.theme-gift { --sd-y: 32px; --sd-y-card: 24px; --sd-end: 95%; }
 .pblur > i:nth-child(3) { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); mask-image: linear-gradient(to bottom, transparent 74%, #000 82%); }
 .pblur > i:nth-child(4) { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); mask-image: linear-gradient(to bottom, transparent 80%, #000 88%); }
 .pblur > i:nth-child(5) { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); mask-image: linear-gradient(to bottom, transparent 86%, #000 95%); }
+
+.site-public.theme-gift main.theme-gift { background: none; }
+.site-public.theme-gift { min-height: 100svh; background-attachment: fixed; }
