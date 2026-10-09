@@ -62,7 +62,7 @@ function GiftBoxPage() {
     const el = centinela.current;
     if (!el || typeof IntersectionObserver === "undefined") { setBarraVisible(true); return; }
     // Visible cuando el inicio de la sección entra en el 70% inferior de la pantalla (o ya pasó hacia arriba).
-    const obs = new IntersectionObserver(([e]) => setBarraVisible(e.isIntersecting || e.boundingClientRect.top < 0), { rootMargin: "0px 0px -30% 0px" });
+    const obs = new IntersectionObserver(([e]) => setBarraVisible(e.isIntersecting), { rootMargin: "0px 0px -30% 0px" });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
@@ -170,8 +170,9 @@ function GiftBoxPage() {
         </div>
       </section>
 
-      <section className="border-t border-primary-foreground/10">
-        <div ref={centinela} aria-hidden="true" />
+      <section className="relative border-t border-primary-foreground/10">
+        {/* Centinela del alto de la sección: un elemento de 0px se salta al hacer scroll rápido. */}
+        <div ref={centinela} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 bottom-0 !animate-none" />
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-subtitulo">Armador de experiencias</h2>
           <p className="mt-2 text-cuerpo text-primary-foreground/80">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
