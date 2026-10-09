@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Gift, QrCode, Sparkles, Truck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,17 @@ function GiftBoxPage() {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState<{ items: GiftboxItem[]; total: number; formato: GiftboxFormato } | null>(null);
+
+  const centinela = useRef<HTMLDivElement>(null);
+  const [barraVisible, setBarraVisible] = useState(false);
+  useEffect(() => {
+    const el = centinela.current;
+    if (!el || typeof IntersectionObserver === "undefined") { setBarraVisible(true); return; }
+    // Visible cuando el inicio de la sección entra en el 70% inferior de la pantalla (o ya pasó hacia arriba).
+    const obs = new IntersectionObserver(([e]) => setBarraVisible(e.isIntersecting || e.boundingClientRect.top < 0), { rootMargin: "0px 0px -30% 0px" });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const elegidos = useMemo(() => Object.values(seleccion), [seleccion]);
   const total = elegidos.reduce((acc, item) => acc + Number(item.precio), 0);
@@ -160,6 +171,7 @@ function GiftBoxPage() {
       </section>
 
       <section className="border-t border-primary-foreground/10">
+        <div ref={centinela} aria-hidden="true" />
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-subtitulo">Armador de experiencias</h2>
           <p className="mt-2 text-cuerpo text-primary-foreground/80">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
@@ -167,7 +179,7 @@ function GiftBoxPage() {
           {items.isLoading ? (
             <p className="mt-10 text-primary-foreground/60">Cargando experiencias…</p>
           ) : (
-             <div className="mt-10 space-y-12 pb-10 sm:pb-48">
+             <div className="mt-10 space-y-12 pb-16">
               {CATEGORIAS.map((categoria) => {
                 const deCategoria = (items.data ?? []).filter((item) => item.categoria === categoria.id);
                 if (deCategoria.length === 0) return null;
@@ -193,9 +205,9 @@ function GiftBoxPage() {
                                  : "border-gift-foreground/15 bg-gift-foreground/5 hover:border-gift-accent/50 hover:bg-gift-foreground/10",
                             )}
                           >
-                            <span className="text-2xl !font-light leading-tight">{item.nombre}</span>
-                            <span className="mt-6 flex items-center justify-between">
-                               <span className="text-2xl font-semibold leading-tight tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
+                            <span className="text-cuerpo !font-light">{item.nombre}</span>
+                            <span className="mt-auto flex items-center justify-between pt-6">
+                               <span className="text-cuerpo !font-semibold tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
                               <span
                                 className={cn(
                                   "flex size-7 items-center justify-center rounded-full border",
@@ -215,16 +227,14 @@ function GiftBoxPage() {
             </div>
           )}
         </div>
-      </section>
-
-       <div className="barra-gift sm:sticky sm:bottom-0 sm:z-30">
+       <div data-visible={barraVisible} className="barra-gift barra-gift-sticky">
         <div className="mx-auto max-w-7xl space-y-4 px-4 py-5 sm:px-6 lg:px-8">
            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative isolate">
               <p className="text-xs uppercase tracking-widest text-primary-foreground/60">
                 {elegidos.length} {elegidos.length === 1 ? "experiencia elegida" : "experiencias elegidas"}
               </p>
-               <p className="font-serif-editorial text-5xl leading-none tnum text-primary-foreground">{formatearPrecio(total)}</p>
+               <p className="text-cuerpo !font-semibold tnum text-primary-foreground">{formatearPrecio(total)}</p>
             </div>
              <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
               {(["digital", "fisico"] as GiftboxFormato[]).map((opcion) => (
@@ -263,6 +273,8 @@ function GiftBoxPage() {
           {error && <p className="text-sm text-accent">{error}</p>}
         </div>
       </div>
+      </section>
+
     </main>
   );
 }

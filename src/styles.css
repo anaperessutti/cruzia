@@ -37,7 +37,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-plan-recommended: #DF3B25;
-  --shadow-plan-pro: 0 0 60px -20px rgb(223 59 37 / 0.55), 0 0 30px -18px rgb(242 156 90 / 0.6);
+  --shadow-plan-pro: 0 0 78px -26px rgb(223 59 37 / 0.715), 0 0 39px -23px rgb(242 156 90 / 0.78);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -425,3 +425,8 @@ main.theme-gift { --sd-y: 32px; --sd-y-card: 24px; --sd-end: 95%; }
 
 /* Top Slider: preserve the pre-unification pill typography without changing other eyebrows. */
 @utility text-slider-eyebrow { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* Gift Box: barra de total que aparece al llegar al armador. */
+.barra-gift-sticky { position: sticky; bottom: 0; z-index: 30; padding-bottom: env(safe-area-inset-bottom); transition: opacity 250ms ease, transform 250ms ease, visibility 250ms; }
+.barra-gift-sticky[data-visible="false"] { opacity: 0; transform: translateY(12px); pointer-events: none; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .barra-gift-sticky, .barra-gift-sticky[data-visible="false"] { transform: none; transition: opacity 250ms ease, visibility 250ms; } }
