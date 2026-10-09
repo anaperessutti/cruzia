@@ -63,7 +63,7 @@ export function SiteHeader() {
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70 xl:hidden" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
-            <SheetContent className={cn("glass-menu grain-overlay !m-3 flex !h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] flex-col overflow-clip rounded-[28px] border-0 bg-transparent sm:max-w-md", gift ? "theme-gift !bg-[rgb(20_22_23/0.4)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
+            <SheetContent className={cn("glass-menu grain-overlay !m-3 flex !h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] flex-col overflow-clip rounded-[28px] border-0 sm:max-w-md", gift ? "theme-gift !bg-[rgb(20_22_23/0.4)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
               <SheetHeader className="pb-6 text-left">
                 <SheetTitle><Logo variant="wordmark" tone={gift ? "dark" : "light"} height={28} decorative /><span className="sr-only">Menú</span></SheetTitle>
                 <SheetDescription className={gift ? "text-primary-foreground/70" : "text-muted-foreground"}>Todo lo bueno de La Costa, más cerca.</SheetDescription>

@@ -146,7 +146,7 @@ export function PremiumHero() {
       })}
 
       {total > 1 ? (
-        <div className="glass-dark absolute bottom-[30%] right-5 z-20 flex items-center gap-1.5 rounded-full px-3 py-2 sm:right-8 sm:bottom-[20%]">
+        <div className="glass-dark absolute top-20 right-5 z-20 sm:top-auto flex items-center gap-1.5 rounded-full px-3 py-2 sm:right-8 sm:bottom-[20%]">
           {slides.map((slide, index) => (
             <button
               key={slide?.id ?? `brand-${index}`}
