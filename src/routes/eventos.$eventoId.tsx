@@ -1,3 +1,4 @@
+import { FadeOrganic } from "@/components/public/fade-organic";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, MapPin, Store } from "lucide-react";
