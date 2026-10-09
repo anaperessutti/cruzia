@@ -83,7 +83,7 @@ function Page() {
       </PageIntro>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
-        <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground sm:text-4xl"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2>
+        <h2 className="text-subtitulo text-foreground"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2>
         <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-0">
           {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
@@ -114,8 +114,8 @@ function Page() {
       <section id="sumarme" className="scroll-mt-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
-            <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground sm:text-4xl"><span className="font-light">Dejanos tus </span><span className="font-bold">datos</span></h2>
-            <p className="mt-4 max-w-lg leading-7 text-muted-foreground">
+            <h2 className="text-subtitulo !font-normal text-foreground">Dejanos tus datos</h2>
+            <p className="mt-4 max-w-lg text-cuerpo text-foreground/80">
               Sabemos que cada comercio es un mundo. Diseñamos campañas flexibles que se adaptan a tu presupuesto y objetivo, dejanos tu consulta y te enviamos una propuesta personalizada para tu negocio.
             </p>
           </div>

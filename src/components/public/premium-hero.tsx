@@ -127,8 +127,8 @@ export function PremiumHero() {
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
               <div className="max-w-2xl text-primary-foreground">
-                <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
-                <h1 className="font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl"><TituloEditorial texto={titulo} /></h1>
+                <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-sobretitulo font-medium">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
+                <h1 className="text-titulo"><TituloEditorial texto={titulo} /></h1>
                 {texto ? <p className="mt-4 line-clamp-2 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p> : null}
                 <Link
                   tabIndex={visible ? 0 : -1}
@@ -172,8 +172,8 @@ function SlideInstitucional({ visible }: { visible: boolean }) {
       <Logo variant="isotype" tone="dark" height={260} decorative className="absolute -left-10 top-24 opacity-[0.06]" />
       <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
         <div className="max-w-2xl text-primary-foreground">
-          <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">Viví La Costa</div>
-          <h1 className="font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
+          <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-sobretitulo font-medium">Viví La Costa</div>
+          <h1 className="text-titulo"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.</p>
           <Link to="/sumate-a-cruzia" tabIndex={visible ? 0 : -1} className="group mt-7 inline-block"><BotonFlecha>Sumate a Cruzia</BotonFlecha></Link>
         </div>

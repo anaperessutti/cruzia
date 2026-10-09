@@ -85,11 +85,11 @@ function Page() {
       <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
           <div>
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
-            <h1 className="font-serif-editorial mt-5 max-w-3xl text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl">
+            <p className="flex items-center gap-2 text-sobretitulo font-bold text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
+            <h1 className="mt-5 max-w-3xl text-titulo text-foreground">
               Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">
+            <p className="mt-6 max-w-2xl text-cuerpo text-foreground/80">
               Somos parte de estos barrios y queremos crecer con ellos. Por eso acompañamos iniciativas e instituciones del Partido de la Costa que cuidan, reúnen y hacen más linda la vida de nuestros vecinos. Es nuestra manera de devolver un poco de todo lo que esta comunidad nos da.
             </p>
           </div>
@@ -150,9 +150,9 @@ function Page() {
        <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
           <div>
-             <p className="text-xs font-bold uppercase text-secondary">Postulá una causa</p>
-             <h2 className="mt-4 font-display text-3xl font-extrabold leading-tight text-foreground sm:text-4xl">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
-             <p className="mt-5 max-w-lg leading-7 text-muted-foreground">
+             <p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p>
+             <h2 className="mt-4 text-subtitulo text-foreground">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
+             <p className="mt-5 max-w-lg text-cuerpo text-foreground/80">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
             </p>
           </div>

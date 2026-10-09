@@ -76,8 +76,8 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
-          {rotulo ? <span className="text-pill block text-primary">{rotulo}</span> : null}
-          <span className="mt-1 block font-display text-[26px] font-semibold leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[32px]"><TituloFila texto={titulo} /></span>
+          {rotulo ? <span className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
+          <span className="mt-1 block text-subtitulo text-foreground"><TituloFila texto={titulo} /></span>
         </a>
         <a href={destinoUrl} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />
