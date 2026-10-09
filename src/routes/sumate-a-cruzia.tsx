@@ -90,9 +90,9 @@ function Page() {
             // Tres fichas iguales; la del medio (recomendada) lleva etiqueta y un resaltado sutil.
             const recomendado = index === 1;
             return (
-              <div key={plan.id} className="flex flex-col">
-              <p className={`mb-4 flex h-4 items-center justify-end px-6 sm:px-7 text-sobretitulo font-medium text-foreground ${recomendado ? "" : "max-md:hidden"}`}>{recomendado ? "Recomendado" : null}</p>
-              <article className={`glass relative flex flex-1 flex-col rounded-[32px] p-6 sm:p-7 ${recomendado ? "!border-[1.5px] !border-primary-foreground/80 shadow-glow-premium" : ""}`}>
+              <div key={plan.id} className={`relative flex flex-col ${recomendado ? "z-10" : ""}`}>
+              <p className={`mb-4 flex h-4 items-center justify-end px-6 sm:px-7 text-sobretitulo !font-bold text-plan-recommended ${recomendado ? "" : "max-md:hidden"}`}>{recomendado ? "Recomendado" : null}</p>
+              <article className={`glass relative flex flex-1 flex-col rounded-[32px] p-6 sm:p-7 ${recomendado ? "!border-[1.5px] !border-primary-foreground/80 shadow-plan-pro" : ""}`}>
                 <div className="flex items-center justify-between">
                   <span className="rounded-full bg-card/70 px-3 py-1 text-pill text-foreground">Plan {plan.nombre}</span>
                   <span className={`grid size-11 place-items-center rounded-full ${recomendado ? "bg-primary text-primary-foreground" : "bg-foreground text-background"}`}><Icono className="size-5" /></span>

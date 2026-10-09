@@ -193,7 +193,7 @@ function GiftBoxPage() {
                                  : "border-gift-foreground/15 bg-gift-foreground/5 hover:border-gift-accent/50 hover:bg-gift-foreground/10",
                             )}
                           >
-                            <span className="text-2xl font-normal leading-tight">{item.nombre}</span>
+                            <span className="text-2xl !font-light leading-tight">{item.nombre}</span>
                             <span className="mt-6 flex items-center justify-between">
                                <span className="text-2xl font-semibold leading-tight tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
                               <span

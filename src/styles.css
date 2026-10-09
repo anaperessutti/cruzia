@@ -36,6 +36,8 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-plan-recommended: #DF3B25;
+  --shadow-plan-pro: 0 0 60px -20px rgb(223 59 37 / 0.55), 0 0 30px -18px rgb(242 156 90 / 0.6);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
