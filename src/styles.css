@@ -430,3 +430,5 @@ main.theme-gift { --sd-y: 32px; --sd-y-card: 24px; --sd-end: 95%; }
 .barra-gift-sticky { position: sticky; bottom: 0; z-index: 30; padding-bottom: env(safe-area-inset-bottom); transition: opacity 250ms ease, transform 250ms ease, visibility 250ms; }
 .barra-gift-sticky[data-visible="false"] { opacity: 0; transform: translateY(12px); pointer-events: none; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .barra-gift-sticky, .barra-gift-sticky[data-visible="false"] { transform: none; transition: opacity 250ms ease, visibility 250ms; } }
+main.theme-gift section > .barra-gift-sticky { animation: none !important; }
+
