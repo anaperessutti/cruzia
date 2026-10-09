@@ -1,3 +1,4 @@
+import { FadeOrganic } from "@/components/public/fade-organic";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
@@ -120,12 +121,11 @@ export function PremiumHero() {
         const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
-            <div className="mask-hero absolute inset-0"><div className="sd-parallax absolute inset-x-0 -top-[4%] h-[108%]">
-            <img src={imagen} alt={titulo} width={1600} height={900} className={cn("absolute inset-0 size-full object-cover transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
-            {/* Desenfoque progresivo teñido con la propia imagen. */}
+            <div className="absolute inset-0"><div className="absolute inset-0">
+            <FadeOrganic src={imagen} alt={titulo} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
             </div>
-            <div className="absolute inset-0 bg-linear-to-t from-transparent via-ink/45 to-ink/30" /></div>
-            <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
+            <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
+            <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
               <div className="max-w-2xl text-primary-foreground">
                 <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
                 <h1 className="font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl"><TituloEditorial texto={titulo} /></h1>
