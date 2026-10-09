@@ -16,11 +16,11 @@ export function TituloLigero({ texto, negrita }: { texto: string; negrita?: stri
 export function PageIntro({ rotulo, titulo, negrita, intro, children, className }: { rotulo: string; titulo: string; negrita?: string | undefined; intro?: ReactNode; children?: ReactNode; className?: string | undefined }) {
   return (
     <section className={cn("mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:px-8", className)}>
-      <p className="sd-reveal-text text-pill text-primary">{rotulo}</p>
-      <h1 className="sd-reveal-text mt-4 max-w-4xl font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-7xl">
+      <p className="sd-reveal-text text-sobretitulo font-medium text-primary">{rotulo}</p>
+      <h1 className="sd-reveal-text mt-4 max-w-4xl text-titulo text-foreground">
         <TituloLigero texto={titulo} negrita={negrita} />
       </h1>
-      {intro ? <div className="sd-reveal-text mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">{intro}</div> : null}
+      {intro ? <div className="sd-reveal-text mt-6 max-w-2xl text-cuerpo text-foreground/80">{intro}</div> : null}
       {children}
     </section>
   );

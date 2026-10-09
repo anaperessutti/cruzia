@@ -132,11 +132,11 @@ function GiftBoxPage() {
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary-foreground">Gift Box · Regalá La Costa</p>
-            <h1 className="font-serif-editorial mt-5 text-[52px] leading-[1.02] sm:text-[64px]">
+            <p className="text-sobretitulo font-bold text-primary-foreground">Gift Box · Regalá La Costa</p>
+            <h1 className="mt-5 text-titulo">
               Una caja.<br />Muchas experiencias.
             </h1>
-            <p className="font-serif-editorial mt-6 max-w-xl text-2xl leading-8 text-primary-foreground/70">
+            <p className="mt-6 max-w-xl text-cuerpo text-primary-foreground/80">
               Elegí momentos reales del Partido de la Costa y armá un regalo a medida: una cena, un masaje,
               una tarde de surf. Todo en una sola caja.
             </p>
@@ -161,8 +161,8 @@ function GiftBoxPage() {
 
       <section className="border-t border-primary-foreground/10">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <h2 className="font-serif-editorial text-[44px] leading-[1.02]">Armador de experiencias</h2>
-          <p className="mt-2 text-primary-foreground/70">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
+          <h2 className="text-subtitulo">Armador de experiencias</h2>
+          <p className="mt-2 text-cuerpo text-primary-foreground/80">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
 
           {items.isLoading ? (
             <p className="mt-10 text-primary-foreground/60">Cargando experiencias…</p>
@@ -193,9 +193,9 @@ function GiftBoxPage() {
                                  : "border-gift-foreground/15 bg-gift-foreground/5 hover:border-gift-accent/50 hover:bg-gift-foreground/10",
                             )}
                           >
-                            <span className="font-serif-editorial text-2xl leading-tight">{item.nombre}</span>
+                            <span className="text-2xl font-normal leading-tight">{item.nombre}</span>
                             <span className="mt-6 flex items-center justify-between">
-                               <span className="font-serif-editorial text-3xl tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
+                               <span className="text-2xl font-semibold leading-tight tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
                               <span
                                 className={cn(
                                   "flex size-7 items-center justify-center rounded-full border",
