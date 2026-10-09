@@ -19,3 +19,4 @@
 - [x] og:image con dominio propio
 - [ ] Íconos en círculo en los campos de formularios
 - [ ] Isotipo como indicador de carga
+- [x] Refactorización visual completa (Inter, fondo claro, barra transparente, tarjetas con desenfoque progresivo, pie con filete)

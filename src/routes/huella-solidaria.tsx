@@ -86,7 +86,7 @@ function Page() {
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
           <div>
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
-            <h1 className="font-serif-editorial mt-5 max-w-3xl text-[2.75rem] italic leading-[1.02] text-foreground sm:text-6xl">
+            <h1 className="font-serif-editorial mt-5 max-w-3xl text-[2.75rem] leading-[1.02] text-foreground sm:text-6xl">
               Antes que una red de beneficios, somos vecinos de La Costa.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground/80">

@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
@@ -122,6 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
+  const isGift = useRouterState({ select: (state) => state.location.pathname.startsWith("/gift-box") });
   const isHome = useRouterState({ select: (state) => state.location.pathname === "/" || state.location.pathname.startsWith("/comercio/") });
 
   return (
@@ -129,12 +130,12 @@ function RootComponent() {
       {isAdmin ? <Outlet /> : (
         <PublicDirectoryProvider>
           {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
-          <div className="bg-canvas relative isolate flex min-h-screen flex-col overflow-x-clip">
+          <div className={`site-public ${isGift ? "theme-gift" : "bg-canvas"} relative isolate flex min-h-screen flex-col overflow-x-clip`}>
             <ScrollRevealFallback />
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"><div className="sd-drift-a halo-accent absolute -left-40 top-[15%] size-[44rem]" /><div className="sd-drift-b halo-accent absolute -right-40 top-[55%] size-[40rem] opacity-70" /></div>
-            <div aria-hidden="true" className="bg-grain pointer-events-none fixed inset-0 z-[60] opacity-[0.035] mix-blend-multiply" />
+            {isGift ? null : <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-clip"><div className="sd-drift-a halo-gray absolute -left-40 top-[15%] size-[44rem]" /><div className="sd-drift-b halo-accent absolute -right-40 top-[55%] size-[40rem] opacity-70" /></div>}
+            <div aria-hidden="true" className="bg-grain pointer-events-none fixed inset-0 z-[60] opacity-[0.045] mix-blend-multiply" style={isGift ? { mixBlendMode: "overlay", opacity: 0.08 } : undefined} />
             <SiteHeader />
-            <div className={isHome ? "flex-1" : "flex-1 pt-24"}><Outlet /></div>
+            <div className={isHome ? "flex-1" : "flex-1 pt-20"}><Outlet /></div>
             <SiteFooter />
           </div>
         </PublicDirectoryProvider>

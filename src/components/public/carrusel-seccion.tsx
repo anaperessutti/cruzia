@@ -27,10 +27,7 @@ function TituloFila({ texto }: { texto: string }) {
   const palabras = texto.trim().split(/\s+/);
   const corte = Math.max(palabras.length - 1, 0);
   return (
-    <>
-      {corte > 0 ? <span className="font-light">{palabras.slice(0, corte).join(" ")} </span> : null}
-      <span className="font-bold">{palabras.slice(corte).join(" ")}</span>
-    </>
+    <>{palabras.slice(0, corte).concat(palabras.slice(corte)).join(" ")}</>
   );
 }
 
@@ -75,14 +72,14 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section aria-label={titulo} className={cn("relative", className)}>
+    <section aria-label={titulo} className={cn("reveal relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <a href={destinoUrl} className="sd-reveal-text min-w-0">
+        <a href={destinoUrl} className="min-w-0">
           {rotulo ? <span className="text-pill block text-primary">{rotulo}</span> : null}
-          <span className="mt-1 block font-display text-[28px] leading-[1.1] tracking-[-0.02em] text-foreground sm:text-[34px]"><TituloFila texto={titulo} /></span>
+          <span className="mt-1 block font-display text-[26px] font-semibold leading-[1.15] tracking-[-0.02em] text-foreground sm:text-[32px]"><TituloFila texto={titulo} /></span>
         </a>
-        <a href={destinoUrl} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-semibold text-foreground">
+        <a href={destinoUrl} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />
         </a>
       </div>
@@ -100,10 +97,10 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
           ))}
 
           <div data-carousel-card="ver-todo" className={cn("shrink-0 snap-start", ancho)}>
-            <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="group relative isolate flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[32px] bg-ink p-5 text-primary-foreground shadow-warm transition-transform duration-500 hover:-translate-y-1">
+            <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="group relative isolate flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] bg-ink p-5 text-primary-foreground shadow-warm transition-transform duration-500 hover:-translate-y-1">
               <span aria-hidden="true" className="bg-orb absolute -right-10 top-8 size-48 rounded-full" />
               <span aria-hidden="true" className="glass-dark absolute -right-6 top-24 h-40 w-[70%] rounded-[28px]" />
-              <span className="relative text-xl font-bold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
+              <span className="relative text-xl font-semibold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
               <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
             </a>
           </div>

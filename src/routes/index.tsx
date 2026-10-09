@@ -34,10 +34,10 @@ function Index() {
 
   // La Barra de Filtros Sticky no se muestra en el Home; el GPS igual corre en el proveedor.
   return (
-    <main className="relative isolate overflow-hidden">
+    <main className="relative isolate overflow-clip">
       <PremiumHero />
       {/* Las filas suben sobre el hero que se disuelve: sin cortes entre ambos. */}
-      <div className="relative z-10 -mt-12">
+      <div className="relative z-10 -mt-16">
         <HomeCarousels />
       </div>
     </main>

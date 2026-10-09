@@ -97,7 +97,7 @@ function GiftBoxPage() {
 
   if (confirmado) {
     return (
-      <main className="theme-gift bg-gift text-gift-foreground"><div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"><div className="absolute -left-40 top-20 size-[30rem] rounded-full bg-glow-amber/20 blur-3xl" /><div className="absolute -right-32 top-[70vh] size-[26rem] rounded-full bg-primary/20 blur-3xl" /></div>
+      <main className="theme-gift bg-gift text-gift-foreground">
         <section className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
           <span className="inline-flex size-16 items-center justify-center rounded-full bg-accent/20 text-accent">
             <Gift className="size-8" />
@@ -111,11 +111,11 @@ function GiftBoxPage() {
             {confirmado.items.map((item) => (
               <li key={item.id} className="flex items-center justify-between gap-4 rounded-md border border-gift-foreground/15 px-4 py-3">
                 <span>{item.nombre}</span>
-                <span className="shrink-0 text-gift-accent">{formatearPrecio(Number(item.precio))}</span>
+                <span className="shrink-0 text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-pill text-gift-champagne">Total</p><p className="font-serif-editorial text-5xl text-gift-accent">{formatearPrecio(confirmado.total)}</p>
+          <p className="mt-6 text-pill text-primary-foreground/70">Total</p><p className="font-serif-editorial text-5xl text-primary-foreground">{formatearPrecio(confirmado.total)}</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Button variant="secondary" onClick={() => setConfirmado(null)}>Armar otra caja</Button>
             <Button asChild variant="outline" className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10">
@@ -128,15 +128,15 @@ function GiftBoxPage() {
   }
 
   return (
-    <main className="theme-gift bg-gift text-gift-foreground"><div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"><div className="absolute -left-40 top-20 size-[30rem] rounded-full bg-glow-amber/20 blur-3xl" /><div className="absolute -right-32 top-[70vh] size-[26rem] rounded-full bg-primary/20 blur-3xl" /></div>
+    <main className="theme-gift bg-gift text-gift-foreground">
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gift-accent">Gift Box · Regalá La Costa</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary-foreground">Gift Box · Regalá La Costa</p>
             <h1 className="font-serif-editorial mt-5 text-[52px] leading-[1.02] sm:text-[64px]">
-              Una caja.<br /><em>Muchas experiencias.</em>
+              Una caja.<br />Muchas experiencias.
             </h1>
-            <p className="font-serif-editorial mt-6 max-w-xl text-2xl italic leading-8 text-gift-champagne">
+            <p className="font-serif-editorial mt-6 max-w-xl text-2xl leading-8 text-primary-foreground/70">
               Elegí momentos reales del Partido de la Costa y armá un regalo a medida: una cena, un masaje,
               una tarde de surf. Todo en una sola caja.
             </p>
@@ -144,12 +144,12 @@ function GiftBoxPage() {
           <ol className="space-y-4">
             {PASOS.map((paso, index) => (
                <li key={paso.titulo} className="flex gap-4 glass-dark rounded-[28px] p-5">
-                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-gift-accent">
+                 <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-primary-foreground">
                   <paso.icon className="size-5" />
                 </span>
                 <div>
                   <p className="font-display text-lg font-bold">
-                     <span className="text-gift-accent">0{index + 1}</span> · {paso.titulo}
+                     <span className="text-primary-foreground">0{index + 1}</span> · {paso.titulo}
                   </p>
                   <p className="mt-1 text-sm leading-6 text-primary-foreground/70">{paso.texto}</p>
                 </div>
@@ -161,7 +161,7 @@ function GiftBoxPage() {
 
       <section className="border-t border-primary-foreground/10">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <h2 className="font-serif-editorial text-[44px] leading-[1.02]">Armador de <em>experiencias</em></h2>
+          <h2 className="font-serif-editorial text-[44px] leading-[1.02]">Armador de experiencias</h2>
           <p className="mt-2 text-primary-foreground/70">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
 
           {items.isLoading ? (
@@ -174,7 +174,7 @@ function GiftBoxPage() {
                 return (
                   <div key={categoria.id}>
                     <div className="flex flex-wrap items-baseline gap-3">
-                       <h3 className="font-display text-2xl font-bold text-gift-accent">{categoria.titulo}</h3>
+                       <h3 className="font-display text-2xl font-bold text-primary-foreground">{categoria.titulo}</h3>
                       <p className="text-sm text-primary-foreground/60">{categoria.detalle}</p>
                     </div>
                     <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -195,7 +195,7 @@ function GiftBoxPage() {
                           >
                             <span className="font-serif-editorial text-2xl leading-tight">{item.nombre}</span>
                             <span className="mt-6 flex items-center justify-between">
-                               <span className="font-serif-editorial text-3xl tnum text-gift-accent">{formatearPrecio(Number(item.precio))}</span>
+                               <span className="font-serif-editorial text-3xl tnum text-primary-foreground">{formatearPrecio(Number(item.precio))}</span>
                               <span
                                 className={cn(
                                   "flex size-7 items-center justify-center rounded-full border",
@@ -227,7 +227,7 @@ function GiftBoxPage() {
               <p className="text-xs uppercase tracking-widest text-primary-foreground/60">
                 {elegidos.length} {elegidos.length === 1 ? "experiencia elegida" : "experiencias elegidas"}
               </p>
-               <p className="font-serif-editorial text-5xl leading-none tnum text-gift-accent">{formatearPrecio(total)}</p>
+               <p className="font-serif-editorial text-5xl leading-none tnum text-primary-foreground">{formatearPrecio(total)}</p>
             </div>
              <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
               {(["digital", "fisico"] as GiftboxFormato[]).map((opcion) => (

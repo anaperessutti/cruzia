@@ -23,17 +23,13 @@ function TituloEditorial({ texto }: { texto: string }) {
   const palabras = texto.trim().split(/\s+/);
   const enNegrita = palabras.length >= 5 ? 2 : 1;
   const corte = Math.max(palabras.length - enNegrita, 0);
-  return (
-    <>
-      <span className="font-light">{palabras.slice(0, corte).join(" ")} </span>
-      <span className="font-bold">{palabras.slice(corte).join(" ")}</span>
-    </>
-  );
+  void corte;
+  return <>{texto}</>;
 }
 
 function BotonFlecha({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-3 rounded-full bg-card py-1.5 pl-5 pr-1.5 text-sm font-semibold text-foreground shadow-warm transition-transform group-hover:-translate-y-0.5">
+    <span className="inline-flex items-center gap-3 rounded-full bg-card py-1.5 pl-5 pr-1.5 text-sm font-medium text-foreground shadow-warm transition-transform group-hover:-translate-y-0.5">
       {children}
       <span className="grid size-9 place-items-center rounded-full bg-foreground text-background"><ArrowRight className="size-4" /></span>
     </span>
@@ -101,7 +97,7 @@ export function PremiumHero() {
     <section
       aria-label="Destacados de Cruzia"
       aria-roledescription="carrusel"
-      className="mask-fade-bottom relative h-[82svh] min-h-[520px] max-h-[760px] w-full overflow-hidden bg-ink"
+      className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
       onTouchStart={(e) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
       onTouchEnd={(e) => {
         const inicio = toqueX.current;
@@ -124,16 +120,15 @@ export function PremiumHero() {
         const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
-            <div className="sd-parallax absolute inset-x-0 -top-[4%] h-[108%]">
+            <div className="mask-hero absolute inset-0"><div className="sd-parallax absolute inset-x-0 -top-[4%] h-[108%]">
             <img src={imagen} alt={titulo} width={1600} height={900} className={cn("absolute inset-0 size-full object-cover transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
             {/* Desenfoque progresivo teñido con la propia imagen. */}
-            <img src={imagen} alt="" aria-hidden="true" className="glass-progressive absolute inset-0 size-full object-cover" />
             </div>
-            <div className="absolute inset-0 bg-linear-to-t from-ink/25 via-transparent to-ink/20" />
-            <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-40 sm:px-8 sm:pb-44">
+            <div className="absolute inset-0 bg-linear-to-t from-transparent via-ink/45 to-ink/30" /></div>
+            <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
               <div className="max-w-2xl text-primary-foreground">
                 <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
-                <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-[-0.035em] sm:text-7xl"><TituloEditorial texto={titulo} /></h1>
+                <h1 className="font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl"><TituloEditorial texto={titulo} /></h1>
                 {texto ? <p className="mt-4 line-clamp-2 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p> : null}
                 <Link
                   tabIndex={visible ? 0 : -1}
@@ -151,7 +146,7 @@ export function PremiumHero() {
       })}
 
       {total > 1 ? (
-        <div className="glass-dark absolute bottom-28 right-5 z-20 flex items-center gap-1.5 rounded-full px-3 py-2 sm:right-8 sm:bottom-32">
+        <div className="glass-dark absolute top-20 right-5 z-20 sm:top-auto flex items-center gap-1.5 rounded-full px-3 py-2 sm:right-8 sm:bottom-[20%] sm:top-auto">
           {slides.map((slide, index) => (
             <button
               key={slide?.id ?? `brand-${index}`}
@@ -171,14 +166,14 @@ export function PremiumHero() {
 /** Slide institucional: orbe nítido parcialmente cubierto por vidrio + isotipo como marca de agua. */
 function SlideInstitucional({ visible }: { visible: boolean }) {
   return (
-    <div aria-hidden={!visible} className={cn("absolute inset-0 overflow-hidden bg-ink transition-opacity duration-1000", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
+    <div aria-hidden={!visible} className={cn("mask-hero absolute inset-0 overflow-clip bg-ink transition-opacity duration-1000", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
       <div className="bg-orb absolute -right-24 top-[18%] size-[22rem] rounded-full sm:right-[8%] sm:size-[32rem]" />
       <div className="glass-dark absolute -right-10 top-[38%] h-[45%] w-[70%] rounded-[2.5rem] sm:right-[2%] sm:w-[38%]" />
       <Logo variant="isotype" tone="dark" height={260} decorative className="absolute -left-10 top-24 opacity-[0.06]" />
-      <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-40 sm:px-8 sm:pb-44">
+      <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
         <div className="max-w-2xl text-primary-foreground">
           <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-pill">Viví La Costa</div>
-          <h1 className="font-display text-[2.6rem] leading-[1.02] tracking-[-0.035em] sm:text-7xl"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
+          <h1 className="font-display text-[2.4rem] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-6xl"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.</p>
           <Link to="/sumate-a-cruzia" tabIndex={visible ? 0 : -1} className="group mt-7 inline-block"><BotonFlecha>Sumate a Cruzia</BotonFlecha></Link>
         </div>
