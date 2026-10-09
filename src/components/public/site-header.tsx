@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowRight, Instagram, Menu } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, ChevronDown, Instagram, Menu } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -10,26 +10,30 @@ import { usePublicDirectory } from "./public-directory-provider";
 import { SearchDialog } from "./search-dialog";
 import { StickyFilters } from "./sticky-filters";
 
-const baseLinks = [
-  { to: "/" as const, label: "Inicio" },
-  { to: "/cupones" as const, label: "Cupones" },
-  { to: "/categorias" as const, label: "Categorías" },
-  { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
-  { to: "/sumate-a-cruzia" as const, label: "Sumate a Cruzia" },
-  { to: "/contacto" as const, label: "Contacto" },
-];
+type Estado = "arriba" | "oculta" | "barra";
 
-/** True mientras la barra flota sobre la imagen del banner. */
-function useSobreImagen(activo: boolean) {
-  const [sobre, setSobre] = useState(activo);
+/** Un solo listener pasivo con rAF: arriba = transparente, bajando = oculta, subiendo = barra sólida. */
+function useEstadoCabecera(bloqueada: boolean) {
+  const [estado, setEstado] = useState<Estado>("arriba");
+  const bloq = useRef(bloqueada);
+  bloq.current = bloqueada;
   useEffect(() => {
-    if (!activo) { setSobre(false); return; }
-    const medir = () => setSobre(window.scrollY < window.innerHeight * 0.5);
-    medir();
-    window.addEventListener("scroll", medir, { passive: true });
-    return () => window.removeEventListener("scroll", medir);
-  }, [activo]);
-  return sobre;
+    let ultimo = window.scrollY;
+    let pendiente = false;
+    const calcular = () => {
+      pendiente = false;
+      const y = window.scrollY;
+      if (y <= 4) setEstado("arriba");
+      else if (y > ultimo + 2 && y > 80 && !bloq.current) setEstado("oculta");
+      else if (y < ultimo - 2) setEstado("barra");
+      ultimo = y;
+    };
+    const onScroll = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(calcular); } };
+    calcular();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return estado;
 }
 
 export function SiteHeader() {
@@ -38,52 +42,88 @@ export function SiteHeader() {
   const gift = path.startsWith("/gift-box");
   const conHero = path === "/" || path.startsWith("/comercio/");
   const conFiltros = path === "/cupones" || path === "/categorias";
-  const sobreImagen = useSobreImagen(conHero);
-  const claro = gift || sobreImagen; // texto blanco
-  const links = data.giftBoxVisible ? [...baseLinks.slice(0, 3), { to: "/gift-box" as const, label: "Gift Box" }, ...baseLinks.slice(3)] : baseLinks;
+  const [abierto, setAbierto] = useState(false);
+  const [rubrosAbiertos, setRubrosAbiertos] = useState(false);
+  const estado = useEstadoCabecera(abierto);
+  const visibleEstado: Estado = abierto && estado === "oculta" ? "barra" : estado;
+  const claro = gift || (conHero && visibleEstado === "arriba");
+  const tono = claro ? "dark" : "light";
+
+  const item = cn("menu-item group flex w-full items-center justify-between rounded-full border border-transparent px-5 py-3 text-[22px] font-medium transition-colors", gift ? "hover:border-primary-foreground/50" : "hover:border-foreground/40");
+  const activo = { className: gift ? "!border-primary-foreground/50" : "!border-foreground/40" };
+  const flecha = <ArrowRight className="size-5 opacity-0 transition-opacity group-hover:opacity-100 group-data-[status=active]:opacity-100" />;
+  const enlaces = [
+    { to: "/" as const, label: "Inicio" },
+    { to: "/cupones" as const, label: "Cupones" },
+    { to: "rubros" as const, label: "Categorías de Rubros" },
+    ...(data.giftBoxVisible ? [{ to: "/gift-box" as const, label: "Gift Box" }] : []),
+    { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
+    { to: "/sumate-a-cruzia" as const, label: "Sumate a Cruzia" },
+    { to: "/contacto" as const, label: "Contacto" },
+  ];
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-40 transition-colors duration-200", claro ? "text-primary-foreground" : "text-foreground")}>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-40 border-b transition-[opacity,transform,background-color,color,border-color] duration-[250ms] ease-out",
+        visibleEstado === "oculta" ? "pointer-events-none -translate-y-2 opacity-0" : "translate-y-0 opacity-100",
+        visibleEstado === "barra"
+          ? gift ? "border-primary-foreground/10 bg-[rgb(47_51_52/0.94)] text-primary-foreground" : "border-[rgb(31_30_30/0.08)] bg-[rgb(255_255_255/0.94)] text-foreground"
+          : cn("border-transparent bg-transparent", claro ? "text-primary-foreground" : "text-foreground"),
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8">
         <Link to="/" aria-label="Cruzia — Inicio" className="shrink-0">
           {conFiltros ? (
             <>
-              <Logo variant="isotype" tone={claro ? "dark" : "light"} height={26} decorative className="transition-[filter] duration-200 sm:hidden" />
-              <Logo variant="wordmark" tone={claro ? "dark" : "light"} height={28} decorative className="hidden transition-[filter] duration-200 sm:block" />
+              <Logo variant="isotype" tone={tono} height={26} decorative className="sm:hidden" />
+              <Logo variant="wordmark" tone={tono} height={28} decorative className="hidden sm:block" />
             </>
-          ) : <Logo variant="wordmark" tone={claro ? "dark" : "light"} height={28} decorative className="transition-[filter] duration-200" />}
+          ) : <Logo variant="wordmark" tone={tono} height={28} decorative />}
         </Link>
 
         <div className="flex min-w-0 items-center gap-1">
-          <nav aria-label="Navegación principal" className="mr-2 hidden items-center gap-6 text-sm xl:flex">
-            {links.map((l) => <Link key={l.to} to={l.to} className="opacity-80 transition-opacity hover:opacity-100" activeProps={{ className: "!opacity-100" }} activeOptions={{ exact: l.to === "/" }}>{l.label}</Link>)}
-          </nav>
           <SearchDialog />
           {conFiltros ? <StickyFilters /> : null}
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
-          <Sheet>
-            <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70 xl:hidden" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
-            <SheetContent className={cn("glass-menu grain-overlay !m-3 flex !h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] flex-col overflow-clip rounded-[28px] border-0 sm:max-w-md", gift ? "theme-gift !bg-[rgb(20_22_23/0.4)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
-              <SheetHeader className="pb-6 text-left">
+          <Sheet open={abierto} onOpenChange={setAbierto}>
+            <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
+            <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift theme-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
+              <SheetHeader className="relative z-10 pb-4 text-left">
                 <SheetTitle><Logo variant="wordmark" tone={gift ? "dark" : "light"} height={28} decorative /><span className="sr-only">Menú</span></SheetTitle>
-                <SheetDescription className={gift ? "text-primary-foreground/70" : "text-muted-foreground"}>Todo lo bueno de La Costa, más cerca.</SheetDescription>
+                <SheetDescription className="sr-only">Secciones de Cruzia</SheetDescription>
               </SheetHeader>
-              <nav className="relative z-10 flex flex-1 flex-col justify-center gap-1" aria-label="Menú">
-                {links.map((item) => (
-                  <SheetClose asChild key={item.to}>
-                    <Link
-                      to={item.to}
-                      activeOptions={{ exact: item.to === "/" }}
-                      activeProps={{ className: gift ? "!border-primary-foreground/60" : "!border-foreground/50" }}
-                      className={cn("group flex items-center justify-between rounded-full border border-transparent px-5 py-3 text-lg transition-colors", gift ? "hover:border-primary-foreground/60" : "hover:border-foreground/50")}
-                    >
-                      <span>{item.label}</span>
-                      <ArrowRight className="size-4 opacity-0 transition-opacity group-hover:opacity-100 group-data-[status=active]:opacity-100 group-[.active]:opacity-100" />
-                    </Link>
-                  </SheetClose>
-                ))}
+              <nav className="relative z-10 flex flex-1 flex-col justify-center gap-2 py-6" aria-label="Navegación principal">
+                {enlaces.map((e, i) => {
+                  const estilo = { animationDelay: `${60 + i * 45}ms` };
+                  if (e.to === "rubros") {
+                    return (
+                      <div key="rubros" className="menu-item" style={estilo}>
+                        <button type="button" aria-expanded={rubrosAbiertos} onClick={() => setRubrosAbiertos((v) => !v)} className={item}>
+                          <span>{e.label}</span>
+                          <ChevronDown className={cn("size-5 transition-transform", rubrosAbiertos && "rotate-180")} />
+                        </button>
+                        {rubrosAbiertos ? (
+                          <div className="grid gap-1 py-2 pl-5">
+                            <SheetClose asChild><Link to="/categorias" className="rounded-full px-5 py-2 text-base opacity-80 hover:opacity-100">Ver todas</Link></SheetClose>
+                            {data.colecciones.map((c) => (
+                              <SheetClose asChild key={c.id}><Link to="/categorias" search={{ coleccion: c.id }} className="rounded-full px-5 py-2 text-base opacity-80 hover:opacity-100">{c.nombre}</Link></SheetClose>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  }
+                  return (
+                    <SheetClose asChild key={e.to}>
+                      <Link to={e.to} activeOptions={{ exact: true }} activeProps={activo} className={item} style={estilo}>
+                        <span>{e.label}</span>{flecha}
+                      </Link>
+                    </SheetClose>
+                  );
+                })}
               </nav>
-              <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="relative z-10 flex items-center gap-2 pt-5 text-sm"><Instagram className="size-4" /> @cruzia.ar</a>
+              <a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" className="relative z-10 flex items-center gap-2 pt-4 text-sm"><Instagram className="size-4" /> @cruzia.ar</a>
             </SheetContent>
           </Sheet>
         </div>
