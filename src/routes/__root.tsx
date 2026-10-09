@@ -123,6 +123,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
   const isGift = useRouterState({ select: (state) => state.location.pathname.startsWith("/gift-box") });
+  const conFiltros = useRouterState({ select: (state) => state.location.pathname === "/cupones" || state.location.pathname === "/categorias" });
   const isHome = useRouterState({ select: (state) => state.location.pathname === "/" || state.location.pathname.startsWith("/comercio/") });
 
   return (
@@ -134,7 +135,7 @@ function RootComponent() {
             <ScrollRevealFallback />
             <div aria-hidden="true" className={`fondo-fijo ${isGift ? "fondo-gift" : ""}`}><div className="sd-drift-a halo-gray absolute -left-40 top-[15%] size-[44rem]" /></div>
             <SiteHeader />
-            <div className={isHome ? "flex-1" : "flex-1 pt-20"}><Outlet /></div>
+            <div className={isHome ? "flex-1" : conFiltros ? "flex-1 pt-32 min-[480px]:pt-20" : "flex-1 pt-20"}><Outlet /></div>
             <SiteFooter />
           </div>
         </PublicDirectoryProvider>

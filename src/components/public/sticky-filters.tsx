@@ -53,7 +53,7 @@ export function StickyFilters() {
             </div>
           </PopoverContent>
         </Popover>
-        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full px-1.5 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-primary" aria-label="Solo con cupón" /><span className="hidden lg:inline">Solo con cupón</span></label>
+        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full px-1.5 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-[#DF3B25]" aria-label="Solo cupones" /><span className="text-[12px] font-medium text-[#1F1E1E]">Solo cupón</span></label>
       </div>
     </div>
   );

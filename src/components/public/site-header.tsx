@@ -79,7 +79,7 @@ export function SiteHeader() {
 
         <div className="flex min-w-0 items-center gap-1">
           <SearchDialog />
-          {conFiltros ? <StickyFilters /> : null}
+          {conFiltros ? <div className="hidden min-w-0 min-[480px]:block"><StickyFilters /></div> : null}
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
@@ -123,6 +123,7 @@ export function SiteHeader() {
           </Sheet>
         </div>
       </div>
+      {conFiltros ? <div className="mx-auto max-w-7xl px-4 pb-2 min-[480px]:hidden"><StickyFilters /></div> : null}
     </header>
   );
 }
