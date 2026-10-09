@@ -121,7 +121,7 @@ export function PremiumHero() {
         const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
-            <div className="absolute inset-0"><div className="sd-parallax absolute inset-x-0 -top-[4%] h-[108%]">
+            <div className="absolute inset-0"><div className="sd-parallax absolute inset-0">
             <FadeOrganic src={imagen} alt={titulo} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
             </div>
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export function FadeOrganic({ src, alt, className, imgClassName }: { src: string; alt: string; className?: string; imgClassName?: string }) {
   return (
     <div className={cn("fade-organic", className)}>
-      <img src={src} alt="" aria-hidden="true" className="fade-organic__spill" />
+      <div aria-hidden="true" className="fade-organic__spill"><img src={src} alt="" /></div>
       <img src={src} alt={alt} className={cn("fade-organic__sharp", imgClassName)} />
       <div aria-hidden="true" className="fade-organic__grain" />
     </div>
