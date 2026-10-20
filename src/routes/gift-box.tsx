@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
+import { Reveal, RevealGroup } from "@/components/public/reveal";
 import { getDeviceId } from "@/lib/device-id";
 import {
   CATEGORIAS,
@@ -109,7 +110,7 @@ function GiftBoxPage() {
   if (confirmado) {
     return (
       <main className="theme-gift bg-gift text-gift-foreground">
-        <section className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
+        <Reveal as="section" className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
           <span className="inline-flex size-16 items-center justify-center rounded-full bg-accent/20 text-accent">
             <Gift className="size-8" />
           </span>
@@ -133,7 +134,7 @@ function GiftBoxPage() {
               <Link to="/">Volver al inicio</Link>
             </Button>
           </div>
-        </section>
+        </Reveal>
       </main>
     );
   }
@@ -152,7 +153,7 @@ function GiftBoxPage() {
               una tarde de surf. Todo en una sola caja.
             </p>
           </div>
-          <ol className="space-y-4">
+          <RevealGroup as="ol" className="space-y-4">
             {PASOS.map((paso, index) => (
                <li key={paso.titulo} className="flex gap-4 glass-dark rounded-[28px] p-5">
                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-primary-foreground">
@@ -166,7 +167,7 @@ function GiftBoxPage() {
                 </div>
               </li>
             ))}
-          </ol>
+          </RevealGroup>
         </div>
       </section>
 
@@ -185,12 +186,12 @@ function GiftBoxPage() {
                 const deCategoria = (items.data ?? []).filter((item) => item.categoria === categoria.id);
                 if (deCategoria.length === 0) return null;
                 return (
-                  <div key={categoria.id}>
+                  <Reveal key={categoria.id}>
                     <div className="flex flex-wrap items-baseline gap-3">
                        <h3 className="font-display text-2xl font-bold text-primary-foreground">{categoria.titulo}</h3>
                       <p className="text-sm text-primary-foreground/60">{categoria.detalle}</p>
                     </div>
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <RevealGroup className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {deCategoria.map((item) => {
                         const activo = Boolean(seleccion[item.id]);
                         return (
@@ -221,8 +222,8 @@ function GiftBoxPage() {
                           </button>
                         );
                       })}
-                    </div>
-                  </div>
+                    </RevealGroup>
+                  </Reveal>
                 );
               })}
             </div>
