@@ -33,12 +33,20 @@ function getObserver() {
   return observer;
 }
 
+/** Tope de elementos con filter animándose a la vez; los extra entran sin blur (clase m-noblur). */
+let filtrosActivos = 0;
+const MAX_FILTROS = 24;
+
 /** Activa el elemento: will-change solo mientras dura la animación (m-run se quita al terminar). */
 function activar(el: HTMLElement) {
+  const conFiltro = filtrosActivos < MAX_FILTROS;
+  if (conFiltro) filtrosActivos += 1;
+  else el.classList.add("m-noblur");
   el.classList.add("m-run", "m-in");
   let timer = 0;
   const fin = () => {
     el.classList.remove("m-run");
+    if (conFiltro) filtrosActivos -= 1;
     el.removeEventListener("transitionend", alTerminar);
     window.clearTimeout(timer);
   };
@@ -50,7 +58,7 @@ function activar(el: HTMLElement) {
     if (e.target === el || pendientes > 40) fin();
   };
   el.addEventListener("transitionend", alTerminar);
-  timer = window.setTimeout(fin, 3200);
+  timer = window.setTimeout(fin, 4800);
 }
 
 export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true) {

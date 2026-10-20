@@ -294,29 +294,36 @@
 /* ───────── Movimiento (tiempos de linear.app) ─────────
    Único lugar para ajustar tiempos. Los estados ocultos solo aplican con html.m-js. */
 :root {
-  --m-dur: 1000ms;
-  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --m-word-stagger: 33ms;
-  --m-stagger: 90ms;
+  --m-dur: 1400ms;
+  --m-ease-move: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+  --m-word-stagger: 45ms;
+  --m-stagger: 110ms;
+  --m-blur-title: 14px;
+  --m-blur-text: 8px;
+  --m-blur-img: 18px;
   --m-dist: 14px;
 }
 
 /* Transición de página: sin fill-mode → no retiene transform al terminar. */
 @keyframes m-page { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
-.page-transition { animation: m-page 600ms var(--m-ease); }
+.page-transition { animation: m-page 600ms var(--m-ease-move); }
 
 /* Scroll: bloques, grupos, hijos de carrusel. Solo opacity + transform. */
 [data-m], [data-m-group] > *, [data-m] [data-m-child] {
-  transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease);
+  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
 }
 [data-m-group] > *, [data-m] [data-m-child] { transition-delay: calc(var(--i, 0) * var(--m-stagger)); }
 html.m-js [data-m]:not(.m-in) { opacity: 0; transform: translate3d(0, var(--m-dist), 0); }
 html.m-js [data-m-group]:not(.m-in) > *, html.m-js [data-m]:not(.m-in) [data-m-child] { opacity: 0; transform: translate3d(0, 24px, 0); }
 [data-m].m-in, [data-m-group].m-in > *, [data-m].m-in [data-m-child] { opacity: 1; transform: none; }
-.m-run, .m-run > *, .m-run [data-m-child], .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform; }
-/* Imágenes dentro de tarjetas en grilla: 1.05 → 1 en 1400ms (transition solo mientras corre). */
-html.m-js [data-m-group]:not(.m-in) > * img { transform: scale(1.05); }
-[data-m-group].m-run > * img { transition: transform 1400ms var(--m-ease); }
+.m-run, .m-run > *, .m-run [data-m-child], .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
+/* Sin filtro cuando se supera el tope de ~24 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
+.m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur [data-m-child], .m-noblur > * img, .m-noblur [data-m-child] img { filter: none !important; }
+/* Imágenes de tarjetas (grilla y primer encuadre de carruseles): entran borrosas, grandes y transparentes → nítidas. */
+html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data-m-child] img { opacity: 0; transform: scale(1.05); filter: blur(var(--m-blur-img)); }
+[data-m-group].m-run > * img, [data-m].m-run [data-m-child] img { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
+[data-m-group].m-in > * img, [data-m].m-in [data-m-child] img { opacity: 1; transform: none; filter: none; }
 [data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
 [data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
 [data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
@@ -325,12 +332,11 @@ html.m-js [data-m-group]:not(.m-in) > * img { transform: scale(1.05); }
 /* Palabras: inline-block para poder moverlas sin cambiar los saltos de línea. */
 [data-m-w] {
   display: inline-block;
-  transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease), filter var(--m-dur) var(--m-ease);
+  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade);
   transition-delay: calc(var(--w, 0) * var(--m-word-stagger));
 }
-html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); }
-/* Blur solo en el hero de la home (rendimiento). */
-html.m-js [data-m-hero]:not(.m-in) [data-m-w] { filter: blur(6px); }
+/* Todas las palabras de títulos (hero y secciones) entran borrosas y se aclaran. */
+html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(var(--m-blur-title)); }
 [data-m-words].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 [data-m-seq-root].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 
@@ -338,17 +344,19 @@ html.m-js [data-m-hero]:not(.m-in) [data-m-w] { filter: blur(6px); }
 [data-m-seq-root] { --shift: 0ms; }
 [data-m-seq-root][data-m-page] { --shift: 250ms; }
 [data-m-seq-root] [data-m-w] { transition-delay: calc(400ms - var(--shift) + var(--w, 0) * var(--m-word-stagger)); }
-[data-m-seq] { transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease), filter var(--m-dur) var(--m-ease); transition-delay: max(0ms, calc(var(--d, 0ms) - var(--shift))); }
+[data-m-seq] { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); transition-delay: max(0ms, calc(var(--d, 0ms) - var(--shift))); }
 [data-m-seq="title"] { transition: none; }
 [data-m-seq="eyebrow"] { --d: 300ms; --y: 8px; }
-[data-m-seq="desc"] { --d: 600ms; --y: 10px; }
-[data-m-seq="cta"] { --d: 850ms; --y: 10px; }
+[data-m-seq="desc"] { --d: 800ms; --y: 10px; }
+[data-m-seq="cta"] { --d: 1100ms; --y: 10px; }
 [data-m-seq="media"] { --d: 200ms; transition-duration: 1500ms; }
 [data-m-seq="row"] { --d: 1300ms; --y: 24px; transition-duration: 1500ms; }
 html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq]:not([data-m-seq="title"]) { opacity: 0; transform: translate3d(0, var(--y, 0), 0); }
+/* Sobretítulos y descripciones entran borrosos y se aclaran; botones y bloques con vidrio, sin filter. */
+html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="eyebrow"], html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="desc"] { filter: blur(var(--m-blur-text)); }
+html.m-js [data-m-seq-root]:not(.m-in) .glass-dark[data-m-seq], html.m-js [data-m-seq-root]:not(.m-in) .glass[data-m-seq] { filter: none; }
 /* La imagen del hero es el LCP: visible desde el primer pintado, solo zoom 1.03 → 1. */
 html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transform: scale(1.03); }
-html.m-js [data-m-hero]:not(.m-in) [data-m-seq="desc"] { filter: blur(4px); }
 [data-m-seq-root].m-in [data-m-seq] { opacity: 1; transform: none; filter: none; }
 
 @media (prefers-reduced-motion: reduce) {

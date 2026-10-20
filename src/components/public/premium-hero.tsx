@@ -9,7 +9,7 @@ import { estaCerca } from "@/lib/geo";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";
 import { cn } from "@/lib/utils";
 import { usePublicDirectory } from "./public-directory-provider";
-import { SplitWords } from "./motion";
+import { Secuencia, SplitWords } from "./motion";
 
 function vigente(inicio: string, fin: string) {
   const hoy = new Date().toISOString().slice(0, 10);
@@ -90,13 +90,20 @@ export function PremiumHero() {
   useEffect(() => { setCargadas((prev) => (prev.has(activo) && prev.has((activo + 1) % Math.max(total, 1)) ? prev : new Set([...prev, activo, (activo + 1) % Math.max(total, 1)]))); }, [activo, total]);
   const ir = (paso: number) => setActivo((i) => (i + paso + total) % total);
 
+  // Mientras cargan los datos la sección queda vacía; la Secuencia se monta recién cuando
+  // hay slides, así la entrada (sobretítulo → título → descripción → botón) se ve completa.
+  if (slides.length === 0) {
+    return <section aria-label="Destacados de Cruzia" className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip" />;
+  }
   return (
-    <section
+    <Secuencia
+      as="section"
+      hero
       aria-label="Destacados de Cruzia"
       aria-roledescription="carrusel"
       className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
-      onTouchStart={(e) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
-      onTouchEnd={(e) => {
+      onTouchStart={(e: React.TouchEvent) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
+      onTouchEnd={(e: React.TouchEvent) => {
         const inicio = toqueX.current;
         const fin = e.changedTouches[0]?.clientX;
         if (inicio !== null && fin !== undefined && Math.abs(fin - inicio) > 40) ir(fin < inicio ? 1 : -1);
@@ -156,7 +163,7 @@ export function PremiumHero() {
           ))}
         </div>
       ) : null}
-    </section>
+    </Secuencia>
   );
 }
 
