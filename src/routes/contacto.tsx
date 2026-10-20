@@ -3,7 +3,7 @@ import { ArrowRight, Instagram, Mail, Store, User } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { PageIntro } from "@/components/public/page-intro";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup } from "@/components/public/motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

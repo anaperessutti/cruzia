@@ -5,7 +5,7 @@ import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-r
 import { CuponCard } from "@/components/public/cupon-card";
 import { FadeOrganic } from "@/components/public/fade-organic";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup } from "@/components/public/motion";
 import { registrarInteraccionComercio } from "@/lib/cupones";
 import { getDeviceId } from "@/lib/device-id";
 import { Badge } from "@/components/ui/badge";

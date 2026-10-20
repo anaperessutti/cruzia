@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { useReveal } from "./reveal";
+import { SplitWords, useReveal } from "./motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,14 +23,6 @@ interface CarruselSeccionProps {
   /** Se mantiene por compatibilidad. */
   imagenes?: (string | null)[];
   className?: string;
-}
-
-function TituloFila({ texto }: { texto: string }) {
-  const palabras = texto.trim().split(/\s+/);
-  const corte = Math.max(palabras.length - 1, 0);
-  return (
-    <>{palabras.slice(0, corte).concat(palabras.slice(corte)).join(" ")}</>
-  );
 }
 
 export function BurbujaFlecha({ className }: { className?: string }) {
@@ -75,12 +67,12 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section ref={seccionRef as never} data-reveal aria-label={titulo} className={cn("relative", className)}>
+    <section ref={seccionRef as never} data-m aria-label={titulo} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
           {rotulo ? <span className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
-          <span className="mt-1 block text-subtitulo text-foreground"><TituloFila texto={titulo} /></span>
+          <SplitWords className="mt-1 block text-subtitulo text-foreground" text={titulo} />
         </a>
         <a href={destinoUrl} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />
@@ -98,7 +90,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
             <div
               key={index}
               data-carousel-card="real"
-              {...(index < 4 ? { "data-reveal-child": true, style: { "--i": index } as React.CSSProperties } : {})}
+              {...(index < 4 ? { "data-m-child": true, style: { "--i": index } as React.CSSProperties } : {})}
               className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
             >
               {tarjeta}

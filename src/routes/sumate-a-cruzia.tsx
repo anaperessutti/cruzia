@@ -3,7 +3,7 @@ import { ArrowRight, Check, Crown, Store, Ticket } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { PageIntro } from "@/components/public/page-intro";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup, SplitWords } from "@/components/public/motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,7 +84,7 @@ function Page() {
       </PageIntro>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
-        <Reveal><h2 className="text-subtitulo text-foreground"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2></Reveal>
+        <SplitWords as="h2" className="text-subtitulo text-foreground" text="Tres formas de estar en Cruzia" />
         <RevealGroup className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch">
           {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);

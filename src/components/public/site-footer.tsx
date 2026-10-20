@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Logo } from "@/components/brand/logo";
-import { Reveal } from "./reveal";
+import { Reveal } from "./motion";
 import { cn } from "@/lib/utils";
 
 /** Pie sin fondo propio: solo un filete fino arriba, con el mismo margen que el contenido. */

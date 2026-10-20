@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Reveal } from "./reveal";
+import { Secuencia, SplitWords } from "./motion";
 import { cn } from "@/lib/utils";
 
 /** Título editorial: liviano, con la palabra clave en Bold. Por defecto, la última palabra. */
@@ -16,14 +16,12 @@ export function TituloLigero({ texto, negrita }: { texto: string; negrita?: stri
 /** Encabezado de página sobre el lienzo continuo (sin franjas). */
 export function PageIntro({ rotulo, titulo, negrita, intro, children, className }: { rotulo: string; titulo: string; negrita?: string | undefined; intro?: ReactNode; children?: ReactNode; className?: string | undefined }) {
   return (
-    <Reveal as="section" className={cn("mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:px-8", className)}>
-      <p className="text-sobretitulo font-medium text-primary">{rotulo}</p>
-      <h1 className="mt-4 max-w-4xl text-titulo text-foreground">
-        <TituloLigero texto={titulo} negrita={negrita} />
-      </h1>
-      {intro ? <div className="mt-6 max-w-2xl text-cuerpo text-foreground/80">{intro}</div> : null}
-      {children}
-    </Reveal>
+    <Secuencia as="section" pagina className={cn("mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:px-8", className)}>
+      <p data-m-seq="eyebrow" className="text-sobretitulo font-medium text-primary">{rotulo}</p>
+      <SplitWords as="h1" enSecuencia className="mt-4 max-w-4xl text-titulo text-foreground" text={titulo} />
+      {intro ? <div data-m-seq="desc" className="mt-6 max-w-2xl text-cuerpo text-foreground/80">{intro}</div> : null}
+      {children ? <div data-m-seq="cta">{children}</div> : null}
+    </Secuencia>
   );
 }
 
