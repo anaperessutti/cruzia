@@ -2,6 +2,7 @@ import { Link, type LinkProps } from "@tanstack/react-router";
 import { ArrowRight, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { optimizarImagen } from "@/lib/imagen";
 import { cn } from "@/lib/utils";
 
 export type NivelTarjeta = "basica" | "pro" | "premium";
@@ -35,7 +36,7 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
       <article className="relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] bg-ink text-primary-foreground">
         {imagen ? (
           <>
-            <img src={imagen} alt={alt} loading="lazy" className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
+            <img src={optimizarImagen(imagen)} alt={alt} loading="lazy" decoding="async" width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
             <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
           </>
         ) : <div className="frost-neutral frost-grain absolute inset-0" />}

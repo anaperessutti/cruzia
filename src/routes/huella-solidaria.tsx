@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { optimizarImagen } from "@/lib/imagen";
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Hand, Heart, HeartHandshake, Sparkles, Users } from "lucide-react";
 import { useState, type FormEvent } from "react";
@@ -34,7 +35,7 @@ function Fotos({ fase }: { fase: FaseSolidaria }) {
   return (
     <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
       {fase.fotos.map((foto) => (
-        <img key={foto} src={foto} alt={`Foto de ${fase.titulo}`} loading="lazy" className="h-32 w-44 flex-none rounded-[28px_12px_28px_12px] object-cover shadow-warm" />
+        <img key={foto} src={optimizarImagen(foto)} alt={`Foto de ${fase.titulo}`} loading="lazy" decoding="async" width={176} height={128} className="h-32 w-44 flex-none rounded-[28px_12px_28px_12px] object-cover shadow-warm" />
       ))}
     </div>
   );

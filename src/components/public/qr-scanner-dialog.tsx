@@ -1,4 +1,3 @@
-import jsQR from "jsqr";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -59,7 +58,7 @@ export function QrScannerDialog({
           }
           if (!value) {
             const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            value = jsQR(image.data, image.width, image.height)?.data ?? null;
+            value = (await import("jsqr")).default(image.data, image.width, image.height)?.data ?? null;
           }
           if (value && !cancelled) {
             cancelled = true;

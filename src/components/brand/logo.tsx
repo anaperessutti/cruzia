@@ -1,6 +1,6 @@
-import lockup from "@/assets/brand/cruzia-lockup.png.asset.json";
-import isotype from "@/assets/brand/cruzia-isotipo.png.asset.json";
-import wordmark from "@/assets/brand/cruzia-logotipo.png.asset.json";
+import lockup from "@/assets/brand/cruzia-lockup.webp.asset.json";
+import isotype from "@/assets/brand/cruzia-isotipo.webp.asset.json";
+import wordmark from "@/assets/brand/cruzia-logotipo.webp.asset.json";
 import { cn } from "@/lib/utils";
 
 /** Archivos de marca centralizados: reemplazá aquí por SVG/PNG nuevos sin tocar nada más. */

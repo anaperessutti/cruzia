@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import heroImage from "@/assets/auna-costa-hero.jpg";
+import heroImage from "@/assets/auna-costa-hero.webp";
 import { CarruselSeccion } from "@/components/public/carrusel-seccion";
 
 export const Route = createFileRoute("/demo-carrusel")({
