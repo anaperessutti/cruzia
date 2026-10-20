@@ -3,6 +3,7 @@ import { ArrowRight, Instagram, Mail, Store, User } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { PageIntro } from "@/components/public/page-intro";
+import { Reveal, RevealGroup } from "@/components/public/reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,7 +78,7 @@ function Page() {
       <PageIntro rotulo="Hablemos" titulo="Estamos a un clic de distancia." negrita="un clic" />
 
       <section className="relative mx-auto -mt-12 max-w-3xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div role="tablist" aria-label="¿Quién sos?" className="glass grid grid-cols-2 gap-1 rounded-full p-1.5">
+        <Reveal><div role="tablist" aria-label="¿Quién sos?" className="glass grid grid-cols-2 gap-1 rounded-full p-1.5">
           {([
             { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a Cruzia" },
             { key: "usuario" as const, icon: User, titulo: "Soy un Usuario", texto: "Tengo una consulta o una sugerencia." },
@@ -95,7 +96,7 @@ function Page() {
               {opcion.titulo}
             </button>
           ))}
-        </div>
+        </div></Reveal>
 
         {perfil && estado === "ok" ? (
           <div className="mt-8 glass rounded-[32px] p-8">
@@ -169,7 +170,7 @@ function Page() {
           </form>
         ) : null}
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2">
+        <RevealGroup className="mt-12 grid gap-4 md:grid-cols-2">
           <a href={`mailto:${EMAIL_AUNA}`} className="glass rounded-[32px] p-6 transition-transform hover:-translate-y-1">
             <span className="grid size-10 place-items-center rounded-full bg-foreground text-background"><Mail className="size-4" /></span>
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Email</p>
@@ -180,7 +181,7 @@ function Page() {
             <p className="mt-5 text-xs font-bold uppercase text-muted-foreground">Instagram</p>
             <p className="mt-1 font-display text-lg font-bold text-foreground">@cruzia.ar</p>
           </a>
-        </div>
+        </RevealGroup>
       </section>
     </main>
   );
