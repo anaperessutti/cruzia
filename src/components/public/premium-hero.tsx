@@ -103,7 +103,7 @@ export function PremiumHero() {
       aria-roledescription="carrusel"
       className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
       onTouchStart={(e: React.TouchEvent) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
-      onTouchEnd={(e) => {
+      onTouchEnd={(e: React.TouchEvent) => {
         const inicio = toqueX.current;
         const fin = e.changedTouches[0]?.clientX;
         if (inicio !== null && fin !== undefined && Math.abs(fin - inicio) > 40) ir(fin < inicio ? 1 : -1);
