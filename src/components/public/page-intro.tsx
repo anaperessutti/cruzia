@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Reveal } from "./reveal";
+import { Reveal } from "./motion";
 import { cn } from "@/lib/utils";
 
 /** Título editorial: liviano, con la palabra clave en Bold. Por defecto, la última palabra. */

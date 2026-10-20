@@ -290,45 +290,70 @@
 @utility font-serif-editorial { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
 @utility transition-chrome { transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
 
-/* ───────── Animaciones de entrada (estilo Linear) ─────────
-   Solo transform + opacity. Los elementos se ocultan únicamente si el <html>
-   tiene la clase "js" (script inline en el <head>): sin JS se ve todo normal.
-   .rv-in la agrega un IntersectionObserver compartido (una sola vez por elemento).
-   .rv-all es la red de seguridad: fuerza visibilidad aunque el observer falle. */
-@keyframes page-in { from { opacity: 0; transform: translate3d(0, 8px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
-/* Transición de página: sin fill-mode, al terminar no retiene transform ni will-change. */
-.page-transition { animation: page-in 400ms cubic-bezier(0.16, 1, 0.3, 1); }
+/* ───────── Movimiento (tiempos de linear.app) ─────────
+   Único lugar para ajustar tiempos. Los estados ocultos solo aplican con html.m-js. */
+:root {
+  --m-dur: 1000ms;
+  --m-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-word-stagger: 33ms;
+  --m-stagger: 90ms;
+  --m-dist: 14px;
+}
 
-html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
+/* Transición de página: sin fill-mode → no retiene transform al terminar. */
+@keyframes m-page { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
+.page-transition { animation: m-page 600ms var(--m-ease); }
+
+/* Scroll: bloques, grupos, hijos de carrusel. Solo opacity + transform. */
+[data-m], [data-m-group] > *, [data-m] [data-m-child] {
+  transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease);
 }
-[data-reveal], [data-reveal-group] > *, [data-reveal] [data-reveal-child] {
-  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: calc(var(--i, 0) * 60ms);
+[data-m-group] > *, [data-m] [data-m-child] { transition-delay: calc(var(--i, 0) * var(--m-stagger)); }
+html.m-js [data-m]:not(.m-in) { opacity: 0; transform: translate3d(0, var(--m-dist), 0); }
+html.m-js [data-m-group]:not(.m-in) > *, html.m-js [data-m]:not(.m-in) [data-m-child] { opacity: 0; transform: translate3d(0, 24px, 0); }
+[data-m].m-in, [data-m-group].m-in > *, [data-m].m-in [data-m-child] { opacity: 1; transform: none; }
+.m-run, .m-run > *, .m-run [data-m-child], .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform; }
+/* Imágenes dentro de tarjetas en grilla: 1.05 → 1 en 1400ms (transition solo mientras corre). */
+html.m-js [data-m-group]:not(.m-in) > * img { transform: scale(1.05); }
+[data-m-group].m-run > * img { transition: transform 1400ms var(--m-ease); }
+[data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
+[data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
+[data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
+[data-m-group] > *:nth-child(7) { --i: 6; } [data-m-group] > *:nth-child(n+8) { --i: 7; }
+
+/* Palabras: inline-block para poder moverlas sin cambiar los saltos de línea. */
+[data-m-w] {
+  display: inline-block;
+  transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease), filter var(--m-dur) var(--m-ease);
+  transition-delay: calc(var(--w, 0) * var(--m-word-stagger));
 }
-/* Estado final explícito: opacity 1 y transform none (el progressive blur necesita backdrop-filter sano). */
-[data-reveal].rv-in, [data-reveal-group].rv-in > *, [data-reveal].rv-in [data-reveal-child],
-html.rv-all [data-reveal], html.rv-all [data-reveal-group] > *, html.rv-all [data-reveal-child] {
-  opacity: 1;
-  transform: none;
-}
-/* Stagger en cascada: 60 ms por hijo, con tope en el 8.º (del 9.º en adelante repiten su retraso). */
-[data-reveal-group] > *:nth-child(1) { --i: 0; }
-[data-reveal-group] > *:nth-child(2) { --i: 1; }
-[data-reveal-group] > *:nth-child(3) { --i: 2; }
-[data-reveal-group] > *:nth-child(4) { --i: 3; }
-[data-reveal-group] > *:nth-child(5) { --i: 4; }
-[data-reveal-group] > *:nth-child(6) { --i: 5; }
-[data-reveal-group] > *:nth-child(7) { --i: 6; }
-[data-reveal-group] > *:nth-child(8) { --i: 7; }
-[data-reveal-group] > *:nth-child(n+9) { --i: 7; }
+html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); }
+/* Blur solo en el hero de la home (rendimiento). */
+html.m-js [data-m-hero]:not(.m-in) [data-m-w] { filter: blur(6px); }
+[data-m-words].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
+[data-m-seq-root].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
+
+/* Secuencia de carga. --shift: 250ms en páginas internas. */
+[data-m-seq-root] { --shift: 0ms; }
+[data-m-seq-root][data-m-page] { --shift: 250ms; }
+[data-m-seq-root] [data-m-w] { transition-delay: calc(400ms - var(--shift) + var(--w, 0) * var(--m-word-stagger)); }
+[data-m-seq] { transition: opacity var(--m-dur) var(--m-ease), transform var(--m-dur) var(--m-ease), filter var(--m-dur) var(--m-ease); transition-delay: max(0ms, calc(var(--d, 0ms) - var(--shift))); }
+[data-m-seq="title"] { transition: none; }
+[data-m-seq="eyebrow"] { --d: 300ms; --y: 8px; }
+[data-m-seq="desc"] { --d: 600ms; --y: 10px; }
+[data-m-seq="cta"] { --d: 850ms; --y: 10px; }
+[data-m-seq="media"] { --d: 200ms; transition-duration: 1500ms; }
+[data-m-seq="row"] { --d: 1300ms; --y: 24px; transition-duration: 1500ms; }
+html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq]:not([data-m-seq="title"]) { opacity: 0; transform: translate3d(0, var(--y, 0), 0); }
+html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { transform: scale(1.03); }
+html.m-js [data-m-hero]:not(.m-in) [data-m-seq="desc"] { filter: blur(4px); }
+[data-m-seq-root].m-in [data-m-seq] { opacity: 1; transform: none; filter: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  /* Sin movimiento ni espera: todo visible al instante, sin depender del observer. */
-  html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] { opacity: 1; transform: none; }
-  [data-reveal], [data-reveal-group] > *, [data-reveal] [data-reveal-child] { transition: none; transition-delay: 0ms; }
+  [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img {
+    transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
+  }
 }
 
 /* Sitio público: jerarquía por tamaño y color, no por mezcla de pesos. */

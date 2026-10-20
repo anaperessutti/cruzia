@@ -98,8 +98,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
     scripts: [
-      // Marca "js" antes del primer render: solo con ella los [data-reveal] arrancan ocultos.
-      { children: `document.documentElement.classList.add("js");` },
+      // Marca "m-js" antes del primer render: solo con ella los elementos animados arrancan ocultos.
+      { children: `document.documentElement.classList.add("m-js");` },
     ],
   }),
   shellComponent: RootShell,

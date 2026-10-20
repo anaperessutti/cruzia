@@ -1,7 +1,7 @@
 import { CommerceCard } from "./commerce-card";
 import { EventoCard } from "./evento-card";
 import { usePublicDirectory } from "./public-directory-provider";
-import { Reveal, RevealGroup } from "./reveal";
+import { Reveal, RevealGroup } from "./motion";
 
 export function CommerceGrid({ title = "Para disfrutar La Costa" }: { title?: string }) {
   const { data, tarjetas, isLoading } = usePublicDirectory();

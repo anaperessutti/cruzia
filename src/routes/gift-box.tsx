@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup } from "@/components/public/motion";
 import { getDeviceId } from "@/lib/device-id";
 import {
   CATEGORIAS,

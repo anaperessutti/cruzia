@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup } from "@/components/public/motion";
 
 type CategoriasSearch = { coleccion?: string | undefined; localidades?: string | undefined };
 

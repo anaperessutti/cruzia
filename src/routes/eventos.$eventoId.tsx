@@ -1,5 +1,5 @@
 import { FadeOrganic } from "@/components/public/fade-organic";
-import { Reveal } from "@/components/public/reveal";
+import { Reveal } from "@/components/public/motion";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, MapPin, Store } from "lucide-react";

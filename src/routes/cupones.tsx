@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal } from "@/components/public/reveal";
+import { Reveal } from "@/components/public/motion";
 
 type CuponesSearch = { soloCupon?: boolean | undefined; favoritos?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
 

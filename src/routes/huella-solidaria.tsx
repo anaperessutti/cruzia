@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/reveal";
+import { Reveal, RevealGroup } from "@/components/public/motion";
 import { enviarPostulacionSolidaria, fasesSolidariasOptions, type FaseSolidaria } from "@/lib/formularios";
 
 export const Route = createFileRoute("/huella-solidaria")({
