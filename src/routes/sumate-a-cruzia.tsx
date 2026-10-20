@@ -3,6 +3,7 @@ import { ArrowRight, Check, Crown, Store, Ticket } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { PageIntro } from "@/components/public/page-intro";
+import { Reveal, RevealGroup } from "@/components/public/reveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -83,8 +84,8 @@ function Page() {
       </PageIntro>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
-        <h2 className="text-subtitulo text-foreground"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch"> 
+        <Reveal><h2 className="text-subtitulo text-foreground"><span className="font-light">Tres formas de estar en </span><span className="font-bold">Cruzia</span></h2></Reveal>
+        <RevealGroup className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch">
           {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
             // Tres fichas iguales; la del medio (recomendada) lleva etiqueta y un resaltado sutil.
@@ -111,17 +112,17 @@ function Page() {
               </div>
             );
           })}
-        </div>
+        </RevealGroup>
       </section>
 
       <section id="sumarme" className="scroll-mt-24">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2 lg:px-8">
-          <div>
+          <Reveal>
             <h2 className="text-subtitulo !font-normal text-foreground">Dejanos tus datos</h2>
             <p className="mt-4 max-w-lg text-cuerpo text-foreground/80">
               Sabemos que cada comercio es un mundo. Diseñamos campañas flexibles que se adaptan a tu presupuesto y objetivo, dejanos tu consulta y te enviamos una propuesta personalizada para tu negocio.
             </p>
-          </div>
+          </Reveal>
           {estado === "ok" ? (
             <div className="glass rounded-[32px] p-8">
               <h3 className="font-display text-2xl font-extrabold text-foreground">¡Listo, {form.nombre_local}!</h3>

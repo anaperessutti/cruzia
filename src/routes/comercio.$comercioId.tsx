@@ -5,6 +5,7 @@ import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-r
 import { CuponCard } from "@/components/public/cupon-card";
 import { FadeOrganic } from "@/components/public/fade-organic";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
+import { Reveal, RevealGroup } from "@/components/public/reveal";
 import { registrarInteraccionComercio } from "@/lib/cupones";
 import { getDeviceId } from "@/lib/device-id";
 import { Badge } from "@/components/ui/badge";
@@ -108,7 +109,7 @@ function FichaComercio() {
 
       {conPromocion && cupones.length > 0 ? (
         <section className="relative z-10 mx-auto -mt-16 max-w-5xl px-4 sm:px-6">
-          <div className="glass rounded-[32px] p-4 sm:p-6">
+          <Reveal><div className="glass rounded-[32px] p-4 sm:p-6">
           <p className="text-pill text-primary">Módulo de promoción</p>
           <div className="mt-3 grid gap-4">
             {cupones.map((cupon) => (
@@ -120,21 +121,21 @@ function FichaComercio() {
               />
             ))}
           </div>
-          </div>
+          </div></Reveal>
         </section>
       ) : null}
 
       {comercio.galeria.length > 1 ? (
         <section className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <RevealGroup className="grid gap-3 sm:grid-cols-3">
             {comercio.galeria.slice(1).map((url) => (
               <img key={url} src={url} alt={`Foto de ${comercio.nombre}`} loading="lazy" className="aspect-[4/3] w-full rounded-[28px] object-cover shadow-warm" />
             ))}
-          </div>
+          </RevealGroup>
         </section>
       ) : null}
 
-      <section className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2">
+      <Reveal as="section" className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-2">
         <div>
           {comercio.descripcion ? <p className="text-base leading-relaxed text-foreground">{comercio.descripcion}</p> : null}
           {comercio.horarios ? <p className="mt-5 flex items-start gap-2 text-sm text-muted-foreground"><Clock className="mt-0.5 size-4" /> {comercio.horarios}</p> : null}
@@ -158,12 +159,12 @@ function FichaComercio() {
             className="h-72 w-full rounded-[26px]"
           />
         </div>
-      </section>
+      </Reveal>
 
       {sedes.length > 0 ? (
         <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6">
-          <h2 className="font-display text-2xl font-extrabold text-foreground">Nuestras sedes</h2>
-          <div className="mt-5 grid gap-6 lg:grid-cols-2">
+          <Reveal><h2 className="font-display text-2xl font-extrabold text-foreground">Nuestras sedes</h2></Reveal>
+          <RevealGroup className="mt-5 grid gap-6 lg:grid-cols-2">
             {sedes.map((sede) => {
               const promos = cupones.filter((c) => {
                 const soloEn = sedesDeCupon.get(c.id);
@@ -211,7 +212,7 @@ function FichaComercio() {
                 </article>
               );
             })}
-          </div>
+          </RevealGroup>
         </section>
       ) : null}
     </main>

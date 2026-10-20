@@ -15,7 +15,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PublicDirectoryProvider } from "@/components/public/public-directory-provider";
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
-import { ScrollRevealFallback } from "@/components/public/scroll-reveal-fallback";
 
 function NotFoundComponent() {
   return (
@@ -98,6 +97,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
+    scripts: [
+      // Marca "js" antes del primer render: solo con ella los [data-reveal] arrancan ocultos.
+      { children: `document.documentElement.classList.add("js");` },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -119,6 +122,19 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/** Transición de página: envuelve SOLO el contenido de cada ruta y se reinicia con key=pathname. */
+function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return (
+    <div key={pathname} className={`page-transition ${className ?? ""}`}>
+      {children}
+    </div>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
@@ -132,10 +148,9 @@ function RootComponent() {
         <PublicDirectoryProvider>
           {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
           <div className={`site-public ${isGift ? "theme-gift" : ""} relative isolate flex min-h-screen flex-col overflow-x-clip`}>
-            <ScrollRevealFallback />
-            <div aria-hidden="true" className={`fondo-fijo ${isGift ? "fondo-gift" : ""}`}><div className="sd-drift-a halo-gray absolute -left-40 top-[15%] size-[44rem]" /></div>
+            <div aria-hidden="true" className={`fondo-fijo ${isGift ? "fondo-gift" : ""}`}><div className="halo-gray absolute -left-40 top-[15%] size-[44rem]" /></div>
             <SiteHeader />
-            <div className={isHome ? "flex-1" : conFiltros ? "flex-1 pt-32 min-[480px]:pt-20" : "flex-1 pt-20"}><Outlet /></div>
+            <PageTransition className={isHome ? "flex-1" : conFiltros ? "flex-1 pt-32 min-[480px]:pt-20" : "flex-1 pt-20"}><Outlet /></PageTransition>
             <SiteFooter />
           </div>
         </PublicDirectoryProvider>
