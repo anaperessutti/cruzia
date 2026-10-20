@@ -299,7 +299,7 @@
 /* Transición de página: sin fill-mode, al terminar no retiene transform ni will-change. */
 .page-transition { animation: page-in 400ms cubic-bezier(0.16, 1, 0.3, 1); }
 
-html.js [data-reveal], html.js [data-reveal-group] > *, html.js [data-reveal] [data-reveal-child] {
+html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] {
   opacity: 0;
   transform: translate3d(0, 16px, 0);
 }
@@ -326,7 +326,7 @@ html.rv-all [data-reveal], html.rv-all [data-reveal-group] > *, html.rv-all [dat
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  html.js [data-reveal], html.js [data-reveal-group] > *, html.js [data-reveal] [data-reveal-child] { transform: none; }
+  html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] { transform: none; }
   [data-reveal], [data-reveal-group] > *, [data-reveal] [data-reveal-child] { transition: opacity 150ms ease-out; transition-delay: 0ms; }
 }
 
