@@ -22,3 +22,4 @@
 - [ ] Íconos en círculo en los campos de formularios
 - [ ] Isotipo como indicador de carga
 - [x] Refactorización visual completa (Inter, fondo claro, barra transparente, tarjetas con desenfoque progresivo, pie con filete)
+- [x] Sistema de animaciones de entrada estilo Linear (Reveal/RevealGroup, transición de página, stagger, reduced-motion)
