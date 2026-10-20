@@ -9,6 +9,7 @@ import { estaCerca } from "@/lib/geo";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";
 import { cn } from "@/lib/utils";
 import { usePublicDirectory } from "./public-directory-provider";
+import { SplitWords } from "./motion";
 
 function vigente(inicio: string, fin: string) {
   const hoy = new Date().toISOString().slice(0, 10);
@@ -18,15 +19,6 @@ function vigente(inicio: string, fin: string) {
 type Slide =
   | { tipo: "comercio"; id: string; comercio: Comercio; promo: Cupon | null }
   | { tipo: "evento"; id: string; evento: Evento };
-
-/** Título editorial: liviano, con la(s) última(s) palabra(s) en Bold. */
-function TituloEditorial({ texto }: { texto: string }) {
-  const palabras = texto.trim().split(/\s+/);
-  const enNegrita = palabras.length >= 5 ? 2 : 1;
-  const corte = Math.max(palabras.length - enNegrita, 0);
-  void corte;
-  return <>{texto}</>;
-}
 
 function BotonFlecha({ children }: { children: React.ReactNode }) {
   return (
@@ -121,17 +113,18 @@ export function PremiumHero() {
         const etiqueta = esEvento ? "Evento destacado" : slide.promo ? slide.comercio.nombre : "Elegido Premium";
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
-            <div className="absolute inset-0"><div className="absolute inset-0">
+            <div className="absolute inset-0"><div data-m-seq="media" className="absolute inset-0">
             <FadeOrganic src={imagen} alt={titulo} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
             </div>
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
               <div className="max-w-2xl text-primary-foreground">
-                <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-slider-eyebrow">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
-                <h1 className="text-titulo"><TituloEditorial texto={titulo} /></h1>
-                {texto ? <p className="mt-4 line-clamp-2 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p> : null}
+                <div data-m-seq="eyebrow" className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-slider-eyebrow">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
+                <SplitWords as="h1" enSecuencia className="text-titulo" text={titulo} />
+                {texto ? <p data-m-seq="desc" className="mt-4 line-clamp-2 max-w-xl text-base leading-7 text-primary-foreground/80 sm:text-lg">{texto}</p> : null}
                 <Link
                   tabIndex={visible ? 0 : -1}
+                  data-m-seq="cta"
                   className="group mt-7 inline-block"
                   {...(esEvento
                     ? { to: "/eventos/$eventoId" as const, params: { eventoId: slide.evento.id } }
@@ -170,10 +163,10 @@ function SlideInstitucional({ visible }: { visible: boolean }) {
       <Logo variant="isotype" tone="dark" height={260} decorative className="absolute -left-10 top-24 opacity-[0.06]" />
       <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[34%] sm:px-8 sm:pb-[18%]">
         <div className="max-w-2xl text-primary-foreground">
-          <div className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-slider-eyebrow">Viví La Costa</div>
-          <h1 className="text-titulo"><TituloEditorial texto="Beneficios que te llevan más lejos." /></h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.</p>
-          <Link to="/sumate-a-cruzia" tabIndex={visible ? 0 : -1} className="group mt-7 inline-block"><BotonFlecha>Sumate a Cruzia</BotonFlecha></Link>
+          <div data-m-seq="eyebrow" className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-slider-eyebrow">Viví La Costa</div>
+          <SplitWords as="h1" enSecuencia className="text-titulo" text="Beneficios que te llevan más lejos." />
+          <p data-m-seq="desc" className="mt-4 max-w-xl text-base leading-7 text-primary-foreground/75 sm:text-lg">Descubrí comercios, experiencias y cupones en cada rincón del Partido de la Costa.</p>
+          <Link to="/sumate-a-cruzia" tabIndex={visible ? 0 : -1} data-m-seq="cta" className="group mt-7 inline-block"><BotonFlecha>Sumate a Cruzia</BotonFlecha></Link>
         </div>
       </div>
     </div>

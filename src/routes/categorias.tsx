@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/motion";
+import { RevealGroup, Secuencia, SplitWords } from "@/components/public/motion";
 
 type CategoriasSearch = { coleccion?: string | undefined; localidades?: string | undefined };
 
@@ -34,5 +34,5 @@ function CategoriasPage() {
     : undefined;
   const tituloGrilla = coleccionSeleccionada?.nombre ?? "Elegí tu mejor opción";
   const mostrarCategorias = !search.coleccion && filters.coleccionIds.length === 0;
-  return <main>{mostrarCategorias ? <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><Reveal><p className="text-sobretitulo font-bold text-secondary">Explorá a tu manera</p><h1 className="mt-3 max-w-3xl text-titulo text-foreground">Todo lo que te gusta, cerca.</h1></Reveal><RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.colecciones.map((item, index) => <Link key={item.id} to="/categorias" search={{ coleccion: item.id }} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">{String(index + 1).padStart(2, "0")}</span><span className="mt-2 block font-display text-xl font-bold text-foreground">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</RevealGroup></section> : null}<CommerceGrid title={tituloGrilla} /></main>;
+  return <main>{mostrarCategorias ? <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"><Secuencia pagina><p data-m-seq="eyebrow" className="text-sobretitulo font-bold text-secondary">Explorá a tu manera</p><SplitWords as="h1" enSecuencia className="mt-3 max-w-3xl text-titulo text-foreground" text="Todo lo que te gusta, cerca." /></Secuencia><RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.colecciones.map((item, index) => <Link key={item.id} to="/categorias" search={{ coleccion: item.id }} className="group flex min-h-32 items-end justify-between rounded-md border border-border bg-card p-5 transition-colors hover:border-secondary hover:bg-muted"><span><span className="block text-xs font-bold text-secondary">{String(index + 1).padStart(2, "0")}</span><span className="mt-2 block font-display text-xl font-bold text-foreground">{item.nombre}</span></span><ArrowRight className="text-secondary transition-transform group-hover:translate-x-1" /></Link>)}</RevealGroup></section> : null}<CommerceGrid title={tituloGrilla} /></main>;
 }
