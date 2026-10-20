@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
+import { Reveal } from "@/components/public/reveal";
 
 type CuponesSearch = { soloCupon?: boolean | undefined; favoritos?: boolean | undefined; localidades?: string | undefined; coleccion?: string | undefined };
 
@@ -30,5 +31,5 @@ function CuponesPage() {
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
     return () => setColeccionIds([]);
   }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds, setSoloCupon]);
-  return <main><section><div className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><h1 className="mt-3 text-titulo text-foreground">Cupones que hacen rendir tu verano.</h1></div></section><CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
+  return <main><section><Reveal className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><h1 className="mt-3 text-titulo text-foreground">Cupones que hacen rendir tu verano.</h1></Reveal></section><CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
 }
