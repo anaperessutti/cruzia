@@ -32,7 +32,7 @@ function BotonFlecha({ children }: { children: React.ReactNode }) {
 const AUTOPLAY_MS = 6000;
 
 export function PremiumHero() {
-  const { data, userCoords } = usePublicDirectory();
+  const { data, userCoords, isLoading } = usePublicDirectory();
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
   const localidadById = new Map(data.localidades.map((l) => [l.id, l.nombre]));
   const ordenAleatorio = useMemo(
@@ -71,7 +71,8 @@ export function PremiumHero() {
   const seleccion = elegiblesParaEsteVisitante
     .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
     .slice(0, 7);
-  const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : [null];
+  // Mientras cargan los datos no hay slide institucional oscuro: se muestra el fondo claro del sitio.
+  const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : isLoading ? [] : [null];
 
   // Fundido cruzado con autoplay, pausa al tocar y swipe.
   const [activo, setActivo] = useState(0);
@@ -84,6 +85,9 @@ export function PremiumHero() {
     const id = window.setTimeout(() => setActivo((i) => (i + 1) % total), AUTOPLAY_MS);
     return () => window.clearTimeout(id);
   }, [activo, pausado, total]);
+  // Solo se cargan la imagen actual, la siguiente y las ya vistas.
+  const [cargadas, setCargadas] = useState<Set<number>>(() => new Set([0, 1]));
+  useEffect(() => { setCargadas((prev) => (prev.has(activo) && prev.has((activo + 1) % Math.max(total, 1)) ? prev : new Set([...prev, activo, (activo + 1) % Math.max(total, 1)]))); }, [activo, total]);
   const ir = (paso: number) => setActivo((i) => (i + paso + total) % total);
 
   return (
@@ -114,7 +118,7 @@ export function PremiumHero() {
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
             <div className="absolute inset-0"><div data-m-seq="media" className="absolute inset-0">
-            <FadeOrganic src={imagen} alt={titulo} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} />
+            {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
             </div>
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">

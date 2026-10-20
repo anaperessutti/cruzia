@@ -99,7 +99,7 @@ function FichaComercio() {
     <main>
       {/* Galería a sangre completa; el header flota encima y el borde inferior se disuelve en el lienzo. */}
       <section className="relative h-[62svh] min-h-[420px] max-h-[640px] w-full overflow-clip text-primary-foreground">
-        {comercio.galeria[0] ? <FadeOrganic src={comercio.galeria[0]} alt={`Foto de ${comercio.nombre}`} /> : <div className="frost-neutral frost-grain absolute inset-0 [mask-image:radial-gradient(ellipse_125%_95%_at_38%_8%,#000_40%,transparent_94%)]" />}
+        {comercio.galeria[0] ? <FadeOrganic src={comercio.galeria[0]} alt={`Foto de ${comercio.nombre}`} prioridad /> : <div className="frost-neutral frost-grain absolute inset-0 [mask-image:radial-gradient(ellipse_125%_95%_at_38%_8%,#000_40%,transparent_94%)]" />}
         <div aria-hidden="true" className="veil-radial absolute inset-0" />
         <div className="text-shadow-soft relative mx-auto flex h-full max-w-5xl flex-col justify-end px-5 pb-[46%] sm:px-6 sm:pb-[22%]">
           {exclusivo && plan ? <span className="mb-4 inline-flex w-fit items-center gap-1 rounded-full bg-card px-3 py-1 text-pill text-foreground [text-shadow:none]"><Crown className="size-3 fill-current" /> {plan.nombre}</span> : null}

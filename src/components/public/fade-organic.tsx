@@ -7,7 +7,7 @@ export function FadeOrganic({ src, alt, className, imgClassName, prioridad = fal
   const carga = prioridad ? ({ loading: "eager", fetchPriority: "high" } as const) : ({ loading: "lazy" } as const);
   return (
     <div className={cn("fade-organic", className)}>
-      <div aria-hidden="true" className="fade-organic__spill"><img src={url} alt="" decoding="async" {...carga} fetchPriority="low" /></div>
+      <div aria-hidden="true" className="fade-organic__spill"><img src={url} alt="" decoding="async" {...carga} /></div>
       <img src={url} alt={alt} decoding="async" {...carga} className={cn("fade-organic__sharp", imgClassName)} />
       <div aria-hidden="true" className="fade-organic__grain" />
     </div>
