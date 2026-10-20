@@ -319,11 +319,11 @@ html.m-js [data-m-group]:not(.m-in) > *, html.m-js [data-m]:not(.m-in) [data-m-c
 [data-m].m-in, [data-m-group].m-in > *, [data-m].m-in [data-m-child] { opacity: 1; transform: none; }
 .m-run, .m-run > *, .m-run [data-m-child], .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
 /* Sin filtro cuando se supera el tope de ~24 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
-.m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur [data-m-child], .m-noblur > * img { filter: none !important; }
-/* Imágenes de tarjetas en grilla: entran borrosas, grandes y transparentes → nítidas (transition solo mientras corre). */
-html.m-js [data-m-group]:not(.m-in) > * img { opacity: 0; transform: scale(1.05); filter: blur(var(--m-blur-img)); }
-[data-m-group].m-run > * img { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
-[data-m-group].m-in > * img { opacity: 1; transform: none; filter: none; }
+.m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur [data-m-child], .m-noblur > * img, .m-noblur [data-m-child] img { filter: none !important; }
+/* Imágenes de tarjetas (grilla y primer encuadre de carruseles): entran borrosas, grandes y transparentes → nítidas. */
+html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data-m-child] img { opacity: 0; transform: scale(1.05); filter: blur(var(--m-blur-img)); }
+[data-m-group].m-run > * img, [data-m].m-run [data-m-child] img { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
+[data-m-group].m-in > * img, [data-m].m-in [data-m-child] img { opacity: 1; transform: none; filter: none; }
 [data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
 [data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
 [data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
