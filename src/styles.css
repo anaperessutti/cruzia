@@ -326,8 +326,9 @@ html.rv-all [data-reveal], html.rv-all [data-reveal-group] > *, html.rv-all [dat
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] { transform: none; }
-  [data-reveal], [data-reveal-group] > *, [data-reveal] [data-reveal-child] { transition: opacity 150ms ease-out; transition-delay: 0ms; }
+  /* Sin movimiento ni espera: todo visible al instante, sin depender del observer. */
+  html.js [data-reveal]:not(.rv-in), html.js [data-reveal-group]:not(.rv-in) > *, html.js [data-reveal]:not(.rv-in) [data-reveal-child] { opacity: 1; transform: none; }
+  [data-reveal], [data-reveal-group] > *, [data-reveal] [data-reveal-child] { transition: none; transition-delay: 0ms; }
 }
 
 /* Sitio público: jerarquía por tamaño y color, no por mezcla de pesos. */
