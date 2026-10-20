@@ -163,7 +163,7 @@ export function PremiumHero() {
           ))}
         </div>
       ) : null}
-    </section>
+    </Secuencia>
   );
 }
 
