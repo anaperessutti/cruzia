@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+
+import { useReveal } from "./reveal";
 import { cn } from "@/lib/utils";
 
 /**
@@ -37,6 +39,7 @@ export function BurbujaFlecha({ className }: { className?: string }) {
 
 export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const seccionRef = useReveal<HTMLElement>();
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
@@ -72,7 +75,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section aria-label={titulo} className={cn("reveal relative", className)}>
+    <section ref={seccionRef as never} data-reveal aria-label={titulo} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
@@ -91,7 +94,13 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
           className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
         >
           {tarjetasVisibles.map((tarjeta, index) => (
-            <div key={index} data-carousel-card="real" className={cn("sd-card-inline shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}>
+            // Stagger solo en las tarjetas del primer encuadre; las de afuera quedan siempre visibles.
+            <div
+              key={index}
+              data-carousel-card="real"
+              {...(index < 4 ? { "data-reveal-child": true, style: { "--i": index } as React.CSSProperties } : {})}
+              className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
+            >
               {tarjeta}
             </div>
           ))}
