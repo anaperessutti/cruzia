@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
-import heroImage from "@/assets/auna-costa-hero.jpg";
+import heroImage from "@/assets/auna-costa-hero.webp";
 import { Logo } from "@/components/brand/logo";
 import { estaCerca } from "@/lib/geo";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";

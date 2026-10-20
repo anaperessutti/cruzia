@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { optimizarImagen } from "@/lib/imagen";
 import { useEffect, useRef } from "react";
 import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
@@ -129,7 +130,7 @@ function FichaComercio() {
         <section className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
           <RevealGroup className="grid gap-3 sm:grid-cols-3">
             {comercio.galeria.slice(1).map((url) => (
-              <img key={url} src={url} alt={`Foto de ${comercio.nombre}`} loading="lazy" className="aspect-[4/3] w-full rounded-[28px] object-cover shadow-warm" />
+              <img key={url} src={optimizarImagen(url)} alt={`Foto de ${comercio.nombre}`} loading="lazy" decoding="async" width={800} height={600} className="aspect-[4/3] w-full rounded-[28px] object-cover shadow-warm" />
             ))}
           </RevealGroup>
         </section>
