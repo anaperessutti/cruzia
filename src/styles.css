@@ -329,6 +329,23 @@ html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data
 [data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
 [data-m-group] > *:nth-child(7) { --i: 6; } [data-m-group] > *:nth-child(n+8) { --i: 7; }
 
+/* Individual scroll cards: never apply filter to the progressive-blur container. */
+[data-m-card] {
+  transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move);
+  transition-delay: var(--m-card-delay, 0ms);
+}
+html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 20px, 0); }
+[data-m-card].m-in { opacity: 1; transform: none; }
+img[data-m-card-image] { transition: opacity 700ms var(--m-ease-fade); }
+img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
+[data-m-card] img[data-m-card-image] {
+  transition: opacity 700ms var(--m-ease-fade), transform 700ms var(--m-ease-move), filter 700ms var(--m-ease-fade);
+  transition-delay: var(--m-card-delay, 0ms);
+}
+html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); filter: blur(8px); }
+[data-m-card].m-in img { transform: none; filter: none; }
+[data-m-card].m-card-done img { filter: none; transition-delay: 0ms; }
+
 /* Palabras: inline-block para poder moverlas sin cambiar los saltos de línea. */
 [data-m-w] {
   display: inline-block;
@@ -363,7 +380,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img {
+  [data-m-card], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }

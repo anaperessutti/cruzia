@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Adelantar aparición individual y precarga de tarjetas en Inicio, Cupones y Categorías; conservar primera fila y verificar scroll rápido a 390/1280px, imágenes lentas y movimiento reducido.
+
 - [x] Animar la presentación de Gift Box con la secuencia existente y conservar sus saltos de línea.
 - [x] Verificar el pie único compartido en páginas públicas, navegación y separación de la barra Gift Box a 360px.
 

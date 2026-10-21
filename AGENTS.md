@@ -14,3 +14,4 @@
 - Motion text components combine classes with clsx, not default tailwind-merge: custom typography utilities must coexist with text color utilities without being discarded.
 - Shared one-shot reveal containers must keep a stable React className across route/theme changes; apply theme-dependent spacing through ancestor selectors so React does not erase observer-added visibility classes.
 - SplitWords preserves explicit editorial line breaks through its optional preservarSaltos prop while retaining one continuous word-stagger index; hero presentations reuse Secuencia rather than introducing separate motion logic.
+- Public directory scroll cards use CardReveal and CardImage within the shared motion module, with separate pooled entrance/preload observers; carousel primeraFila preserves the initial sequence so card tuning cannot change hero or other reveals.
