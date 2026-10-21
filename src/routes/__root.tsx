@@ -77,7 +77,7 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
 }
 
 // Origen del backend (API + Storage de imágenes comparten host): conexión anticipada.
-const backendOrigin = new URL(import.meta.env.VITE_SUPABASE_URL).origin;
+const backendOrigin = new URL(import.meta.env["VITE_SUPABASE_URL"]).origin;
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -112,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
