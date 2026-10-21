@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
+import { memo, useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
 
 import { clsx } from "clsx";
 
@@ -12,6 +12,11 @@ import { clsx } from "clsx";
  *   data-m-seq="eyebrow|title|desc|cta|media|row" toman los retrasos del hero.
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
+
+/** Cuando un observador compartido se queda sin elementos, se desconecta (se reactiva solo al observar de nuevo). */
+function soltarSiVacio(io: IntersectionObserver, mapa: Map<Element, unknown>) {
+  if (mapa.size === 0) io.disconnect();
+}
 
 let observer: IntersectionObserver | null = null;
 const callbacks = new Map<Element, () => void>();
@@ -27,6 +32,7 @@ function getObserver() {
         observer?.unobserve(entry.target);
         cb?.();
       }
+      if (observer) soltarSiVacio(observer, callbacks);
     },
     { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
   );
@@ -70,7 +76,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
     if (!io) { el.classList.add("m-in"); return; }
     callbacks.set(el, () => activar(el));
     io.observe(el);
-    return () => { callbacks.delete(el); io.unobserve(el); };
+    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
   }, [enabled]);
   return ref;
 }
@@ -91,6 +97,7 @@ function getHeadObserver() {
       headObserver?.unobserve(entry.target);
       cb?.();
     }
+    if (headObserver) soltarSiVacio(headObserver, headCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
   return headObserver;
 }
@@ -106,7 +113,7 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primer
     const timed = primeraFila || after ? firstCollectionEntrance(el, -400, () => activar(el), after) : null;
     headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
-    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); };
+    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, headCallbacks); };
   }, [primeraFila, after]);
   return ref;
 }
@@ -116,24 +123,38 @@ function inViewport(el: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
 }
 
-/** Read the real text/button transitions, including the last staggered title word. */
-function heroTextDuration(hero: HTMLElement, includeAccessibleWords = false) {
-  const times = (value: string) => value.split(",").map((part) => {
-    const time = Number.parseFloat(part);
-    return Number.isFinite(time) ? time * (part.trim().endsWith("ms") ? 1 : 1000) : 0;
-  });
-  let end = 0;
-  for (const el of hero.querySelectorAll<HTMLElement>('[data-m-seq="eyebrow"], [data-m-w], [data-m-seq="desc"], [data-m-seq="cta"]')) {
-    // Title word spans are aria-hidden for accessibility, not visually hidden.
-    const visibilityOwner = includeAccessibleWords ? el.closest('[data-m-words]')?.parentElement ?? el : el;
-    if (visibilityOwner.closest('[aria-hidden="true"]')) continue;
-    const style = getComputedStyle(el);
-    const durations = times(style.transitionDuration);
-    const delays = times(style.transitionDelay);
-    const count = Math.max(durations.length, delays.length);
-    for (let i = 0; i < count; i += 1) end = Math.max(end, (durations[i % durations.length] ?? 0) + (delays[i % delays.length] ?? 0));
+/** Fin de la entrada calculado desde las variables de tiempo del CSS, sin medir el DOM:
+    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms (ver bloque
+    "Movimiento" en styles.css); las páginas internas adelantan todo 250 ms (--shift). */
+let tiemposCache: { dur: number; stagger: number } | null = null;
+function tiemposMovimiento() {
+  if (tiemposCache) return tiemposCache;
+  const raiz = getComputedStyle(document.documentElement);
+  tiemposCache = {
+    dur: Number.parseFloat(raiz.getPropertyValue("--m-dur")) || 1400,
+    stagger: Number.parseFloat(raiz.getPropertyValue("--m-word-stagger")) || 45,
+  };
+  return tiemposCache;
+}
+function heroTextDuration(hero: HTMLElement) {
+  const { dur, stagger } = tiemposMovimiento();
+  const shift = hero.hasAttribute("data-m-page") ? 250 : 0;
+  // Solo cuenta lo visible: los slides ocultos del hero llevan aria-hidden.
+  const visible = (selector: string) => {
+    for (const el of hero.querySelectorAll(selector)) if (!el.closest('[aria-hidden="true"]')) return true;
+    return false;
+  };
+  let palabras = 0;
+  for (const cont of hero.querySelectorAll("[data-m-words]")) {
+    if (cont.closest('[aria-hidden="true"]')) continue;
+    palabras = Math.max(palabras, cont.querySelectorAll("[data-m-w]").length);
   }
-  return end;
+  let end = 0;
+  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, 300 + dur);
+  if (palabras > 0) end = Math.max(end, 400 + (palabras - 1) * stagger + dur);
+  if (visible('[data-m-seq="desc"]')) end = Math.max(end, 800 + dur);
+  if (visible('[data-m-seq="cta"]')) end = Math.max(end, 1100 + dur);
+  return Math.max(0, end - shift);
 }
 
 /** First collection follows the hero's actual end, including late data/layout changes. */
@@ -199,13 +220,14 @@ function getCardObserver() {
     const rows = new Map<number, IntersectionObserverEntry[]>();
     for (const entry of entries.filter((item) => item.isIntersecting)) {
       // Group the same visual row, then order independently of DOM/observer order.
-      const row = Math.round((entry.target as HTMLElement).getBoundingClientRect().top / 10);
+      // boundingClientRect viene en la entrada: no fuerza lectura de layout.
+      const row = Math.round(entry.boundingClientRect.top / 10);
       const group = rows.get(row) ?? [];
       group.push(entry);
       rows.set(row, group);
     }
     for (const group of rows.values()) {
-      group.sort((a, b) => a.target.getBoundingClientRect().left - b.target.getBoundingClientRect().left);
+      group.sort((a, b) => a.boundingClientRect.left - b.boundingClientRect.left);
       group.forEach((entry, step) => {
         const cb = cardCallbacks.get(entry.target);
         cardCallbacks.delete(entry.target);
@@ -213,6 +235,7 @@ function getCardObserver() {
         cb?.(Math.min(step, 2) * 80);
       });
     }
+    if (cardObserver) soltarSiVacio(cardObserver, cardCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
   return cardObserver;
 }
@@ -249,13 +272,19 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       el.style.setProperty("--m-card-delay", `${delay}ms`);
       if (timed) timed.enter(); else reveal();
     };
+    // La lectura de layout se agrupa en un solo frame por ráfaga de scroll.
+    let rafPendiente = 0;
     const catchMissed = () => {
-      if (done || timed) return;
-      if (el.getBoundingClientRect().bottom <= 0) {
-        el.classList.add("m-card-fast");
-        el.style.setProperty("--m-card-delay", "0ms");
-        reveal();
-      }
+      if (done || timed || rafPendiente) return;
+      rafPendiente = requestAnimationFrame(() => {
+        rafPendiente = 0;
+        if (done) return;
+        if (el.getBoundingClientRect().bottom <= 0) {
+          el.classList.add("m-card-fast");
+          el.style.setProperty("--m-card-delay", "0ms");
+          reveal();
+        }
+      });
     };
     const io = getCardObserver();
     if (io) { cardCallbacks.set(el, enter); io.observe(el); }
@@ -263,7 +292,9 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
     window.addEventListener("scroll", catchMissed, { passive: true });
     return () => {
       timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
+      cancelAnimationFrame(rafPendiente);
       cardCallbacks.delete(el); io?.unobserve(el);
+      if (io) soltarSiVacio(io, cardCallbacks);
       window.clearTimeout(cleanupTimer);
       window.clearTimeout(imageTimer); removeImageListener();
     };
@@ -282,6 +313,7 @@ function getImageObserver() {
       imageCallbacks.delete(entry.target);
       imageObserver?.unobserve(entry.target);
     }
+    if (imageObserver) soltarSiVacio(imageObserver, imageCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 150% 0px" });
   return imageObserver;
 }
@@ -298,7 +330,7 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
     el.addEventListener("m-preload", preload);
     if (io) { imageCallbacks.set(el, preload); io.observe(el); }
     else preload();
-    return () => { imageCallbacks.delete(el); io?.unobserve(el); el.removeEventListener("m-preload", preload); };
+    return () => { imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); el.removeEventListener("m-preload", preload); };
   }, [src]);
   const loaded = async () => {
     try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
@@ -329,7 +361,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
       activar(el);
       if (hero || sequenceId) {
         el.dataset['mStarted'] = String(performance.now());
-        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el, Boolean(sequenceId)));
+        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
         window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
       }
     }); });
@@ -343,7 +375,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
 }
 
 /** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. Con enCabecera, lo dispara el encabezado de colección que lo contiene (variante rápida). */
-export function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
+export const SplitWords = memo(function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
   const ref = useReveal<HTMLElement>(!enSecuencia && !enCabecera);
   const palabras = text.trim().split(/\s+/);
   const saltos = new Set<number>();
@@ -365,4 +397,4 @@ export function SplitWords({ text, as: T = "span", className, enSecuencia = fals
       ))}
     </T>
   );
-}
+});

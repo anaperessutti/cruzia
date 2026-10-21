@@ -41,3 +41,5 @@
 - [ ] Isotipo como indicador de carga
 - [x] Refactorización visual completa (Inter, fondo claro, barra transparente, tarjetas con desenfoque progresivo, pie con filete)
 - [x] Sistema de animaciones de entrada estilo Linear (Reveal/RevealGroup, transición de página, stagger, reduced-motion)
+
+- [x] Limpieza de rendimiento: preconnect/dns-prefetch al backend, heroEnd calculado desde variables CSS (sin medir DOM), observers con boundingClientRect de la entrada y disconnect al vaciarse, memo en tarjetas y SplitWords, 35 archivos y 31 dependencias muertas eliminadas; verificado en Chromium a 390px sin errores.

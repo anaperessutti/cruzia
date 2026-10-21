@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as CuponesRouteImport } from './routes/cupones'
-import { Route as DemoCarruselRouteImport } from './routes/demo-carrusel'
 import { Route as GiftBoxRouteImport } from './routes/gift-box'
 import { Route as HuellaSolidariaRouteImport } from './routes/huella-solidaria'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
@@ -49,11 +48,6 @@ const ContactoRoute = ContactoRouteImport.update({
 const CuponesRoute = CuponesRouteImport.update({
   id: '/cupones',
   path: '/cupones',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoCarruselRoute = DemoCarruselRouteImport.update({
-  id: '/demo-carrusel',
-  path: '/demo-carrusel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GiftBoxRoute = GiftBoxRouteImport.update({
@@ -143,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/categorias': typeof CategoriasRoute
   '/contacto': typeof ContactoRoute
   '/cupones': typeof CuponesRoute
-  '/demo-carrusel': typeof DemoCarruselRoute
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -166,7 +159,6 @@ export interface FileRoutesByTo {
   '/categorias': typeof CategoriasRoute
   '/contacto': typeof ContactoRoute
   '/cupones': typeof CuponesRoute
-  '/demo-carrusel': typeof DemoCarruselRoute
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -190,7 +182,6 @@ export interface FileRoutesById {
   '/categorias': typeof CategoriasRoute
   '/contacto': typeof ContactoRoute
   '/cupones': typeof CuponesRoute
-  '/demo-carrusel': typeof DemoCarruselRoute
   '/gift-box': typeof GiftBoxRoute
   '/huella-solidaria': typeof HuellaSolidariaRoute
   '/privacidad': typeof PrivacidadRoute
@@ -215,7 +206,6 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/contacto'
     | '/cupones'
-    | '/demo-carrusel'
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
@@ -238,7 +228,6 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/contacto'
     | '/cupones'
-    | '/demo-carrusel'
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
@@ -261,7 +250,6 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/contacto'
     | '/cupones'
-    | '/demo-carrusel'
     | '/gift-box'
     | '/huella-solidaria'
     | '/privacidad'
@@ -285,7 +273,6 @@ export interface RootRouteChildren {
   CategoriasRoute: typeof CategoriasRoute
   ContactoRoute: typeof ContactoRoute
   CuponesRoute: typeof CuponesRoute
-  DemoCarruselRoute: typeof DemoCarruselRoute
   GiftBoxRoute: typeof GiftBoxRoute
   HuellaSolidariaRoute: typeof HuellaSolidariaRoute
   PrivacidadRoute: typeof PrivacidadRoute
@@ -332,13 +319,6 @@ declare module '@tanstack/react-router' {
       path: '/cupones'
       fullPath: '/cupones'
       preLoaderRoute: typeof CuponesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo-carrusel': {
-      id: '/demo-carrusel'
-      path: '/demo-carrusel'
-      fullPath: '/demo-carrusel'
-      preLoaderRoute: typeof DemoCarruselRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gift-box': {
@@ -461,7 +441,6 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriasRoute: CategoriasRoute,
   ContactoRoute: ContactoRoute,
   CuponesRoute: CuponesRoute,
-  DemoCarruselRoute: DemoCarruselRoute,
   GiftBoxRoute: GiftBoxRoute,
   HuellaSolidariaRoute: HuellaSolidariaRoute,
   PrivacidadRoute: PrivacidadRoute,
