@@ -332,6 +332,8 @@ html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data
 /* Palabras: inline-block para poder moverlas sin cambiar los saltos de línea. */
 [data-m-w] {
   display: inline-block;
+  line-height: inherit;
+  vertical-align: baseline;
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade);
   transition-delay: calc(var(--w, 0) * var(--m-word-stagger));
 }

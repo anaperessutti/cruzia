@@ -1,6 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
 
-import { cn } from "@/lib/utils";
+import { clsx } from "clsx";
 
 /**
  * Módulo único de movimiento de entrada (tiempos de linear.app).
@@ -106,14 +106,14 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
 }
 
 /** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. */
-export function SplitWords({ text, as: T = "span", className, enSecuencia = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean }) {
+export function SplitWords({ text, as: T = "span", className, enSecuencia = false, negrita }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; negrita?: string }) {
   const ref = useReveal<HTMLElement>(!enSecuencia);
   const palabras = text.trim().split(/\s+/);
   return (
-    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={cn(enSecuencia && "m-in", className)}>
+    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx(enSecuencia && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
-          <span data-m-w="" style={{ "--w": i } as CSSProperties}>{p}</span>
+          <span data-m-w="" className={negrita ? (p === negrita ? "font-bold" : "font-light") : undefined} style={{ "--w": i } as CSSProperties}>{p}</span>
           {i < palabras.length - 1 ? " " : null}
         </span>
       ))}

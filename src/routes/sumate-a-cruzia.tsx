@@ -84,7 +84,7 @@ function Page() {
       </PageIntro>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8">
-        <SplitWords as="h2" className="text-subtitulo text-foreground" text="Tres formas de estar en Cruzia" />
+        <SplitWords as="h2" className="text-subtitulo text-foreground" text="Tres formas de estar en Cruzia" negrita="Cruzia" />
         <RevealGroup className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch">
           {planes.map((plan, index) => {
             const { titulo, icono: Icono } = etiquetaPlan(plan);
