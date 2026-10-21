@@ -96,18 +96,18 @@ function getHeadObserver() {
 }
 
 /** Encabezado de colección: se dispara apenas toca el borde del viewport, igual que las tarjetas. */
-export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primeraFila = false) {
+export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primeraFila = false, after?: string) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || el.classList.contains("m-in")) return;
     const io = getHeadObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    const timed = primeraFila ? firstCollectionEntrance(el, -400, () => activar(el)) : null;
+    const timed = primeraFila || after ? firstCollectionEntrance(el, -400, () => activar(el), after) : null;
     headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
     return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); };
-  }, [primeraFila]);
+  }, [primeraFila, after]);
   return ref;
 }
 
@@ -117,14 +117,16 @@ function inViewport(el: HTMLElement) {
 }
 
 /** Read the real text/button transitions, including the last staggered title word. */
-function heroTextDuration(hero: HTMLElement) {
+function heroTextDuration(hero: HTMLElement, includeAccessibleWords = false) {
   const times = (value: string) => value.split(",").map((part) => {
     const time = Number.parseFloat(part);
     return Number.isFinite(time) ? time * (part.trim().endsWith("ms") ? 1 : 1000) : 0;
   });
   let end = 0;
   for (const el of hero.querySelectorAll<HTMLElement>('[data-m-seq="eyebrow"], [data-m-w], [data-m-seq="desc"], [data-m-seq="cta"]')) {
-    if (el.closest('[aria-hidden="true"]')) continue;
+    // Title word spans are aria-hidden for accessibility, not visually hidden.
+    const visibilityOwner = includeAccessibleWords ? el.closest('[data-m-words]')?.parentElement ?? el : el;
+    if (visibilityOwner.closest('[aria-hidden="true"]')) continue;
     const style = getComputedStyle(el);
     const durations = times(style.transitionDuration);
     const delays = times(style.transitionDelay);
@@ -135,13 +137,14 @@ function heroTextDuration(hero: HTMLElement) {
 }
 
 /** First collection follows the hero's actual end, including late data/layout changes. */
-function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => void) {
+function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => void, after?: string) {
   let timer = 0;
   let safetyTimer = 0;
   let scrolled = false;
   let finished = false;
   const heroEnd = () => {
-    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
+    const selector = after ? `[data-m-sequence="${CSS.escape(after)}"]` : "[data-m-hero]";
+    const hero = el.closest("main")?.querySelector<HTMLElement>(selector);
     const end = Number(hero?.dataset['mEnded']);
     return hero && Number.isFinite(end) ? end : null;
   };
@@ -175,12 +178,14 @@ function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => 
   const main = el.closest("main");
   if (main) resize?.observe(main);
   window.addEventListener("m-hero-start", recheck);
+  window.addEventListener("m-sequence-start", recheck);
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", recheck);
   measure();
   return { enter, cleanup: () => {
     window.clearTimeout(timer); window.clearTimeout(safetyTimer); resize?.disconnect();
     window.removeEventListener("m-hero-start", recheck);
+    window.removeEventListener("m-sequence-start", recheck);
     window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", recheck);
   } };
 }
@@ -212,7 +217,7 @@ function getCardObserver() {
   return cardObserver;
 }
 
-export function CardReveal({ children, className, primeraFila = false, indice = 0 }: Props & { primeraFila?: boolean; indice?: number }) {
+export function CardReveal({ children, className, primeraFila = false, indice = 0, after }: Props & { primeraFila?: boolean; indice?: number; after?: string | undefined }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -239,7 +244,7 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       } else show();
     };
     let removeImageListener = () => {};
-    const timed = primeraFila ? firstCollectionEntrance(el, -300, reveal) : null;
+    const timed = primeraFila || after ? firstCollectionEntrance(el, -300, reveal, after) : null;
     const enter = (delay: number) => {
       el.style.setProperty("--m-card-delay", `${delay}ms`);
       if (timed) timed.enter(); else reveal();
@@ -262,7 +267,7 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       window.clearTimeout(cleanupTimer);
       window.clearTimeout(imageTimer); removeImageListener();
     };
-  }, [primeraFila, indice]);
+  }, [primeraFila, indice, after]);
   return <div ref={ref} data-m-card="" className={className}>{children}</div>;
 }
 
@@ -314,7 +319,7 @@ export function RevealGroup({ children, className, as: T = "div", style }: Props
 }
 
 /** Secuencia de carga (hero de la home o encabezado de página con `pagina`, que arranca 250 ms antes). */
-export function Secuencia({ children, className, as: T = "div", style, pagina = false, hero = false, ...rest }: Props & { pagina?: boolean; hero?: boolean; "aria-label"?: string; "aria-roledescription"?: string } & Record<string, unknown>) {
+export function Secuencia({ children, className, as: T = "div", style, pagina = false, hero = false, sequenceId, ...rest }: Props & { pagina?: boolean; hero?: boolean; sequenceId?: string; "aria-label"?: string; "aria-roledescription"?: string } & Record<string, unknown>) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -322,16 +327,16 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
     let r2 = 0;
     const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => {
       activar(el);
-      if (hero) {
+      if (hero || sequenceId) {
         el.dataset['mStarted'] = String(performance.now());
-        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
-        window.dispatchEvent(new Event("m-hero-start"));
+        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el, Boolean(sequenceId)));
+        window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
       }
     }); });
     return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
-  }, [hero]);
+  }, [hero, sequenceId]);
   return (
-    <T ref={ref as never} data-m-seq-root="" {...(pagina ? { "data-m-page": "" } : {})} {...(hero ? { "data-m-hero": "" } : {})} className={className} style={style} {...rest}>
+    <T ref={ref as never} data-m-seq-root="" data-m-sequence={sequenceId} {...(pagina ? { "data-m-page": "" } : {})} {...(hero ? { "data-m-hero": "" } : {})} className={className} style={style} {...rest}>
       {children}
     </T>
   );
