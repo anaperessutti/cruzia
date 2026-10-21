@@ -3,7 +3,7 @@
 - [x] Extender el fondo a los bordes seguros del iPhone y sumar safe-area a cabecera/contenido/pie/paneles; medidas, actualización de metrics, separación Gift Box/pie e insets cero/no-cero comprobados en Chromium/WebKit sin errores. Diagnósticos conservados.
 - [ ] Confirmar ausencia de franja inferior en la app de Google del iPhone real; pendiente de revisión de Ana en su celular.
 
-- [x] Agregar diagnóstico temporal exclusivo de ?debug=colors y documentar estilos, fondo fijo, metadatos y elementos inferiores sin corregirlos; colores y etiquetas verificados a 599×734px, sin errores y estilos normales idénticos al desactivarlo.
+- [x] Eliminar todos los modos de diagnóstico temporales (?debug=colors/metrics/noblend/nograin/nogradient/nobackdrop/nofixed): componente borrado, import y montaje removidos, sin restos en el código.
 
 - [x] Secuenciar la colección de Cupones después de su título con el patrón compartido del inicio; verificado a 390/1280px con caché desactivada y CPU x4, un resultado y varios, cambios de filtros, scroll anticipado y navegación desde Inicio en Chromium/WebKit.
 
