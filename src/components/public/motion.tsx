@@ -13,6 +13,38 @@ import { clsx } from "clsx";
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
 
+/**
+ * ÚNICA fuente de verdad de los tiempos de movimiento. Las CSS vars de :root se escriben
+ * desde este objeto al iniciar la app (aplicarTiemposMovimiento) y heroEnd se calcula con
+ * estas constantes: nunca se lee el DOM ni el CSS (getComputedStyle normaliza 1400ms a "1.4s"
+ * y parseFloat devolvía 1.4, lo que adelantaba ~1,4 s la entrada de la colección siguiente).
+ */
+export const TIEMPOS = {
+  dur: 1400,
+  easeMove: "cubic-bezier(0.22, 1, 0.36, 1)",
+  easeFade: "cubic-bezier(0.4, 0, 0.2, 1)",
+  wordStagger: 45,
+  stagger: 110,
+  hero: { eyebrow: 300, title: 400, desc: 800, cta: 1100 },
+  pageShift: 250,
+} as const;
+
+let tiemposAplicados = false;
+/** Escribe las CSS vars de movimiento en :root desde TIEMPOS (los valores de styles.css quedan de respaldo). */
+export function aplicarTiemposMovimiento() {
+  if (tiemposAplicados || typeof document === "undefined") return;
+  tiemposAplicados = true;
+  const s = document.documentElement.style;
+  s.setProperty("--m-dur", `${TIEMPOS.dur}ms`);
+  s.setProperty("--m-ease-move", TIEMPOS.easeMove);
+  s.setProperty("--m-ease-fade", TIEMPOS.easeFade);
+  s.setProperty("--m-word-stagger", `${TIEMPOS.wordStagger}ms`);
+  s.setProperty("--m-stagger", `${TIEMPOS.stagger}ms`);
+}
+
+/** Fin (timestamp de performance.now()) de la secuencia inicial en curso; 0 = no hay secuencia activa. */
+let secuenciaTerminaEn = 0;
+
 /** Cuando un observador compartido se queda sin elementos, se desconecta (se reactiva solo al observar de nuevo). */
 function soltarSiVacio(io: IntersectionObserver, mapa: Map<Element, unknown>) {
   if (mapa.size === 0) io.disconnect();
