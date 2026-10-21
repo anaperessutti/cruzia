@@ -3,6 +3,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { CardReveal, SplitWords, useRevealCabecera } from "./motion";
 import { cn } from "@/lib/utils";
+import { observeStableResize } from "@/lib/stable-resize";
 
 /**
  * Carrusel horizontal reutilizable para filas del Home.
@@ -32,6 +33,7 @@ export function BurbujaFlecha({ className }: { className?: string }) {
 
 export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className, primeraFila = false }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const scrollFrame = useRef(0);
   const cabeceraRef = useRevealCabecera<HTMLDivElement>(primeraFila);
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
@@ -52,10 +54,14 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
   useEffect(() => {
     medir();
     const el = scrollerRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(medir);
-    observer.observe(el);
-    return () => observer.disconnect();
+    if (!el) return;
+    const stopResize = observeStableResize(medir, [el]);
+    const onScroll = () => {
+      if (scrollFrame.current) return;
+      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(); });
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => { stopResize(); el.removeEventListener("scroll", onScroll); cancelAnimationFrame(scrollFrame.current); scrollFrame.current = 0; };
   }, [medir, tarjetasVisibles.length]);
 
   const desplazar = (direccion: number) => {
@@ -87,7 +93,6 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
       <div className="relative mt-5">
         <div
           ref={scrollerRef}
-          onScroll={medir}
           className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
         >
           {tarjetasVisibles.map((tarjeta, index) => (

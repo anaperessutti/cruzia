@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
 
 import { clsx } from "clsx";
+import { observeStableResize } from "@/lib/stable-resize";
 
 /**
  * Módulo único de movimiento de entrada (tiempos de linear.app).
@@ -246,27 +247,28 @@ function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => 
       safetyTimer = window.setTimeout(safety, Math.max(0, end + 3000 - performance.now()));
     }
   };
-  const onScroll = () => { scrolled = true; measure(); };
+  let recheckFrame = 0;
+  const onScroll = () => { scrolled = true; recheck(); };
   // Visible content cannot remain stranded if it was measured before data/layout settled.
   const safety = () => {
     const end = heroEnd();
     if (!finished && end !== null && performance.now() >= end + 3000 && inViewport(el)) { finished = true; reveal(); }
   };
-  const recheck = () => { measure(); safety(); };
-  const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(recheck);
-  resize?.observe(el);
+  const recheck = () => {
+    if (finished || recheckFrame) return;
+    recheckFrame = requestAnimationFrame(() => { recheckFrame = 0; measure(); safety(); });
+  };
   const main = el.closest("main");
-  if (main) resize?.observe(main);
+  const cleanupResize = observeStableResize(() => { measure(); safety(); }, main ? [el, main] : [el]);
   window.addEventListener("m-hero-start", recheck);
   window.addEventListener("m-sequence-start", recheck);
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", recheck);
   measure();
   return { enter, cleanup: () => {
-    window.clearTimeout(timer); window.clearTimeout(safetyTimer); resize?.disconnect();
+    window.clearTimeout(timer); window.clearTimeout(safetyTimer); cleanupResize(); cancelAnimationFrame(recheckFrame);
     window.removeEventListener("m-hero-start", recheck);
     window.removeEventListener("m-sequence-start", recheck);
-    window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", recheck);
+    window.removeEventListener("scroll", onScroll);
   } };
 }
 
@@ -419,6 +421,8 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
     const el = ref.current;
     if (!el) return;
     let r2 = 0;
+    let decodeTimer = 0;
+    let idle: number | undefined;
     const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => {
       activar(el);
       if (hero || sequenceId) {
@@ -427,9 +431,23 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
         el.dataset['mEnded'] = String(fin);
         secuenciaTerminaEn = fin;
         window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
+        if (hero && el.classList.contains("home-premium-hero")) {
+          decodeTimer = window.setTimeout(() => {
+            const decode = () => {
+              const cards = el.closest("main")?.querySelectorAll<HTMLImageElement>('img[data-m-card-image]');
+              Array.from(cards ?? []).slice(0, 3).forEach((image) => {
+                image.dispatchEvent(new Event("m-preload"));
+                if (image.complete && image.currentSrc) void image.decode().catch(() => {});
+                else image.addEventListener("load", () => { void image.decode().catch(() => {}); }, { once: true });
+              });
+            };
+            if ("requestIdleCallback" in window) idle = window.requestIdleCallback(decode, { timeout: 1000 });
+            else decodeTimer = window.setTimeout(decode, 0);
+          }, Math.max(0, fin - performance.now()));
+        }
       }
     }); });
-    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
+    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); window.clearTimeout(decodeTimer); if (idle !== undefined) window.cancelIdleCallback(idle); };
   }, [hero, sequenceId]);
   return (
     <T ref={ref as never} data-m-seq-root="" data-m-sequence={sequenceId} {...(pagina ? { "data-m-page": "" } : {})} {...(hero ? { "data-m-hero": "" } : {})} className={className} style={style} {...rest}>
