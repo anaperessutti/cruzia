@@ -193,7 +193,7 @@ function getCardObserver() {
   cardObserver = new IntersectionObserver((entries) => {
     const rows = new Map<number, IntersectionObserverEntry[]>();
     for (const entry of entries.filter((item) => item.isIntersecting)) {
-      // offsetTop is unaffected by the entrance transform (unlike the visual top).
+      // Group the same visual row, then order independently of DOM/observer order.
       const row = Math.round((entry.target as HTMLElement).getBoundingClientRect().top / 10);
       const group = rows.get(row) ?? [];
       group.push(entry);

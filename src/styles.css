@@ -486,6 +486,7 @@ html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) button { visib
 html:has(.site-public.theme-gift), body:has(.site-public.theme-gift) { background-color: var(--canvas-gift-base); }
 .fondo-fijo {
   position: fixed; top: 0; left: 0; bottom: -120px; width: 100%; height: calc(100vh + 120px); height: calc(100lvh + 120px); z-index: -1; pointer-events: none; overflow: clip;
+  transition: none !important;
   background:
     radial-gradient(ellipse 70% 45% at 45% 22%, rgba(120,120,126,.55), transparent 70%),
     radial-gradient(ellipse 70% 50% at 0% 80%, rgba(234,176,104,.85), transparent 70%),
