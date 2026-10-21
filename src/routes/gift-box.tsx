@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/motion";
+import { Reveal, RevealGroup, Secuencia, SplitWords } from "@/components/public/motion";
 import { getDeviceId } from "@/lib/device-id";
 import {
   CATEGORIAS,
@@ -143,16 +143,14 @@ function GiftBoxPage() {
     <main className="theme-gift bg-gift text-gift-foreground">
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
-          <div>
-            <p className="text-sobretitulo font-bold text-primary-foreground">Gift Box · Regalá La Costa</p>
-            <h1 className="mt-5 text-titulo">
-              Una caja.<br />Muchas experiencias.
-            </h1>
-            <p className="mt-6 max-w-xl text-cuerpo text-primary-foreground/80">
+          <Secuencia hero>
+            <p data-m-seq="eyebrow" className="text-sobretitulo font-bold text-primary-foreground">Gift Box · Regalá La Costa</p>
+            <SplitWords as="h1" enSecuencia preservarSaltos className="mt-5 text-titulo" text={"Una caja.\nMuchas experiencias."} />
+            <p data-m-seq="desc" className="mt-6 max-w-xl text-cuerpo text-primary-foreground/80">
               Elegí momentos reales del Partido de la Costa y armá un regalo a medida: una cena, un masaje,
               una tarde de surf. Todo en una sola caja.
             </p>
-          </div>
+          </Secuencia>
           <RevealGroup as="ol" className="space-y-4">
             {PASOS.map((paso, index) => (
                <li key={paso.titulo} className="flex gap-4 glass-dark rounded-[28px] p-5">

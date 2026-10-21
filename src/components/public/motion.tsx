@@ -106,15 +106,24 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
 }
 
 /** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. */
-export function SplitWords({ text, as: T = "span", className, enSecuencia = false, negrita }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; negrita?: string }) {
+export function SplitWords({ text, as: T = "span", className, enSecuencia = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; negrita?: string; preservarSaltos?: boolean }) {
   const ref = useReveal<HTMLElement>(!enSecuencia);
   const palabras = text.trim().split(/\s+/);
+  const saltos = new Set<number>();
+  if (preservarSaltos) {
+    let indice = 0;
+    for (const linea of text.trim().split(/\n+/).slice(0, -1)) {
+      indice += linea.trim().split(/\s+/).length;
+      saltos.add(indice);
+    }
+  }
   return (
     <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx(enSecuencia && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
+          {saltos.has(i) ? <br /> : null}
           <span data-m-w="" className={negrita ? (p === negrita ? "font-bold" : "font-light") : undefined} style={{ "--w": i } as CSSProperties}>{p}</span>
-          {i < palabras.length - 1 ? " " : null}
+          {i < palabras.length - 1 && !saltos.has(i + 1) ? " " : null}
         </span>
       ))}
     </T>
