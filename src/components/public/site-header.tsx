@@ -65,7 +65,7 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-40 border-b transition-[opacity,transform,background-color,color,border-color] duration-[250ms] ease-out",
+        "site-safe-header fixed inset-x-0 top-0 z-40 border-b transition-[opacity,transform,background-color,color,border-color] duration-[250ms] ease-out",
         visibleEstado === "oculta" ? "pointer-events-none -translate-y-2 opacity-0" : "translate-y-0 opacity-100",
         visibleEstado === "barra"
           ? gift ? "border-primary-foreground/10 bg-[rgb(47_51_52/0.94)] text-primary-foreground" : "border-[rgb(31_30_30/0.08)] bg-[rgb(255_255_255/0.94)] text-foreground"
