@@ -235,6 +235,7 @@ function getCardObserver() {
         cb?.(Math.min(step, 2) * 80);
       });
     }
+    if (cardObserver) soltarSiVacio(cardObserver, cardCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
   return cardObserver;
 }
@@ -293,6 +294,7 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
       cancelAnimationFrame(rafPendiente);
       cardCallbacks.delete(el); io?.unobserve(el);
+      if (io) soltarSiVacio(io, cardCallbacks);
       window.clearTimeout(cleanupTimer);
       window.clearTimeout(imageTimer); removeImageListener();
     };
@@ -311,6 +313,7 @@ function getImageObserver() {
       imageCallbacks.delete(entry.target);
       imageObserver?.unobserve(entry.target);
     }
+    if (imageObserver) soltarSiVacio(imageObserver, imageCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 150% 0px" });
   return imageObserver;
 }
@@ -327,7 +330,7 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
     el.addEventListener("m-preload", preload);
     if (io) { imageCallbacks.set(el, preload); io.observe(el); }
     else preload();
-    return () => { imageCallbacks.delete(el); io?.unobserve(el); el.removeEventListener("m-preload", preload); };
+    return () => { imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); el.removeEventListener("m-preload", preload); };
   }, [src]);
   const loaded = async () => {
     try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
