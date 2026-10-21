@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
-import { Reveal, RevealGroup } from "@/components/public/motion";
+import { CardReveal, Reveal, RevealGroup, Secuencia, SplitWords } from "@/components/public/motion";
 import { enviarPostulacionSolidaria, fasesSolidariasOptions, type FaseSolidaria } from "@/lib/formularios";
 
 export const Route = createFileRoute("/huella-solidaria")({
@@ -86,16 +86,14 @@ function Page() {
       {/* Manifiesto */}
       <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
-          <Reveal>
-            <p className="flex items-center gap-2 text-sobretitulo font-bold text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
-            <h1 className="mt-5 max-w-3xl text-titulo text-foreground">
-              Antes que una red de beneficios, somos vecinos de La Costa.
-            </h1>
-            <p className="mt-6 max-w-2xl text-cuerpo text-foreground/80">
+          <Secuencia hero>
+            <p data-m-seq="eyebrow" className="flex items-center gap-2 text-sobretitulo font-bold text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
+            <SplitWords as="h1" enSecuencia className="mt-5 max-w-3xl text-titulo text-foreground" text="Antes que una red de beneficios, somos vecinos de La Costa." />
+            <p data-m-seq="desc" className="mt-6 max-w-2xl text-cuerpo text-foreground/80">
               Somos parte de estos barrios y queremos crecer con ellos. Por eso acompañamos iniciativas e instituciones del Partido de la Costa que cuidan, reúnen y hacen más linda la vida de nuestros vecinos. Es nuestra manera de devolver un poco de todo lo que esta comunidad nos da.
             </p>
-          </Reveal>
-          <RevealGroup className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
+          </Secuencia>
+          <RevealGroup trasHero className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
               { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
@@ -115,34 +113,40 @@ function Page() {
       {!isLoading && (actual || historial.length > 0) ? (
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           {actual ? (
-            <Reveal>
-              <h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground"><span className="font-light">Nuestro próximo </span><span className="font-bold">aporte</span></h2>
-              <div className="glass mt-8 rounded-[32px] p-6 shadow-glow-pro sm:p-8">
-                <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
-                  <Sparkles className="size-3.5" /> En marcha
-                </span>
-                <h3 className="mt-4 font-display text-2xl font-extrabold text-foreground">{actual.titulo}</h3>
-                <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> {formatearFecha(actual.fecha)}</p>
-                {actual.descripcion ? <p className="mt-4 leading-7 text-foreground/80">{actual.descripcion}</p> : null}
-                <Fotos fase={actual} />
-              </div>
-            </Reveal>
+            <>
+              <Reveal><h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground"><span className="font-light">Nuestro próximo </span><span className="font-bold">aporte</span></h2></Reveal>
+              <CardReveal className="mt-8">
+                <div className="glass rounded-[32px] p-6 shadow-glow-pro sm:p-8">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase text-secondary-foreground">
+                    <Sparkles className="size-3.5" /> En marcha
+                  </span>
+                  <h3 className="mt-4 font-display text-2xl font-extrabold text-foreground">{actual.titulo}</h3>
+                  <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Calendar className="size-4" /> {formatearFecha(actual.fecha)}</p>
+                  {actual.descripcion ? <p className="mt-4 leading-7 text-foreground/80">{actual.descripcion}</p> : null}
+                  <Fotos fase={actual} />
+                </div>
+              </CardReveal>
+            </>
           ) : null}
 
           {historial.length > 0 ? (
             <div className={actual ? "mt-14" : ""}>
               <Reveal><h2 className="font-display text-[28px] tracking-[-0.02em] text-foreground"><span className="font-light">Proyectos que </span><span className="font-bold">acompañamos</span></h2></Reveal>
-              <RevealGroup as="ol" className="relative mt-8 space-y-6 pl-8 before:absolute before:bottom-4 before:left-[7px] before:top-4 before:w-[2px] before:rounded-full before:bg-linear-to-b before:from-primary before:via-glow-amber before:to-transparent">
+              <ol className="relative mt-8 space-y-6 pl-8 before:absolute before:bottom-4 before:left-[7px] before:top-4 before:w-[2px] before:rounded-full before:bg-linear-to-b before:from-primary before:via-glow-amber before:to-transparent">
                 {historial.map((fase) => (
-                  <li key={fase.id} className="glass relative rounded-[28px] p-5 sm:p-6">
+                  <li key={fase.id} className="relative">
                     <span className="absolute -left-[31px] top-7 size-3.5 rounded-full bg-primary ring-4 ring-background" />
-                    <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
-                    <h4 className="mt-1 font-display text-xl font-bold text-foreground">{fase.titulo}</h4>
-                    {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
-                    <Fotos fase={fase} />
+                    <CardReveal>
+                      <div className="glass rounded-[28px] p-5 sm:p-6">
+                        <p className="text-xs font-bold uppercase text-muted-foreground">{formatearFecha(fase.fecha)}</p>
+                        <h4 className="mt-1 font-display text-xl font-bold text-foreground">{fase.titulo}</h4>
+                        {fase.descripcion ? <p className="mt-2 leading-7 text-muted-foreground">{fase.descripcion}</p> : null}
+                        <Fotos fase={fase} />
+                      </div>
+                    </CardReveal>
                   </li>
                 ))}
-              </RevealGroup>
+              </ol>
             </div>
           ) : null}
         </section>
@@ -151,14 +155,14 @@ function Page() {
       {/* Postulación */}
        <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[1.2fr_1fr] lg:px-8">
-          <Reveal>
-             <p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p>
-             <h2 className="mt-4 text-subtitulo text-foreground">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
-             <p className="mt-5 max-w-lg text-cuerpo text-foreground/80">
+          <div>
+            <Reveal><p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p></Reveal>
+            <SplitWords as="h2" alBorde className="mt-4 text-subtitulo text-foreground" text="¿Conocés alguna iniciativa solidaria que necesite un empujón?" />
+            <Reveal><p className="mt-5 max-w-lg text-cuerpo text-foreground/80">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
-            </p>
-          </Reveal>
-          <Reveal><form onSubmit={onSubmit} className="glass rounded-[32px] p-6 text-foreground sm:p-8">
+            </p></Reveal>
+          </div>
+          <Reveal alBorde><form onSubmit={onSubmit} className="glass rounded-[32px] p-6 text-foreground sm:p-8">
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="hs-nombre">Tu Nombre</Label>
