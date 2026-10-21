@@ -44,12 +44,12 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
         ) : <div className="frost-neutral frost-grain absolute inset-0" />}
         <div aria-hidden="true" className="pblur-shade" />
 
-        <div className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
+        <div data-m-card-content="" className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
           {insignia ?? <span />}
           {etiquetaSuperior ? <span className="rounded-full bg-ink/20 px-2.5 py-1 text-[11px] font-medium backdrop-blur-md">{etiquetaSuperior}</span> : null}
         </div>
 
-        <div className="text-shadow-soft relative z-10 p-4">
+        <div data-m-card-content="" className="text-shadow-soft relative z-10 p-4">
           <h3 className="text-[17px] font-semibold leading-tight">{titulo}</h3>
           {descripcion ? <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-primary-foreground/90">{descripcion}</p> : null}
           {pildoras.length > 0 || ubicacion ? (

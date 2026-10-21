@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { CardReveal, SplitWords, useReveal, useRevealCabecera } from "./motion";
+import { CardReveal, SplitWords, useRevealCabecera } from "./motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -32,8 +32,7 @@ export function BurbujaFlecha({ className }: { className?: string }) {
 
 export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className, primeraFila = false }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const seccionRef = useReveal<HTMLElement>();
-  const cabeceraRef = useRevealCabecera<HTMLDivElement>();
+  const cabeceraRef = useRevealCabecera<HTMLDivElement>(primeraFila);
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
@@ -73,14 +72,14 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section {...(primeraFila ? { ref: seccionRef as never, "data-m": true } : {})} aria-label={titulo} className={cn("relative", className)}>
+    <section aria-label={titulo} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
-      <div {...(primeraFila ? {} : { ref: cabeceraRef as never, "data-m-head": true })} className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div ref={cabeceraRef} data-m-head="" className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
-          {rotulo ? <span {...(primeraFila ? {} : { "data-m-head-el": "eyebrow" })} className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
-          <SplitWords enCabecera={!primeraFila} className="mt-1 block text-subtitulo text-foreground" text={titulo} />
+          {rotulo ? <span data-m-head-el="eyebrow" className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
+          <SplitWords enCabecera className="mt-1 block text-subtitulo text-foreground" text={titulo} />
         </a>
-        <a href={destinoUrl} {...(primeraFila ? {} : { "data-m-head-el": "cta" })} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
+        <a href={destinoUrl} data-m-head-el="cta" className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />
         </a>
       </div>
@@ -96,10 +95,9 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
             <div
               key={index}
               data-carousel-card="real"
-              {...(primeraFila && index < 4 ? { "data-m-child": true, style: { "--i": index } as React.CSSProperties } : {})}
               className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
             >
-              {primeraFila ? tarjeta : <CardReveal className="h-full">{tarjeta}</CardReveal>}
+              <CardReveal className="h-full" primeraFila={primeraFila} indice={index}>{tarjeta}</CardReveal>
             </div>
           ))}
 
