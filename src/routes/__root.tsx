@@ -15,7 +15,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PublicDirectoryProvider } from "@/components/public/public-directory-provider";
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
-import { ColorDebug } from "@/components/public/color-debug";
 
 function NotFoundComponent() {
   return (
@@ -142,7 +141,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ColorDebug />
       {isAdmin ? <Outlet /> : (
         <PublicDirectoryProvider>
           {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
