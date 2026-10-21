@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Animar la presentación de Gift Box con la secuencia existente y conservar sus saltos de línea.
-- [ ] Verificar el pie único compartido en páginas públicas, navegación y separación de la barra Gift Box a 360px.
+- [x] Animar la presentación de Gift Box con la secuencia existente y conservar sus saltos de línea.
+- [x] Verificar el pie único compartido en páginas públicas, navegación y separación de la barra Gift Box a 360px.
 
 - [x] Comparar y corregir tipografía y dimensiones respecto de la referencia anterior a Linear, sin alterar movimiento ni imágenes.
 
