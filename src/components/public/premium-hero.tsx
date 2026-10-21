@@ -93,7 +93,7 @@ export function PremiumHero() {
   // Mientras cargan los datos la sección queda vacía; la Secuencia se monta recién cuando
   // hay slides, así la entrada (sobretítulo → título → descripción → botón) se ve completa.
   if (slides.length === 0) {
-    return <section aria-label="Destacados de Cruzia" className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip" />;
+    return <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip" />;
   }
   return (
     <Secuencia
@@ -101,7 +101,7 @@ export function PremiumHero() {
       hero
       aria-label="Destacados de Cruzia"
       aria-roledescription="carrusel"
-      className="relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
+      className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
       onTouchStart={(e: React.TouchEvent) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
       onTouchEnd={(e: React.TouchEvent) => {
         const inicio = toqueX.current;

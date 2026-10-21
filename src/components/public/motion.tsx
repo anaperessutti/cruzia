@@ -96,18 +96,70 @@ function getHeadObserver() {
 }
 
 /** Encabezado de colección: se dispara apenas toca el borde del viewport, igual que las tarjetas. */
-export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>() {
+export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primeraFila = false) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || el.classList.contains("m-in")) return;
     const io = getHeadObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    headCallbacks.set(el, () => activar(el));
+    const timed = primeraFila ? firstCollectionEntrance(el, 1400, () => activar(el)) : null;
+    headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
-    return () => { headCallbacks.delete(el); io.unobserve(el); };
-  }, []);
+    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); };
+  }, [primeraFila]);
   return ref;
+}
+
+function inViewport(el: HTMLElement) {
+  const rect = el.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
+}
+
+/** First collection uses the hero's actual start, including late data and layout changes. */
+function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => void) {
+  let timer = 0;
+  let scrolled = false;
+  let finished = false;
+  const enter = () => {
+    if (finished || !inViewport(el)) return;
+    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
+    const start = Number(hero?.dataset['mStarted']);
+    if (!scrolled && (!Number.isFinite(start) || performance.now() < start + offset)) return;
+    finished = true;
+    reveal();
+  };
+  const measure = () => {
+    window.clearTimeout(timer);
+    enter();
+    if (finished) return;
+    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
+    const start = Number(hero?.dataset['mStarted']);
+    if (Number.isFinite(start) && performance.now() < start + offset) {
+      timer = window.setTimeout(measure, start + offset - performance.now());
+    }
+  };
+  const onScroll = () => { scrolled = true; measure(); };
+  // Visible content cannot remain stranded if it was measured before data/layout settled.
+  let safetyReady = false;
+  const safety = () => {
+    if (!finished && safetyReady && inViewport(el)) { finished = true; reveal(); }
+  };
+  const recheck = () => { measure(); safety(); };
+  const safetyTimer = window.setTimeout(() => { safetyReady = true; safety(); }, Math.max(0, 3000 - performance.now()));
+  const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(recheck);
+  resize?.observe(el);
+  const main = el.closest("main");
+  if (main) resize?.observe(main);
+  window.addEventListener("m-hero-start", recheck);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", recheck);
+  measure();
+  return { enter, cleanup: () => {
+    window.clearTimeout(timer); window.clearTimeout(safetyTimer); resize?.disconnect();
+    window.removeEventListener("m-hero-start", recheck);
+    window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", recheck);
+  } };
 }
 
 // Card-only observers: other reveals and hero sequences retain their configuration.
@@ -127,44 +179,46 @@ function getCardObserver() {
       cardObserver?.unobserve(entry.target);
       cb?.(Math.min(step, 3) * 60);
     }
-  }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
   return cardObserver;
 }
 
-export function CardReveal({ children, className }: Props) {
+export function CardReveal({ children, className, primeraFila = false, indice = 0 }: Props & { primeraFila?: boolean; indice?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || el.classList.contains("m-in")) return;
-    let timer = 0;
     let cleanupTimer = 0;
     let done = false;
     const reveal = () => {
       if (done) return;
       done = true;
-      window.clearTimeout(timer);
       el.classList.add("m-in");
       cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), 1100);
     };
+    const timed = primeraFila ? firstCollectionEntrance(el, 1500 + Math.min(indice, 3) * 90, reveal) : null;
     const enter = (delay: number) => {
-      el.style.setProperty("--m-card-delay", `${delay}ms`);
-      const image = el.querySelector<HTMLImageElement>("img[data-m-card-image]");
-      if (!image || image.dataset['ready'] === "true") { reveal(); return; }
-      image.dispatchEvent(new Event("m-preload"));
-      image.addEventListener("load", reveal, { once: true });
-      image.addEventListener("error", reveal, { once: true });
-      timer = window.setTimeout(reveal, 400);
+      el.style.setProperty("--m-card-delay", `${timed ? 0 : delay}ms`);
+      if (timed) timed.enter(); else reveal();
+    };
+    const catchMissed = () => {
+      if (done || timed) return;
+      if (el.getBoundingClientRect().bottom <= 0) {
+        el.classList.add("m-card-fast");
+        el.style.setProperty("--m-card-delay", "0ms");
+        reveal();
+      }
     };
     const io = getCardObserver();
     if (io) { cardCallbacks.set(el, enter); io.observe(el); }
     else enter(0);
+    window.addEventListener("scroll", catchMissed, { passive: true });
     return () => {
+      timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
       cardCallbacks.delete(el); io?.unobserve(el);
-      window.clearTimeout(timer); window.clearTimeout(cleanupTimer);
-      const image = el.querySelector("img[data-m-card-image]");
-      image?.removeEventListener("load", reveal); image?.removeEventListener("error", reveal);
+      window.clearTimeout(cleanupTimer);
     };
-  }, []);
+  }, [primeraFila, indice]);
   return <div ref={ref} data-m-card="" className={className}>{children}</div>;
 }
 
@@ -221,9 +275,15 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
     const el = ref.current;
     if (!el) return;
     let r2 = 0;
-    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => activar(el)); });
+    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => {
+      activar(el);
+      if (hero) {
+        el.dataset['mStarted'] = String(performance.now());
+        window.dispatchEvent(new Event("m-hero-start"));
+      }
+    }); });
     return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
-  }, []);
+  }, [hero]);
   return (
     <T ref={ref as never} data-m-seq-root="" {...(pagina ? { "data-m-page": "" } : {})} {...(hero ? { "data-m-hero": "" } : {})} className={className} style={style} {...rest}>
       {children}

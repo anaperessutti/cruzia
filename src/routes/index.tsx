@@ -38,7 +38,7 @@ function Index() {
     <Secuencia as="main" className="relative isolate overflow-clip">
       <PremiumHero />
       {/* Las filas suben sobre el hero que se disuelve: sin cortes entre ambos. */}
-      <div data-m-seq="row" className="relative z-10 -mt-16">
+      <div className="relative z-10 -mt-16">
         <HomeCarousels />
       </div>
     </Secuencia>
