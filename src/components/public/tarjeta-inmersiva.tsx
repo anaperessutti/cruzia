@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { optimizarImagen } from "@/lib/imagen";
 import { cn } from "@/lib/utils";
+import { CardImage } from "./motion";
 
 export type NivelTarjeta = "basica" | "pro" | "premium";
 
@@ -34,9 +35,10 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
       )}
     >
       <article className="relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] bg-ink text-primary-foreground">
+        <div aria-hidden="true" className="frost-neutral frost-grain absolute inset-0" />
         {imagen ? (
           <>
-            <img src={optimizarImagen(imagen)} alt={alt} loading="lazy" decoding="async" width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
+            <CardImage src={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
             <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
           </>
         ) : <div className="frost-neutral frost-grain absolute inset-0" />}

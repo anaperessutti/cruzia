@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
 
 import { clsx } from "clsx";
 
@@ -77,6 +77,100 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
 
 type Tag = "div" | "section" | "footer" | "li" | "article" | "ol" | "ul" | "main" | "header";
 type Props = { children: ReactNode; className?: string; as?: Tag; style?: CSSProperties };
+
+// Card-only observers: other reveals and hero sequences retain their configuration.
+let cardObserver: IntersectionObserver | null = null;
+const cardCallbacks = new Map<Element, (delay: number) => void>();
+function getCardObserver() {
+  if (cardObserver || typeof IntersectionObserver === "undefined") return cardObserver;
+  cardObserver = new IntersectionObserver((entries) => {
+    const entering = entries.filter((entry) => entry.isIntersecting);
+    const rows = new Map<number, number>();
+    for (const entry of entering) {
+      const row = Math.round(entry.boundingClientRect.top / 10);
+      const step = rows.get(row) ?? 0;
+      rows.set(row, step + 1);
+      const cb = cardCallbacks.get(entry.target);
+      cardCallbacks.delete(entry.target);
+      cardObserver?.unobserve(entry.target);
+      cb?.(Math.min(step, 3) * 70);
+    }
+  }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
+  return cardObserver;
+}
+
+export function CardReveal({ children, className }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.classList.contains("m-in")) return;
+    let timer = 0;
+    let cleanupTimer = 0;
+    let done = false;
+    const reveal = () => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
+      el.classList.add("m-in");
+      cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), 1100);
+    };
+    const enter = (delay: number) => {
+      el.style.setProperty("--m-card-delay", `${delay}ms`);
+      const image = el.querySelector<HTMLImageElement>("img[data-m-card-image]");
+      if (!image || image.dataset.ready === "true") { reveal(); return; }
+      image.dispatchEvent(new Event("m-preload"));
+      image.addEventListener("load", reveal, { once: true });
+      image.addEventListener("error", reveal, { once: true });
+      timer = window.setTimeout(reveal, 400);
+    };
+    const io = getCardObserver();
+    if (io) { cardCallbacks.set(el, enter); io.observe(el); }
+    else enter(0);
+    return () => {
+      cardCallbacks.delete(el); io?.unobserve(el);
+      window.clearTimeout(timer); window.clearTimeout(cleanupTimer);
+      const image = el.querySelector("img[data-m-card-image]");
+      image?.removeEventListener("load", reveal); image?.removeEventListener("error", reveal);
+    };
+  }, []);
+  return <div ref={ref} data-m-card="" className={className}>{children}</div>;
+}
+
+let imageObserver: IntersectionObserver | null = null;
+const imageCallbacks = new Map<Element, () => void>();
+function getImageObserver() {
+  if (imageObserver || typeof IntersectionObserver === "undefined") return imageObserver;
+  imageObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      imageCallbacks.get(entry.target)?.();
+      imageCallbacks.delete(entry.target);
+      imageObserver?.unobserve(entry.target);
+    }
+  }, { threshold: 0, rootMargin: "0px 0px 150% 0px" });
+  return imageObserver;
+}
+
+export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+  const ref = useRef<HTMLImageElement>(null);
+  const [requested, setRequested] = useState(false);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const preload = () => setRequested(true);
+    const io = getImageObserver();
+    el.addEventListener("m-preload", preload);
+    if (io) { imageCallbacks.set(el, preload); io.observe(el); }
+    else preload();
+    return () => { imageCallbacks.delete(el); io?.unobserve(el); el.removeEventListener("m-preload", preload); };
+  }, [src]);
+  const loaded = async () => {
+    try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
+    setReady(true);
+  };
+  return <img {...props} ref={ref} src={requested ? src : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} />;
+}
 
 export function Reveal({ children, className, as: T = "div", style }: Props) {
   const ref = useReveal<HTMLDivElement>();

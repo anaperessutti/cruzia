@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { SplitWords, useReveal } from "./motion";
+import { CardReveal, SplitWords, useReveal } from "./motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,13 +23,14 @@ interface CarruselSeccionProps {
   /** Se mantiene por compatibilidad. */
   imagenes?: (string | null)[];
   className?: string;
+  primeraFila?: boolean;
 }
 
 export function BurbujaFlecha({ className }: { className?: string }) {
   return <span className={cn("grid size-8 place-items-center rounded-full bg-foreground text-background transition-transform duration-300 group-hover:translate-x-1", className)}><ArrowRight className="size-4" /></span>;
 }
 
-export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className }: CarruselSeccionProps) {
+export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className, primeraFila = false }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const seccionRef = useReveal<HTMLElement>();
   const [puedeAtras, setPuedeAtras] = useState(false);
@@ -42,6 +43,10 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     const max = el.scrollWidth - el.clientWidth;
     setPuedeAtras(el.scrollLeft > 4);
     setPuedeAdelante(el.scrollLeft < max - 4);
+    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-card="real"]'));
+    const right = el.getBoundingClientRect().right;
+    const lastVisible = cards.findLastIndex((card) => card.getBoundingClientRect().left < right);
+    cards.slice(0, lastVisible + 4).forEach((card) => card.querySelector("img[data-m-card-image]")?.dispatchEvent(new Event("m-preload")));
   }, []);
 
   useEffect(() => {
@@ -67,9 +72,9 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section ref={seccionRef as never} data-m aria-label={titulo} className={cn("relative", className)}>
+    <section {...(primeraFila ? { ref: seccionRef as never, "data-m": true } : {})} aria-label={titulo} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
-      <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div {...(!primeraFila ? { ref: seccionRef as never, "data-m": true } : {})} className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
           {rotulo ? <span className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
           <SplitWords className="mt-1 block text-subtitulo text-foreground" text={titulo} />
@@ -90,10 +95,10 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
             <div
               key={index}
               data-carousel-card="real"
-              {...(index < 4 ? { "data-m-child": true, style: { "--i": index } as React.CSSProperties } : {})}
+              {...(primeraFila && index < 4 ? { "data-m-child": true, style: { "--i": index } as React.CSSProperties } : {})}
               className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
             >
-              {tarjeta}
+              {primeraFila ? tarjeta : <CardReveal className="h-full">{tarjeta}</CardReveal>}
             </div>
           ))}
 
