@@ -75,12 +75,12 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
   return (
     <section {...(primeraFila ? { ref: seccionRef as never, "data-m": true } : {})} aria-label={titulo} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
-      <div {...(!primeraFila ? { ref: seccionRef as never, "data-m": true } : {})} className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div {...(primeraFila ? {} : { ref: cabeceraRef as never, "data-m-head": true })} className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
-          {rotulo ? <span className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
-          <SplitWords className="mt-1 block text-subtitulo text-foreground" text={titulo} />
+          {rotulo ? <span {...(primeraFila ? {} : { "data-m-head-el": "eyebrow" })} className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
+          <SplitWords enCabecera={!primeraFila} className="mt-1 block text-subtitulo text-foreground" text={titulo} />
         </a>
-        <a href={destinoUrl} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
+        <a href={destinoUrl} {...(primeraFila ? {} : { "data-m-head-el": "cta" })} className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />
         </a>
       </div>
