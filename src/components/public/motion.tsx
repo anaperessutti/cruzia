@@ -217,7 +217,7 @@ function getCardObserver() {
   return cardObserver;
 }
 
-export function CardReveal({ children, className, primeraFila = false, indice = 0, after }: Props & { primeraFila?: boolean; indice?: number; after?: string }) {
+export function CardReveal({ children, className, primeraFila = false, indice = 0, after }: Props & { primeraFila?: boolean; indice?: number; after?: string | undefined }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
