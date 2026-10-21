@@ -88,8 +88,8 @@ export function ColorDebug() {
       for (const [el, label] of labels) {
         const rect = el.getBoundingClientRect();
         const name = label.dataset["colorDebugLabel"] ?? "";
-        label.style.top = `${Math.max(0, rect.top)}px`;
-        label.style.left = `${4 + names.indexOf(name) * 76}px`;
+        label.style.top = `${Math.max(0, rect.top) + names.indexOf(name) * 16}px`;
+        label.style.left = "4px";
         label.hidden = rect.bottom <= 0 || rect.top >= window.innerHeight;
       }
     };
@@ -99,9 +99,9 @@ export function ColorDebug() {
     document.head.appendChild(style);
     scan();
     const observer = new MutationObserver((records) => {
-      if (records.some((record) => record.type === "attributes" ||
+      if (records.some((record) => !(record.target instanceof HTMLElement && record.target.hasAttribute("data-color-debug-label")) && (record.type === "attributes" ||
         [...record.addedNodes, ...record.removedNodes].some((node) =>
-          !(node instanceof HTMLElement && node.hasAttribute("data-color-debug-label"))))) schedule();
+          !(node instanceof HTMLElement && node.hasAttribute("data-color-debug-label")))))) schedule();
     });
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style"] });
     window.addEventListener("scroll", positionLabels, { passive: true });
