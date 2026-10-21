@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PublicDirectoryProvider } from "@/components/public/public-directory-provider";
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
+import { aplicarTiemposMovimiento } from "@/components/public/motion";
 
 function NotFoundComponent() {
   return (
@@ -78,6 +79,9 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
 
 // Origen del backend (API + Storage de imágenes comparten host): conexión anticipada.
 const backendOrigin = new URL(import.meta.env["VITE_SUPABASE_URL"]).origin;
+
+// Las CSS vars de movimiento se escriben en :root desde TIEMPOS (única fuente de verdad).
+aplicarTiemposMovimiento();
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({

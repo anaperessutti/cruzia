@@ -13,6 +13,38 @@ import { clsx } from "clsx";
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
 
+/**
+ * ÚNICA fuente de verdad de los tiempos de movimiento. Las CSS vars de :root se escriben
+ * desde este objeto al iniciar la app (aplicarTiemposMovimiento) y heroEnd se calcula con
+ * estas constantes: nunca se lee el DOM ni el CSS (getComputedStyle normaliza 1400ms a "1.4s"
+ * y parseFloat devolvía 1.4, lo que adelantaba ~1,4 s la entrada de la colección siguiente).
+ */
+export const TIEMPOS = {
+  dur: 1400,
+  easeMove: "cubic-bezier(0.22, 1, 0.36, 1)",
+  easeFade: "cubic-bezier(0.4, 0, 0.2, 1)",
+  wordStagger: 45,
+  stagger: 110,
+  hero: { eyebrow: 300, title: 400, desc: 800, cta: 1100 },
+  pageShift: 250,
+} as const;
+
+let tiemposAplicados = false;
+/** Escribe las CSS vars de movimiento en :root desde TIEMPOS (los valores de styles.css quedan de respaldo). */
+export function aplicarTiemposMovimiento() {
+  if (tiemposAplicados || typeof document === "undefined") return;
+  tiemposAplicados = true;
+  const s = document.documentElement.style;
+  s.setProperty("--m-dur", `${TIEMPOS.dur}ms`);
+  s.setProperty("--m-ease-move", TIEMPOS.easeMove);
+  s.setProperty("--m-ease-fade", TIEMPOS.easeFade);
+  s.setProperty("--m-word-stagger", `${TIEMPOS.wordStagger}ms`);
+  s.setProperty("--m-stagger", `${TIEMPOS.stagger}ms`);
+}
+
+/** Fin (timestamp de performance.now()) de la secuencia inicial en curso; 0 = no hay secuencia activa. */
+let secuenciaTerminaEn = 0;
+
 /** Cuando un observador compartido se queda sin elementos, se desconecta (se reactiva solo al observar de nuevo). */
 function soltarSiVacio(io: IntersectionObserver, mapa: Map<Element, unknown>) {
   if (mapa.size === 0) io.disconnect();
@@ -67,17 +99,19 @@ function activar(el: HTMLElement) {
   timer = window.setTimeout(fin, 4800);
 }
 
-export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true) {
+export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true, trasHero = false) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!enabled || !el || el.classList.contains("m-in")) return;
     const io = getObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    callbacks.set(el, () => activar(el));
+    // trasHero: el bloque espera al fin de la secuencia del hero (heroEnd − 400 ms); si se scrollea antes, entra por observer.
+    const timed = trasHero ? firstCollectionEntrance(el, -400, () => activar(el)) : null;
+    callbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
-    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
-  }, [enabled]);
+    return () => { timed?.cleanup(); callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
+  }, [enabled, trasHero]);
   return ref;
 }
 
@@ -123,22 +157,12 @@ function inViewport(el: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
 }
 
-/** Fin de la entrada calculado desde las variables de tiempo del CSS, sin medir el DOM:
-    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms (ver bloque
-    "Movimiento" en styles.css); las páginas internas adelantan todo 250 ms (--shift). */
-let tiemposCache: { dur: number; stagger: number } | null = null;
-function tiemposMovimiento() {
-  if (tiemposCache) return tiemposCache;
-  const raiz = getComputedStyle(document.documentElement);
-  tiemposCache = {
-    dur: Number.parseFloat(raiz.getPropertyValue("--m-dur")) || 1400,
-    stagger: Number.parseFloat(raiz.getPropertyValue("--m-word-stagger")) || 45,
-  };
-  return tiemposCache;
-}
+/** Fin de la entrada calculado desde TIEMPOS (constantes TS), sin leer el DOM ni el CSS:
+    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms;
+    las páginas internas adelantan todo 250 ms (--shift). */
 function heroTextDuration(hero: HTMLElement) {
-  const { dur, stagger } = tiemposMovimiento();
-  const shift = hero.hasAttribute("data-m-page") ? 250 : 0;
+  const { dur, wordStagger, hero: demoras, pageShift } = TIEMPOS;
+  const shift = hero.hasAttribute("data-m-page") ? pageShift : 0;
   // Solo cuenta lo visible: los slides ocultos del hero llevan aria-hidden.
   const visible = (selector: string) => {
     for (const el of hero.querySelectorAll(selector)) if (!el.closest('[aria-hidden="true"]')) return true;
@@ -150,11 +174,13 @@ function heroTextDuration(hero: HTMLElement) {
     palabras = Math.max(palabras, cont.querySelectorAll("[data-m-w]").length);
   }
   let end = 0;
-  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, 300 + dur);
-  if (palabras > 0) end = Math.max(end, 400 + (palabras - 1) * stagger + dur);
-  if (visible('[data-m-seq="desc"]')) end = Math.max(end, 800 + dur);
-  if (visible('[data-m-seq="cta"]')) end = Math.max(end, 1100 + dur);
-  return Math.max(0, end - shift);
+  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, demoras.eyebrow + dur);
+  if (palabras > 0) end = Math.max(end, demoras.title + (palabras - 1) * wordStagger + dur);
+  if (visible('[data-m-seq="desc"]')) end = Math.max(end, demoras.desc + dur);
+  if (visible('[data-m-seq="cta"]')) end = Math.max(end, demoras.cta + dur);
+  const total = Math.max(0, end - shift);
+  // Red de seguridad: un fin menor a 1 s es siempre un cálculo roto; el hero dura ~2,5 s.
+  return total < 1000 ? 2500 : total;
 }
 
 /** First collection follows the hero's actual end, including late data/layout changes. */
@@ -273,12 +299,14 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       if (timed) timed.enter(); else reveal();
     };
     // La lectura de layout se agrupa en un solo frame por ráfaga de scroll.
+    // Solo corre DESPUÉS de terminada la secuencia inicial: nunca revela tarjetas durante la carga.
     let rafPendiente = 0;
     const catchMissed = () => {
       if (done || timed || rafPendiente) return;
       rafPendiente = requestAnimationFrame(() => {
         rafPendiente = 0;
         if (done) return;
+        if (performance.now() < secuenciaTerminaEn) return;
         if (el.getBoundingClientRect().bottom <= 0) {
           el.classList.add("m-card-fast");
           el.style.setProperty("--m-card-delay", "0ms");
@@ -345,8 +373,8 @@ export function Reveal({ children, className, as: T = "div", style }: Props) {
   return <T ref={ref as never} data-m className={className} style={style}>{children}</T>;
 }
 
-export function RevealGroup({ children, className, as: T = "div", style }: Props) {
-  const ref = useReveal<HTMLDivElement>();
+export function RevealGroup({ children, className, as: T = "div", style, trasHero = false }: Props & { trasHero?: boolean }) {
+  const ref = useReveal<HTMLDivElement>(true, trasHero);
   return <T ref={ref as never} data-m-group className={className} style={style}>{children}</T>;
 }
 
@@ -361,7 +389,9 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
       activar(el);
       if (hero || sequenceId) {
         el.dataset['mStarted'] = String(performance.now());
-        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
+        const fin = performance.now() + heroTextDuration(el);
+        el.dataset['mEnded'] = String(fin);
+        secuenciaTerminaEn = fin;
         window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
       }
     }); });

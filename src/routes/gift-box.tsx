@@ -151,7 +151,7 @@ function GiftBoxPage() {
               una tarde de surf. Todo en una sola caja.
             </p>
           </Secuencia>
-          <RevealGroup as="ol" className="space-y-4">
+          <RevealGroup as="ol" trasHero className="space-y-4">
             {PASOS.map((paso, index) => (
                <li key={paso.titulo} className="flex gap-4 glass-dark rounded-[28px] p-5">
                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-primary-foreground">
