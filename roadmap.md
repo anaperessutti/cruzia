@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Secuenciar la colección de Cupones después de su título con el patrón compartido del inicio; verificar recarga, filtros y resultados únicos/múltiples.
+
 - [x] Ajustar escalonado horizontal, entrada de la primera colección desde el final real del hero y cobertura continua del fondo móvil; verificado en Chromium/WebKit a 390px (844/932px de alto), escritorio, caché desactivada/CPU x4, imágenes lentas y movimiento reducido; Gift Box probada sin habilitarla al público.
 
 - [x] Corregir entrada temporal de la primera colección y entrada visible de tarjetas en celular; verificado en Chromium/WebKit con touch, carga tardía, scroll rápido, movimiento reducido y alturas móviles.
