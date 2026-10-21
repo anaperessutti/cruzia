@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Ajustar escalonado horizontal, entrada de la primera colección desde el final real del hero y cobertura continua del fondo móvil; conservar diseño y verificar con carga lenta.
+
 - [x] Corregir entrada temporal de la primera colección y entrada visible de tarjetas en celular; verificado en Chromium/WebKit con touch, carga tardía, scroll rápido, movimiento reducido y alturas móviles.
 - [x] Encabezados de colección con animación propia sincronizada con las tarjetas y tamaño de tarjeta uniforme en todas las colecciones salvo Favoritos.
 - [x] Adelantar aparición individual y precarga de tarjetas en Inicio, Cupones y Categorías; conservar primera fila y verificar scroll rápido a 390/1280px, imágenes lentas y movimiento reducido.
