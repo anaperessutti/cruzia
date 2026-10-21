@@ -548,7 +548,7 @@ body:has(.site-public) .site-safe-panel { padding-bottom: calc(1.5rem + var(--sa
 }
 .site-public { min-height: 100vh; min-height: 100svh; }
 /* Only the sharp photograph moves, never its mask, grain or blurred spill. */
-.home-premium-hero [data-m-seq="media"] { transition: none; }
+.home-premium-hero [data-m-seq="media"] { transition: none; will-change: auto; }
 html.m-js .home-premium-hero[data-m-seq-root]:not(.m-in) [data-m-seq="media"] { transform: none; }
 .slider-static-mask { overflow: clip; }
 .slider-entry-zoom { position: absolute; inset: 0; transition: transform 1500ms var(--m-ease-move) 200ms; transform: none; }
