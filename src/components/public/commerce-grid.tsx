@@ -17,6 +17,7 @@ export function CommerceGrid({ title = "Para disfrutar La Costa", after }: { tit
       return () => cancelAnimationFrame(frame);
     }
     if (initialFilters.current !== filterKey) setFiltersChanged(true);
+    return undefined;
   }, [filterKey, isLoading]);
   const entranceAfter = filtersChanged ? undefined : after;
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
