@@ -125,7 +125,7 @@ export function PremiumHero() {
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
             <div className="absolute inset-0"><div data-m-seq="media" className="absolute inset-0">
-            {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
+            {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} zoomInterno imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
             </div>
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
