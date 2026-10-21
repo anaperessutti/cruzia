@@ -76,6 +76,9 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
   );
 }
 
+// Origen del backend (API + Storage de imágenes comparten host): conexión anticipada.
+const backendOrigin = new URL(import.meta.env.VITE_SUPABASE_URL).origin;
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -87,6 +90,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "preconnect", href: backendOrigin, crossOrigin: "anonymous" },
+      { rel: "dns-prefetch", href: backendOrigin },
       {
         rel: "stylesheet",
         href: appCss,
