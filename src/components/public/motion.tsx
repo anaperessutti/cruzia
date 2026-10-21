@@ -155,22 +155,12 @@ function inViewport(el: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
 }
 
-/** Fin de la entrada calculado desde las variables de tiempo del CSS, sin medir el DOM:
-    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms (ver bloque
-    "Movimiento" en styles.css); las páginas internas adelantan todo 250 ms (--shift). */
-let tiemposCache: { dur: number; stagger: number } | null = null;
-function tiemposMovimiento() {
-  if (tiemposCache) return tiemposCache;
-  const raiz = getComputedStyle(document.documentElement);
-  tiemposCache = {
-    dur: Number.parseFloat(raiz.getPropertyValue("--m-dur")) || 1400,
-    stagger: Number.parseFloat(raiz.getPropertyValue("--m-word-stagger")) || 45,
-  };
-  return tiemposCache;
-}
+/** Fin de la entrada calculado desde TIEMPOS (constantes TS), sin leer el DOM ni el CSS:
+    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms;
+    las páginas internas adelantan todo 250 ms (--shift). */
 function heroTextDuration(hero: HTMLElement) {
-  const { dur, stagger } = tiemposMovimiento();
-  const shift = hero.hasAttribute("data-m-page") ? 250 : 0;
+  const { dur, wordStagger, hero: demoras, pageShift } = TIEMPOS;
+  const shift = hero.hasAttribute("data-m-page") ? pageShift : 0;
   // Solo cuenta lo visible: los slides ocultos del hero llevan aria-hidden.
   const visible = (selector: string) => {
     for (const el of hero.querySelectorAll(selector)) if (!el.closest('[aria-hidden="true"]')) return true;
