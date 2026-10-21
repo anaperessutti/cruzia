@@ -32,6 +32,7 @@ function getObserver() {
         observer?.unobserve(entry.target);
         cb?.();
       }
+      if (observer) soltarSiVacio(observer, callbacks);
     },
     { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
   );
@@ -75,7 +76,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
     if (!io) { el.classList.add("m-in"); return; }
     callbacks.set(el, () => activar(el));
     io.observe(el);
-    return () => { callbacks.delete(el); io.unobserve(el); };
+    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
   }, [enabled]);
   return ref;
 }
@@ -96,6 +97,7 @@ function getHeadObserver() {
       headObserver?.unobserve(entry.target);
       cb?.();
     }
+    if (headObserver) soltarSiVacio(headObserver, headCallbacks);
   }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
   return headObserver;
 }
@@ -111,7 +113,7 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primer
     const timed = primeraFila || after ? firstCollectionEntrance(el, -400, () => activar(el), after) : null;
     headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
-    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); };
+    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, headCallbacks); };
   }, [primeraFila, after]);
   return ref;
 }
