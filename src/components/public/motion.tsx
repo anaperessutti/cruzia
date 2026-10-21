@@ -13,6 +13,11 @@ import { clsx } from "clsx";
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
 
+/** Cuando un observador compartido se queda sin elementos, se desconecta (se reactiva solo al observar de nuevo). */
+function soltarSiVacio(io: IntersectionObserver, mapa: Map<Element, unknown>) {
+  if (mapa.size === 0) io.disconnect();
+}
+
 let observer: IntersectionObserver | null = null;
 const callbacks = new Map<Element, () => void>();
 
@@ -284,6 +289,7 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
     window.addEventListener("scroll", catchMissed, { passive: true });
     return () => {
       timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
+      cancelAnimationFrame(rafPendiente);
       cardCallbacks.delete(el); io?.unobserve(el);
       window.clearTimeout(cleanupTimer);
       window.clearTimeout(imageTimer); removeImageListener();
