@@ -359,6 +359,17 @@ html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(
 [data-m-words].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 [data-m-seq-root].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 
+/* Encabezados de colección: variante rápida (800 ms), disparada apenas tocan el viewport.
+   El título arranca junto con la primera tarjeta de su fila (retraso 0, 30 ms entre palabras). */
+[data-m-head] [data-m-words] [data-m-w] { transition-duration: 800ms; transition-delay: calc(var(--w, 0) * 30ms); }
+html.m-js [data-m-head]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(8px); }
+[data-m-head].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
+[data-m-head-el="eyebrow"] { transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move), filter 800ms var(--m-ease-fade); }
+[data-m-head-el="cta"] { transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move); transition-delay: 80ms; }
+html.m-js [data-m-head]:not(.m-in) [data-m-head-el="eyebrow"] { opacity: 0; transform: translate3d(0, 8px, 0); filter: blur(6px); }
+html.m-js [data-m-head]:not(.m-in) [data-m-head-el="cta"] { opacity: 0; transform: translate3d(0, 8px, 0); }
+[data-m-head].m-in [data-m-head-el] { opacity: 1; transform: none; filter: none; }
+
 /* Secuencia de carga. --shift: 250ms en páginas internas. */
 [data-m-seq-root] { --shift: 0ms; }
 [data-m-seq-root][data-m-page] { --shift: 250ms; }
@@ -380,7 +391,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  [data-m-card], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img {
+  [data-m-card], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img, [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }

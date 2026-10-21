@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Encabezados de colección con animación propia sincronizada con las tarjetas y tamaño de tarjeta uniforme en todas las colecciones salvo Favoritos.
 - [x] Adelantar aparición individual y precarga de tarjetas en Inicio, Cupones y Categorías; conservar primera fila y verificar scroll rápido a 390/1280px, imágenes lentas y movimiento reducido.
 
 - [x] Animar la presentación de Gift Box con la secuencia existente y conservar sus saltos de línea.

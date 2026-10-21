@@ -78,6 +78,38 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
 type Tag = "div" | "section" | "footer" | "li" | "article" | "ol" | "ul" | "main" | "header";
 type Props = { children: ReactNode; className?: string; as?: Tag; style?: CSSProperties };
 
+// Encabezados de colección: observador propio (threshold 0, margen inferior 6%), una sola vez.
+let headObserver: IntersectionObserver | null = null;
+const headCallbacks = new Map<Element, () => void>();
+function getHeadObserver() {
+  if (headObserver || typeof IntersectionObserver === "undefined") return headObserver;
+  headObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const cb = headCallbacks.get(entry.target);
+      headCallbacks.delete(entry.target);
+      headObserver?.unobserve(entry.target);
+      cb?.();
+    }
+  }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
+  return headObserver;
+}
+
+/** Encabezado de colección: se dispara apenas toca el borde del viewport, igual que las tarjetas. */
+export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.classList.contains("m-in")) return;
+    const io = getHeadObserver();
+    if (!io) { el.classList.add("m-in"); return; }
+    headCallbacks.set(el, () => activar(el));
+    io.observe(el);
+    return () => { headCallbacks.delete(el); io.unobserve(el); };
+  }, []);
+  return ref;
+}
+
 // Card-only observers: other reveals and hero sequences retain their configuration.
 let cardObserver: IntersectionObserver | null = null;
 const cardCallbacks = new Map<Element, (delay: number) => void>();
@@ -93,7 +125,7 @@ function getCardObserver() {
       const cb = cardCallbacks.get(entry.target);
       cardCallbacks.delete(entry.target);
       cardObserver?.unobserve(entry.target);
-      cb?.(Math.min(step, 3) * 70);
+      cb?.(Math.min(step, 3) * 60);
     }
   }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
   return cardObserver;
@@ -199,9 +231,9 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
   );
 }
 
-/** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. */
-export function SplitWords({ text, as: T = "span", className, enSecuencia = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; negrita?: string; preservarSaltos?: boolean }) {
-  const ref = useReveal<HTMLElement>(!enSecuencia);
+/** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. Con enCabecera, lo dispara el encabezado de colección que lo contiene (variante rápida). */
+export function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
+  const ref = useReveal<HTMLElement>(!enSecuencia && !enCabecera);
   const palabras = text.trim().split(/\s+/);
   const saltos = new Set<number>();
   if (preservarSaltos) {
@@ -212,7 +244,7 @@ export function SplitWords({ text, as: T = "span", className, enSecuencia = fals
     }
   }
   return (
-    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx(enSecuencia && "m-in", className)}>
+    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
           {saltos.has(i) ? <br /> : null}
