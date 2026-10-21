@@ -103,7 +103,7 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primer
     if (!el || el.classList.contains("m-in")) return;
     const io = getHeadObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    const timed = primeraFila ? firstCollectionEntrance(el, 1400, () => activar(el)) : null;
+    const timed = primeraFila ? firstCollectionEntrance(el, -400, () => activar(el)) : null;
     headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
     return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); };
@@ -116,37 +116,60 @@ function inViewport(el: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
 }
 
-/** First collection uses the hero's actual start, including late data and layout changes. */
+/** Read the real text/button transitions, including the last staggered title word. */
+function heroTextDuration(hero: HTMLElement) {
+  const times = (value: string) => value.split(",").map((part) => {
+    const time = Number.parseFloat(part);
+    return Number.isFinite(time) ? time * (part.trim().endsWith("ms") ? 1 : 1000) : 0;
+  });
+  let end = 0;
+  for (const el of hero.querySelectorAll<HTMLElement>('[data-m-seq="eyebrow"], [data-m-w], [data-m-seq="desc"], [data-m-seq="cta"]')) {
+    if (el.closest('[aria-hidden="true"]')) continue;
+    const style = getComputedStyle(el);
+    const durations = times(style.transitionDuration);
+    const delays = times(style.transitionDelay);
+    const count = Math.max(durations.length, delays.length);
+    for (let i = 0; i < count; i += 1) end = Math.max(end, (durations[i % durations.length] ?? 0) + (delays[i % delays.length] ?? 0));
+  }
+  return end;
+}
+
+/** First collection follows the hero's actual end, including late data/layout changes. */
 function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => void) {
   let timer = 0;
+  let safetyTimer = 0;
   let scrolled = false;
   let finished = false;
+  const heroEnd = () => {
+    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
+    const end = Number(hero?.dataset['mEnded']);
+    return hero && Number.isFinite(end) ? end : null;
+  };
   const enter = () => {
     if (finished || !inViewport(el)) return;
-    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
-    const start = Number(hero?.dataset['mStarted']);
-    if (!scrolled && (!Number.isFinite(start) || performance.now() < start + offset)) return;
+    const end = heroEnd();
+    if (!scrolled && (end === null || performance.now() < end + offset)) return;
     finished = true;
     reveal();
   };
   const measure = () => {
     window.clearTimeout(timer);
+    window.clearTimeout(safetyTimer);
     enter();
     if (finished) return;
-    const hero = el.closest("main")?.querySelector<HTMLElement>("[data-m-hero]");
-    const start = Number(hero?.dataset['mStarted']);
-    if (Number.isFinite(start) && performance.now() < start + offset) {
-      timer = window.setTimeout(measure, start + offset - performance.now());
+    const end = heroEnd();
+    if (end !== null) {
+      if (performance.now() < end + offset) timer = window.setTimeout(measure, end + offset - performance.now());
+      safetyTimer = window.setTimeout(safety, Math.max(0, end + 3000 - performance.now()));
     }
   };
   const onScroll = () => { scrolled = true; measure(); };
   // Visible content cannot remain stranded if it was measured before data/layout settled.
-  let safetyReady = false;
   const safety = () => {
-    if (!finished && safetyReady && inViewport(el)) { finished = true; reveal(); }
+    const end = heroEnd();
+    if (!finished && end !== null && performance.now() >= end + 3000 && inViewport(el)) { finished = true; reveal(); }
   };
   const recheck = () => { measure(); safety(); };
-  const safetyTimer = window.setTimeout(() => { safetyReady = true; safety(); }, Math.max(0, 3000 - performance.now()));
   const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(recheck);
   resize?.observe(el);
   const main = el.closest("main");
@@ -168,16 +191,22 @@ const cardCallbacks = new Map<Element, (delay: number) => void>();
 function getCardObserver() {
   if (cardObserver || typeof IntersectionObserver === "undefined") return cardObserver;
   cardObserver = new IntersectionObserver((entries) => {
-    const entering = entries.filter((entry) => entry.isIntersecting);
-    const rows = new Map<number, number>();
-    for (const entry of entering) {
-      const row = Math.round(entry.boundingClientRect.top / 10);
-      const step = rows.get(row) ?? 0;
-      rows.set(row, step + 1);
-      const cb = cardCallbacks.get(entry.target);
-      cardCallbacks.delete(entry.target);
-      cardObserver?.unobserve(entry.target);
-      cb?.(Math.min(step, 3) * 60);
+    const rows = new Map<number, IntersectionObserverEntry[]>();
+    for (const entry of entries.filter((item) => item.isIntersecting)) {
+      // Group the same visual row, then order independently of DOM/observer order.
+      const row = Math.round((entry.target as HTMLElement).getBoundingClientRect().top / 10);
+      const group = rows.get(row) ?? [];
+      group.push(entry);
+      rows.set(row, group);
+    }
+    for (const group of rows.values()) {
+      group.sort((a, b) => a.target.getBoundingClientRect().left - b.target.getBoundingClientRect().left);
+      group.forEach((entry, step) => {
+        const cb = cardCallbacks.get(entry.target);
+        cardCallbacks.delete(entry.target);
+        cardObserver?.unobserve(entry.target);
+        cb?.(Math.min(step, 2) * 80);
+      });
     }
   }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
   return cardObserver;
@@ -191,16 +220,28 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
     // WebKit must not composite backdrop-filter underneath an opacity-animated ancestor.
     if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg/.test(navigator.userAgent)) el.classList.add("m-card-webkit");
     let cleanupTimer = 0;
+    let imageTimer = 0;
     let done = false;
     const reveal = () => {
       if (done) return;
       done = true;
-      el.classList.add("m-in");
-      cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), 1100);
+      const show = () => {
+        window.clearTimeout(imageTimer);
+        el.removeEventListener("m-image-ready", show);
+        el.classList.add("m-in");
+        cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), 1100);
+      };
+      const image = el.querySelector<HTMLImageElement>("img[data-m-card-image]");
+      if (image && image.dataset['ready'] !== "true" && !el.classList.contains("m-card-fast")) {
+        el.addEventListener("m-image-ready", show, { once: true });
+        imageTimer = window.setTimeout(show, 400);
+        removeImageListener = () => el.removeEventListener("m-image-ready", show);
+      } else show();
     };
-    const timed = primeraFila ? firstCollectionEntrance(el, 1500 + Math.min(indice, 3) * 90, reveal) : null;
+    let removeImageListener = () => {};
+    const timed = primeraFila ? firstCollectionEntrance(el, -300, reveal) : null;
     const enter = (delay: number) => {
-      el.style.setProperty("--m-card-delay", `${timed ? 0 : delay}ms`);
+      el.style.setProperty("--m-card-delay", `${delay}ms`);
       if (timed) timed.enter(); else reveal();
     };
     const catchMissed = () => {
@@ -219,6 +260,7 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
       cardCallbacks.delete(el); io?.unobserve(el);
       window.clearTimeout(cleanupTimer);
+      window.clearTimeout(imageTimer); removeImageListener();
     };
   }, [primeraFila, indice]);
   return <div ref={ref} data-m-card="" className={className}>{children}</div>;
@@ -256,6 +298,7 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
   const loaded = async () => {
     try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
     setReady(true);
+    requestAnimationFrame(() => ref.current?.dispatchEvent(new Event("m-image-ready", { bubbles: true })));
   };
   return <img {...props} ref={ref} src={requested ? src : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} />;
 }
@@ -281,6 +324,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
       activar(el);
       if (hero) {
         el.dataset['mStarted'] = String(performance.now());
+        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
         window.dispatchEvent(new Event("m-hero-start"));
       }
     }); });

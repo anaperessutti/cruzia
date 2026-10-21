@@ -128,7 +128,7 @@ export function HomeCarousels() {
   );
 
   if (isLoading) {
-    return <div className="mx-auto max-w-7xl space-y-4 px-4 py-12 sm:px-6 lg:px-8"><div className="glass h-8 w-56 animate-pulse rounded-full" /><div className="flex gap-3 overflow-hidden">{[0, 1, 2, 3].map((i) => <div key={i} className="glass aspect-[4/5] w-[72%] shrink-0 animate-pulse rounded-[32px] sm:w-[44%] lg:w-[23%]" />)}</div></div>;
+    return <div aria-hidden="true" className="invisible mx-auto max-w-7xl space-y-4 px-4 py-12 sm:px-6 lg:px-8"><div className="h-8 w-56" /><div className="flex gap-3 overflow-hidden">{[0, 1, 2, 3].map((i) => <div key={i} className="aspect-[4/5] w-[72%] shrink-0 sm:w-[44%] lg:w-[23%]" />)}</div></div>;
   }
 
   return (

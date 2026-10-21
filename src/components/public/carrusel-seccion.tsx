@@ -72,7 +72,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
 
   return (
-    <section aria-label={titulo} className={cn("relative", className)}>
+    <section aria-label={titulo} data-m-first-collection={primeraFila || undefined} className={cn("relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
       <div ref={cabeceraRef} data-m-head="" className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
@@ -102,10 +102,12 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
           ))}
 
           <div data-carousel-card="ver-todo" className={cn("shrink-0 snap-start", ancho)}>
+            <CardReveal className="h-full" primeraFila={primeraFila}>
             <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="frost frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1">
               <span className="relative text-xl font-semibold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
               <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
             </a>
+            </CardReveal>
           </div>
         </div>
 
