@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "author", content: "Cruzia" },
       { property: "og:site_name", content: "Cruzia · www.cruzia.ar" },
       { property: "og:type", content: "website" },
@@ -149,7 +149,7 @@ function RootComponent() {
           <div className={`site-public ${isGift ? "theme-gift" : ""} relative isolate flex min-h-screen flex-col overflow-x-clip`}>
             <div aria-hidden="true" className={`fondo-fijo ${isGift ? "fondo-gift" : ""}`}><div className="halo-gray absolute -left-40 top-[15%] size-[44rem]" /></div>
             <SiteHeader />
-            <PageTransition className={isHome ? "flex-1" : conFiltros ? "flex-1 pt-32 min-[480px]:pt-20" : "flex-1 pt-20"}><Outlet /></PageTransition>
+            <PageTransition className={isHome ? "site-safe-page flex-1" : conFiltros ? "site-safe-page site-safe-page-filters flex-1" : "site-safe-page site-safe-page-default flex-1"}><Outlet /></PageTransition>
             <SiteFooter />
           </div>
         </PublicDirectoryProvider>

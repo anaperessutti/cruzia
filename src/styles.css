@@ -88,8 +88,12 @@
 
 :root {
   --radius: 1.25rem;
-  --canvas-base: #E9E5E2;
+  --canvas-base: #EEEAE6;
   --canvas-gift-base: #3A3C3E;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
   --background: #ECE9E6;
   --foreground: #1F1E1E;
   --card: hsl(0 0% 100%);
@@ -484,8 +488,18 @@ html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) button { visib
 /* Fondo único fijo (sin background-attachment). */
 .site-public, .site-public.theme-gift { background: none !important; }
 html:has(.site-public.theme-gift), body:has(.site-public.theme-gift) { background-color: var(--canvas-gift-base); }
+/* Insets add only the device's safe area; zero preserves existing spacing. */
+.site-safe-header { padding-top: var(--safe-area-top); padding-left: var(--safe-area-left); padding-right: var(--safe-area-right); }
+.site-safe-page { padding-top: calc(var(--page-top, 0px) + var(--safe-area-top)); padding-left: var(--safe-area-left); padding-right: var(--safe-area-right); }
+.site-safe-page-default { --page-top: 5rem; }
+.site-safe-page-filters { --page-top: 8rem; }
+@media (min-width: 480px) { .site-safe-page-filters { --page-top: 5rem; } }
+.site-safe-footer { padding-bottom: var(--safe-area-bottom); padding-left: var(--safe-area-left); padding-right: var(--safe-area-right); }
+body:has(.site-public) .site-safe-panel { padding-bottom: calc(1.5rem + var(--safe-area-bottom)); }
+.menu-panel { padding-top: calc(1.5rem + var(--safe-area-top)); padding-left: calc(1.5rem + var(--safe-area-left)); padding-right: calc(1.5rem + var(--safe-area-right)); }
+.menu-panel > button { top: calc(1rem + var(--safe-area-top)); right: calc(1rem + var(--safe-area-right)); z-index: 20; }
 .fondo-fijo {
-  position: fixed; top: 0; left: 0; bottom: -120px; width: 100%; height: calc(100vh + 120px); height: calc(100lvh + 120px); z-index: -1; pointer-events: none; overflow: clip;
+  position: fixed; top: 0; left: 0; right: 0; bottom: -120px; z-index: -1; pointer-events: none; overflow: clip;
   transition: none !important;
   background:
     radial-gradient(ellipse 70% 45% at 45% 22%, rgba(120,120,126,.55), transparent 70%),
