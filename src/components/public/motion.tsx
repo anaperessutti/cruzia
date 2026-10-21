@@ -264,13 +264,19 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       el.style.setProperty("--m-card-delay", `${delay}ms`);
       if (timed) timed.enter(); else reveal();
     };
+    // La lectura de layout se agrupa en un solo frame por ráfaga de scroll.
+    let rafPendiente = 0;
     const catchMissed = () => {
-      if (done || timed) return;
-      if (el.getBoundingClientRect().bottom <= 0) {
-        el.classList.add("m-card-fast");
-        el.style.setProperty("--m-card-delay", "0ms");
-        reveal();
-      }
+      if (done || timed || rafPendiente) return;
+      rafPendiente = requestAnimationFrame(() => {
+        rafPendiente = 0;
+        if (done) return;
+        if (el.getBoundingClientRect().bottom <= 0) {
+          el.classList.add("m-card-fast");
+          el.style.setProperty("--m-card-delay", "0ms");
+          reveal();
+        }
+      });
     };
     const io = getCardObserver();
     if (io) { cardCallbacks.set(el, enter); io.observe(el); }
@@ -344,7 +350,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
       activar(el);
       if (hero || sequenceId) {
         el.dataset['mStarted'] = String(performance.now());
-        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el, Boolean(sequenceId)));
+        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
         window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
       }
     }); });
