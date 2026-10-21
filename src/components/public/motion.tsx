@@ -99,17 +99,19 @@ function activar(el: HTMLElement) {
   timer = window.setTimeout(fin, 4800);
 }
 
-export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true) {
+export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true, trasHero = false) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!enabled || !el || el.classList.contains("m-in")) return;
     const io = getObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    callbacks.set(el, () => activar(el));
+    // trasHero: el bloque espera al fin de la secuencia del hero (heroEnd − 400 ms); si se scrollea antes, entra por observer.
+    const timed = trasHero ? firstCollectionEntrance(el, -400, () => activar(el)) : null;
+    callbacks.set(el, () => timed ? timed.enter() : activar(el));
     io.observe(el);
-    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
-  }, [enabled]);
+    return () => { timed?.cleanup(); callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
+  }, [enabled, trasHero]);
   return ref;
 }
 
@@ -371,8 +373,8 @@ export function Reveal({ children, className, as: T = "div", style }: Props) {
   return <T ref={ref as never} data-m className={className} style={style}>{children}</T>;
 }
 
-export function RevealGroup({ children, className, as: T = "div", style }: Props) {
-  const ref = useReveal<HTMLDivElement>();
+export function RevealGroup({ children, className, as: T = "div", style, trasHero = false }: Props & { trasHero?: boolean }) {
+  const ref = useReveal<HTMLDivElement>(true, trasHero);
   return <T ref={ref as never} data-m-group className={className} style={style}>{children}</T>;
 }
 
