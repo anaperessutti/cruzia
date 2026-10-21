@@ -151,7 +151,6 @@ export function HomeCarousels() {
           primeraFila={favoritos.length === 0 && index === 0}
           titulo={coleccion.nombre}
           rotulo="Colección"
-          anchas={anchasDe(tarjetas)}
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
           tarjetas={tarjetas.map(renderTarjeta)}
           imagenes={imagenesDe(tarjetas)}
