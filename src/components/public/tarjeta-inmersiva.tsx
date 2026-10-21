@@ -30,18 +30,18 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
     <Link
       {...link}
       className={cn(
-        "group block h-full rounded-[28px] shadow-card transition-transform duration-500 ease-out hover:-translate-y-1 active:-translate-y-1",
+        "immersive-card-link group block h-full rounded-[28px] shadow-card transition-transform duration-500 ease-out hover:-translate-y-1 active:-translate-y-1",
         className,
       )}
     >
-      <article className="relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] bg-ink text-primary-foreground">
+      <article className="immersive-card relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] text-primary-foreground">
         <div aria-hidden="true" className="frost-neutral frost-grain absolute inset-0" />
         {imagen ? (
           <>
             <CardImage src={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
             <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
           </>
-        ) : <div className="frost-neutral frost-grain absolute inset-0" />}
+        ) : null}
         <div aria-hidden="true" className="pblur-shade" />
 
         <div data-m-card-content="" className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">

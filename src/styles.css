@@ -88,6 +88,8 @@
 
 :root {
   --radius: 1.25rem;
+  --canvas-base: #E9E5E2;
+  --canvas-gift-base: #3A3C3E;
   --background: #ECE9E6;
   --foreground: #1F1E1E;
   --card: hsl(0 0% 100%);
@@ -173,8 +175,9 @@
 
 @layer base {
   * { border-color: var(--color-border); }
+  html { background-color: var(--canvas-base); }
   body {
-    background-color: var(--color-background);
+    background-color: var(--canvas-base);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-size: 15px;
@@ -335,6 +338,8 @@ html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data
   transition-delay: var(--m-card-delay, 0ms);
 }
 html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 20px, 0); }
+html.m-js :is([data-m-card], [data-m-head]):not(.m-in) { visibility: hidden; }
+[data-m-card].m-in, [data-m-head].m-in { visibility: visible; }
 [data-m-card].m-in { opacity: 1; transform: none; }
 img[data-m-card-image] { transition: opacity 700ms var(--m-ease-fade); }
 img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
@@ -346,9 +351,9 @@ html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); filter: blur(8p
 [data-m-card].m-in img { transform: none; filter: none; }
 [data-m-card].m-card-done img { filter: none; transition-delay: 0ms; }
 @media (max-width: 767px) {
-  [data-m-card] { transition-duration: 900ms; transition-delay: 0ms; }
+  [data-m-card] { transition-duration: 900ms; }
   html.m-js [data-m-card]:not(.m-in) { transform: translate3d(0, 24px, 0); }
-  [data-m-card] img[data-m-card-image] { transition-duration: 900ms; transition-delay: 0ms; }
+  [data-m-card] img[data-m-card-image] { transition-duration: 900ms; }
 }
 [data-m-card].m-card-fast, [data-m-card].m-card-fast img[data-m-card-image] {
   transition: opacity 250ms var(--m-ease-fade); transition-delay: 0ms; transform: none; filter: none;
@@ -358,7 +363,7 @@ html.m-js [data-m-card].m-card-webkit { opacity: 1; }
 [data-m-card].m-card-webkit [data-m-card-content] { transition: opacity 800ms var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
 html.m-js [data-m-card].m-card-webkit:not(.m-in) :is(img[data-m-card-image], [data-m-card-content]) { opacity: 0; }
 [data-m-card].m-card-webkit.m-in [data-m-card-content] { opacity: 1; }
-@media (max-width: 767px) { [data-m-card].m-card-webkit [data-m-card-content] { transition-duration: 900ms; transition-delay: 0ms; } }
+@media (max-width: 767px) { [data-m-card].m-card-webkit [data-m-card-content] { transition-duration: 900ms; } }
 [data-m-card].m-card-fast [data-m-card-content] { transition: opacity 250ms var(--m-ease-fade); }
 /* Only shorten the small-screen hero when the first collection would fall below the fold. */
 @media (max-width: 430px) {
@@ -453,6 +458,18 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 .frost-grain::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: .08;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .frost-neutral { background-color: rgb(255 255 255 / 0.20); }
+/* Never show a dark base/shade before the photograph. Blur layers keep opacity untouched. */
+.immersive-card { background-color: transparent; }
+.immersive-card .frost-neutral { transition: opacity 700ms var(--m-ease-fade); }
+.immersive-card:has(img[data-ready="true"]) > .frost-neutral { opacity: 0; }
+.immersive-card .pblur-shade { opacity: 0; transition: opacity 700ms var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
+.immersive-card:has(img[data-ready="true"]) .pblur-shade { opacity: 1; }
+.immersive-card:not(:has(img[data-ready="true"])) .pblur { visibility: hidden; }
+.immersive-card-link:not(:has(img[data-ready="true"])) { box-shadow: none; }
+html.m-js [data-m-card]:not(.m-in) .pblur-shade { opacity: 0; }
+html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) > [aria-hidden],
+html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) button { visibility: hidden; }
+@media (max-width: 767px) { .immersive-card .pblur-shade { transition-duration: 900ms; } }
 /* Barra inferior de Gift Box: carbón translúcido como la tarjeta "Combiná tu pack". */
 .barra-gift { position: relative; background-color: rgb(28 28 29 / 0.82); backdrop-filter: blur(20px); border-top: 1px solid rgb(255 255 255 / 0.10); border-radius: 0; }
 .barra-gift::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .05;
@@ -466,8 +483,9 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 /* Fondo único fijo (sin background-attachment). */
 .site-public, .site-public.theme-gift { background: none !important; }
+html:has(.site-public.theme-gift), body:has(.site-public.theme-gift) { background-color: var(--canvas-gift-base); }
 .fondo-fijo {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: clip;
+  position: fixed; top: 0; left: 0; bottom: -120px; width: 100%; height: calc(100vh + 120px); height: calc(100lvh + 120px); z-index: -1; pointer-events: none; overflow: clip;
   background:
     radial-gradient(ellipse 70% 45% at 45% 22%, rgba(120,120,126,.55), transparent 70%),
     radial-gradient(ellipse 70% 50% at 0% 80%, rgba(234,176,104,.85), transparent 70%),
