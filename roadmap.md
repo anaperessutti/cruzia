@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Comparar y corregir tipografía y dimensiones respecto de la referencia anterior a Linear, sin alterar movimiento ni imágenes.
+
 - [x] Ajustes puntuales: logotipo con filtros, sobretítulo del slider, halo y etiqueta Pro, nombres Gift Box; verificar 360/390/768/1280.
 
 - [x] Crear sistema visual y marco público global sin afectar `/admin/*`
