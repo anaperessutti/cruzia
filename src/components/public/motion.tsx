@@ -188,6 +188,8 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
   useEffect(() => {
     const el = ref.current;
     if (!el || el.classList.contains("m-in")) return;
+    // WebKit must not composite backdrop-filter underneath an opacity-animated ancestor.
+    if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg/.test(navigator.userAgent)) el.classList.add("m-card-webkit");
     let cleanupTimer = 0;
     let done = false;
     const reveal = () => {

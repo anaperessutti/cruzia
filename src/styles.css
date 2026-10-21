@@ -353,6 +353,13 @@ html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); filter: blur(8p
 [data-m-card].m-card-fast, [data-m-card].m-card-fast img[data-m-card-image] {
   transition: opacity 250ms var(--m-ease-fade); transition-delay: 0ms; transform: none; filter: none;
 }
+/* Safari keeps the progressive-blur layers in an opaque compositing context. */
+html.m-js [data-m-card].m-card-webkit { opacity: 1; }
+[data-m-card].m-card-webkit [data-m-card-content] { transition: opacity 800ms var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
+html.m-js [data-m-card].m-card-webkit:not(.m-in) :is(img[data-m-card-image], [data-m-card-content]) { opacity: 0; }
+[data-m-card].m-card-webkit.m-in [data-m-card-content] { opacity: 1; }
+@media (max-width: 767px) { [data-m-card].m-card-webkit [data-m-card-content] { transition-duration: 900ms; transition-delay: 0ms; } }
+[data-m-card].m-card-fast [data-m-card-content] { transition: opacity 250ms var(--m-ease-fade); }
 /* Only shorten the small-screen hero when the first collection would fall below the fold. */
 @media (max-width: 430px) {
   .home-premium-hero { height: min(86svh, calc(100svh - 170px)); min-height: min(540px, calc(100svh - 170px)); }
@@ -403,7 +410,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  [data-m-card], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img, [data-m-head-el] {
+  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img, [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }
