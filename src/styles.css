@@ -361,7 +361,7 @@ html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(
 
 /* Encabezados de colección: variante rápida (800 ms), disparada apenas tocan el viewport.
    El título arranca junto con la primera tarjeta de su fila (retraso 0, 30 ms entre palabras). */
-[data-m-head] [data-m-w] { transition-duration: 800ms; transition-delay: calc(var(--w, 0) * 30ms); }
+[data-m-head] [data-m-words] [data-m-w] { transition-duration: 800ms; transition-delay: calc(var(--w, 0) * 30ms); }
 html.m-js [data-m-head]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(8px); }
 [data-m-head].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 [data-m-head-el="eyebrow"] { transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move), filter 800ms var(--m-ease-fade); }
