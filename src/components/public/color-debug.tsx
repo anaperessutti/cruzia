@@ -1,12 +1,28 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
 
-/** Temporary, URL-only diagnostic. Does not alter layout or normal-mode styles. */
+/** Temporary, URL-only diagnostics. Does not alter normal-mode styles. */
 export function ColorDebug() {
   const href = useRouterState({ select: (state) => state.location.href });
 
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("debug") !== "colors") return;
+    const mode = new URLSearchParams(window.location.search).get("debug");
+    const independentStyles: Record<string, string> = {
+      noblend: `.fondo-fijo::after { mix-blend-mode: normal !important; }`,
+      nograin: `.fondo-fijo::after { display: none !important; }`,
+      nogradient: `.fondo-fijo { background: #D9D5D2 !important; }`,
+      nobackdrop: `*, *::before, *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }`,
+      nofixed: `.site-public > .fondo-fijo { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; }`,
+    };
+    const independentStyle = mode ? independentStyles[mode] : undefined;
+    if (independentStyle) {
+      const style = document.createElement("style");
+      style.dataset["colorDebugStyle"] = "";
+      style.textContent = independentStyle;
+      document.head.appendChild(style);
+      return () => style.remove();
+    }
+    if (mode !== "colors") return;
 
     const style = document.createElement("style");
     style.dataset["colorDebugStyle"] = "";
