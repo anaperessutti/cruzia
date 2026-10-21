@@ -155,14 +155,14 @@ function Page() {
       {/* Postulación */}
        <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-[1.2fr_1fr] lg:px-8">
-          <Reveal>
-             <p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p>
-             <h2 className="mt-4 text-subtitulo text-foreground">¿Conocés alguna iniciativa solidaria que necesite un empujón?</h2>
-             <p className="mt-5 max-w-lg text-cuerpo text-foreground/80">
+          <div>
+            <Reveal><p className="text-sobretitulo font-bold text-secondary">Postulá una causa</p></Reveal>
+            <SplitWords as="h2" alBorde className="mt-4 text-subtitulo text-foreground" text="¿Conocés alguna iniciativa solidaria que necesite un empujón?" />
+            <Reveal><p className="mt-5 max-w-lg text-cuerpo text-foreground/80">
               El Partido de la Costa es grande y queremos llegar a todos lados. Proponela acá.
-            </p>
-          </Reveal>
-          <Reveal><form onSubmit={onSubmit} className="glass rounded-[32px] p-6 text-foreground sm:p-8">
+            </p></Reveal>
+          </div>
+          <Reveal alBorde><form onSubmit={onSubmit} className="glass rounded-[32px] p-6 text-foreground sm:p-8">
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="hs-nombre">Tu Nombre</Label>
