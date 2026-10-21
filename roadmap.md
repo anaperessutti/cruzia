@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Animar la presentación de Gift Box con la secuencia existente y conservar sus saltos de línea.
+- [x] Verificar el pie único compartido en páginas públicas, navegación y separación de la barra Gift Box a 360px.
+
 - [x] Comparar y corregir tipografía y dimensiones respecto de la referencia anterior a Linear, sin alterar movimiento ni imágenes.
 
 - [x] Ajustes puntuales: logotipo con filtros, sobretítulo del slider, halo y etiqueta Pro, nombres Gift Box; verificar 360/390/768/1280.
