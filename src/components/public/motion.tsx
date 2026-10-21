@@ -244,7 +244,7 @@ export function SplitWords({ text, as: T = "span", className, enSecuencia = fals
     }
   }
   return (
-    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx(enSecuencia && "m-in", className)}>
+    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
           {saltos.has(i) ? <br /> : null}
