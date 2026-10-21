@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Corregir entrada temporal de la primera colección y entrada visible de tarjetas en celular; comprobar carga tardía, scroll rápido y alturas móviles.
+- [x] Corregir entrada temporal de la primera colección y entrada visible de tarjetas en celular; verificado en Chromium/WebKit con touch, carga tardía, scroll rápido, movimiento reducido y alturas móviles.
 - [x] Encabezados de colección con animación propia sincronizada con las tarjetas y tamaño de tarjeta uniforme en todas las colecciones salvo Favoritos.
 - [x] Adelantar aparición individual y precarga de tarjetas en Inicio, Cupones y Categorías; conservar primera fila y verificar scroll rápido a 390/1280px, imágenes lentas y movimiento reducido.
 
