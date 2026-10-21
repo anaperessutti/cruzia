@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { CardReveal, SplitWords, useReveal } from "./motion";
+import { CardReveal, SplitWords, useReveal, useRevealCabecera } from "./motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,6 +33,7 @@ export function BurbujaFlecha({ className }: { className?: string }) {
 export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className, primeraFila = false }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const seccionRef = useReveal<HTMLElement>();
+  const cabeceraRef = useRevealCabecera<HTMLDivElement>();
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
