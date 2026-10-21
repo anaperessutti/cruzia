@@ -78,6 +78,38 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
 type Tag = "div" | "section" | "footer" | "li" | "article" | "ol" | "ul" | "main" | "header";
 type Props = { children: ReactNode; className?: string; as?: Tag; style?: CSSProperties };
 
+// Encabezados de colección: observador propio (threshold 0, margen inferior 6%), una sola vez.
+let headObserver: IntersectionObserver | null = null;
+const headCallbacks = new Map<Element, () => void>();
+function getHeadObserver() {
+  if (headObserver || typeof IntersectionObserver === "undefined") return headObserver;
+  headObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const cb = headCallbacks.get(entry.target);
+      headCallbacks.delete(entry.target);
+      headObserver?.unobserve(entry.target);
+      cb?.();
+    }
+  }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
+  return headObserver;
+}
+
+/** Encabezado de colección: se dispara apenas toca el borde del viewport, igual que las tarjetas. */
+export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.classList.contains("m-in")) return;
+    const io = getHeadObserver();
+    if (!io) { el.classList.add("m-in"); return; }
+    headCallbacks.set(el, () => activar(el));
+    io.observe(el);
+    return () => { headCallbacks.delete(el); io.unobserve(el); };
+  }, []);
+  return ref;
+}
+
 // Card-only observers: other reveals and hero sequences retain their configuration.
 let cardObserver: IntersectionObserver | null = null;
 const cardCallbacks = new Map<Element, (delay: number) => void>();
@@ -93,7 +125,7 @@ function getCardObserver() {
       const cb = cardCallbacks.get(entry.target);
       cardCallbacks.delete(entry.target);
       cardObserver?.unobserve(entry.target);
-      cb?.(Math.min(step, 3) * 70);
+      cb?.(Math.min(step, 3) * 60);
     }
   }, { threshold: 0, rootMargin: "0px 0px 6% 0px" });
   return cardObserver;
