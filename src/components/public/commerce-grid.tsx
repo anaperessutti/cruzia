@@ -11,8 +11,12 @@ export function CommerceGrid({ title = "Para disfrutar La Costa", after }: { tit
   const filterKey = JSON.stringify(filters);
   useEffect(() => {
     if (isLoading) return;
-    if (initialFilters.current === null) initialFilters.current = filterKey;
-    else if (initialFilters.current !== filterKey) setFiltersChanged(true);
+    if (initialFilters.current === null) {
+      // Let the route's initial filter setup settle, including cached navigation.
+      const frame = requestAnimationFrame(() => { initialFilters.current = filterKey; });
+      return () => cancelAnimationFrame(frame);
+    }
+    if (initialFilters.current !== filterKey) setFiltersChanged(true);
   }, [filterKey, isLoading]);
   const entranceAfter = filtersChanged ? undefined : after;
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
@@ -21,7 +25,7 @@ export function CommerceGrid({ title = "Para disfrutar La Costa", after }: { tit
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div ref={cabeceraRef} data-m-head="" className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p data-m-head-el="eyebrow" className="text-sobretitulo font-bold text-secondary">Elegidos para vos</p><SplitWords as="h2" enCabecera className="mt-2 text-subtitulo text-foreground" text={title} /></div><span data-m-head-el="cta" className="shrink-0 text-sm text-muted-foreground">{tarjetas.length} lugares</span></div>
+      <div ref={cabeceraRef} data-m-head="" className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p data-m-head-el="eyebrow" className="text-sobretitulo font-bold text-secondary">Elegidos para vos</p><SplitWords as="h2" enCabecera className="mt-2 text-subtitulo text-foreground" text={title} /></div><span data-m-head-el="cta" className="shrink-0 text-sm text-muted-foreground">{tarjetas.length} {tarjetas.length === 1 ? "lugar" : "lugares"}</span></div>
       {isLoading ? <div aria-hidden={Boolean(after)} className={after ? "invisible grid gap-5 sm:grid-cols-2 lg:grid-cols-3" : "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"}>{[0, 1, 2].map((item) => <div key={item} className={after ? "h-80 rounded-md" : "h-80 animate-pulse rounded-md bg-muted"} />)}</div> : null}
       {!isLoading && tarjetas.length === 0 ? <CardReveal after={entranceAfter}><div className="border-y border-border py-16 text-center"><p className="font-display text-2xl font-bold text-foreground">Todavía no hay resultados para esta combinación.</p><p className="mt-2 text-sm text-muted-foreground">Probá sumando otra localidad o cambiando la categoría.</p></div></CardReveal> : null}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
