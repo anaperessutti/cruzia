@@ -453,7 +453,7 @@ export const SplitWords = memo(function SplitWords({ text, as: T = "span", class
     }
   }
   return (
-    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
+    <T ref={alBorde ? refBorde : ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
           {saltos.has(i) ? <br /> : null}
