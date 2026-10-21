@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Agregar diagnóstico temporal exclusivo de ?debug=colors y documentar estilos, fondo fijo, metadatos y elementos inferiores sin corregirlos; colores y etiquetas verificados a 599×734px, sin errores y estilos normales idénticos al desactivarlo.
+
 - [x] Secuenciar la colección de Cupones después de su título con el patrón compartido del inicio; verificado a 390/1280px con caché desactivada y CPU x4, un resultado y varios, cambios de filtros, scroll anticipado y navegación desde Inicio en Chromium/WebKit.
 
 - [x] Ajustar escalonado horizontal, entrada de la primera colección desde el final real del hero y cobertura continua del fondo móvil; verificado en Chromium/WebKit a 390px (844/932px de alto), escritorio, caché desactivada/CPU x4, imágenes lentas y movimiento reducido; Gift Box probada sin habilitarla al público.
