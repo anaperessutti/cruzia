@@ -297,12 +297,14 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
       if (timed) timed.enter(); else reveal();
     };
     // La lectura de layout se agrupa en un solo frame por ráfaga de scroll.
+    // Solo corre DESPUÉS de terminada la secuencia inicial: nunca revela tarjetas durante la carga.
     let rafPendiente = 0;
     const catchMissed = () => {
       if (done || timed || rafPendiente) return;
       rafPendiente = requestAnimationFrame(() => {
         rafPendiente = 0;
         if (done) return;
+        if (performance.now() < secuenciaTerminaEn) return;
         if (el.getBoundingClientRect().bottom <= 0) {
           el.classList.add("m-card-fast");
           el.style.setProperty("--m-card-delay", "0ms");
@@ -385,7 +387,9 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
       activar(el);
       if (hero || sequenceId) {
         el.dataset['mStarted'] = String(performance.now());
-        el.dataset['mEnded'] = String(performance.now() + heroTextDuration(el));
+        const fin = performance.now() + heroTextDuration(el);
+        el.dataset['mEnded'] = String(fin);
+        secuenciaTerminaEn = fin;
         window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
       }
     }); });
