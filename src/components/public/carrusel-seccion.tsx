@@ -45,7 +45,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     setPuedeAdelante(el.scrollLeft < max - 4);
     const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-card="real"]'));
     const right = el.getBoundingClientRect().right;
-    const lastVisible = cards.findLastIndex((card) => card.getBoundingClientRect().left < right);
+    const lastVisible = cards.reduce((last, card, index) => card.getBoundingClientRect().left < right ? index : last, -1);
     cards.slice(0, lastVisible + 4).forEach((card) => card.querySelector("img[data-m-card-image]")?.dispatchEvent(new Event("m-preload")));
   }, []);
 

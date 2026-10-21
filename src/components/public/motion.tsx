@@ -117,7 +117,7 @@ export function CardReveal({ children, className }: Props) {
     const enter = (delay: number) => {
       el.style.setProperty("--m-card-delay", `${delay}ms`);
       const image = el.querySelector<HTMLImageElement>("img[data-m-card-image]");
-      if (!image || image.dataset.ready === "true") { reveal(); return; }
+      if (!image || image.dataset['ready'] === "true") { reveal(); return; }
       image.dispatchEvent(new Event("m-preload"));
       image.addEventListener("load", reveal, { once: true });
       image.addEventListener("error", reveal, { once: true });
