@@ -115,6 +115,39 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
   return ref;
 }
 
+// Observer de borde: threshold 0 y rootMargin 0, igual que las tarjetas (se dispara apenas toca el viewport).
+let bordeObserver: IntersectionObserver | null = null;
+const bordeCallbacks = new Map<Element, () => void>();
+function getBordeObserver() {
+  if (bordeObserver || typeof IntersectionObserver === "undefined") return bordeObserver;
+  bordeObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const cb = bordeCallbacks.get(entry.target);
+      bordeCallbacks.delete(entry.target);
+      bordeObserver?.unobserve(entry.target);
+      cb?.();
+    }
+    if (bordeObserver) soltarSiVacio(bordeObserver, bordeCallbacks);
+  }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
+  return bordeObserver;
+}
+
+/** Revelado al borde del viewport (threshold 0, rootMargin 0), una sola vez. */
+export function useRevealBorde<T extends HTMLElement = HTMLDivElement>(enabled = true) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!enabled || !el || el.classList.contains("m-in")) return;
+    const io = getBordeObserver();
+    if (!io) { el.classList.add("m-in"); return; }
+    bordeCallbacks.set(el, () => activar(el));
+    io.observe(el);
+    return () => { bordeCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, bordeCallbacks); };
+  }, [enabled]);
+  return ref;
+}
+
 type Tag = "div" | "section" | "footer" | "li" | "article" | "ol" | "ul" | "main" | "header";
 type Props = { children: ReactNode; className?: string; as?: Tag; style?: CSSProperties };
 
@@ -368,9 +401,10 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
   return <img {...props} ref={ref} src={requested ? src : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} />;
 }
 
-export function Reveal({ children, className, as: T = "div", style }: Props) {
-  const ref = useReveal<HTMLDivElement>();
-  return <T ref={ref as never} data-m className={className} style={style}>{children}</T>;
+export function Reveal({ children, className, as: T = "div", style, alBorde = false }: Props & { alBorde?: boolean }) {
+  const ref = useReveal<HTMLDivElement>(!alBorde);
+  const refBorde = useRevealBorde<HTMLDivElement>(alBorde);
+  return <T ref={(alBorde ? refBorde : ref) as never} data-m className={className} style={style}>{children}</T>;
 }
 
 export function RevealGroup({ children, className, as: T = "div", style, trasHero = false }: Props & { trasHero?: boolean }) {
