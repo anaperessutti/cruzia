@@ -172,11 +172,13 @@ function heroTextDuration(hero: HTMLElement) {
     palabras = Math.max(palabras, cont.querySelectorAll("[data-m-w]").length);
   }
   let end = 0;
-  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, 300 + dur);
-  if (palabras > 0) end = Math.max(end, 400 + (palabras - 1) * stagger + dur);
-  if (visible('[data-m-seq="desc"]')) end = Math.max(end, 800 + dur);
-  if (visible('[data-m-seq="cta"]')) end = Math.max(end, 1100 + dur);
-  return Math.max(0, end - shift);
+  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, demoras.eyebrow + dur);
+  if (palabras > 0) end = Math.max(end, demoras.title + (palabras - 1) * wordStagger + dur);
+  if (visible('[data-m-seq="desc"]')) end = Math.max(end, demoras.desc + dur);
+  if (visible('[data-m-seq="cta"]')) end = Math.max(end, demoras.cta + dur);
+  const total = Math.max(0, end - shift);
+  // Red de seguridad: un fin menor a 1 s es siempre un cálculo roto; el hero dura ~2,5 s.
+  return total < 1000 ? 2500 : total;
 }
 
 /** First collection follows the hero's actual end, including late data/layout changes. */
