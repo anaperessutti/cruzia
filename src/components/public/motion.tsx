@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
+import { memo, useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
 
 import { clsx } from "clsx";
 
@@ -375,7 +375,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
 }
 
 /** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla. Con enCabecera, lo dispara el encabezado de colección que lo contiene (variante rápida). */
-export function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
+export const SplitWords = memo(function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
   const ref = useReveal<HTMLElement>(!enSecuencia && !enCabecera);
   const palabras = text.trim().split(/\s+/);
   const saltos = new Set<number>();
@@ -397,4 +397,4 @@ export function SplitWords({ text, as: T = "span", className, enSecuencia = fals
       ))}
     </T>
   );
-}
+});

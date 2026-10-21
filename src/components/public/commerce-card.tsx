@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import type { Comercio, Cupon, Localidad, Plan, Rubro } from "@/lib/public-data";
 import { InsigniaTarjeta, TarjetaInmersiva, type NivelTarjeta } from "./tarjeta-inmersiva";
 
@@ -23,7 +25,7 @@ function venceEn(fin: string) {
   return dias <= 30 ? `Vence en ${dias} días` : null;
 }
 
-export function CommerceCard({ comercio, cupon, plan, localidad, rubro, className }: CommerceCardProps) {
+export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, localidad, rubro, className }: CommerceCardProps) {
   const nivel = nivelDeTarjeta(plan, cupon);
   const destacado = nivel !== "basica";
   return (
@@ -42,4 +44,4 @@ export function CommerceCard({ comercio, cupon, plan, localidad, rubro, classNam
       className={className}
     />
   );
-}
+});

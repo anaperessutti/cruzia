@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import type { Evento, Localidad } from "@/lib/public-data";
 import { InsigniaTarjeta, TarjetaInmersiva } from "./tarjeta-inmersiva";
 
@@ -7,7 +9,7 @@ function rango(inicio: string, fin: string) {
   return inicio === fin ? fmt(inicio) : `${fmt(inicio)} al ${fmt(fin)}`;
 }
 
-export function EventoCard({ evento, localidad, className }: { evento: Evento; localidad?: Localidad | undefined; className?: string }) {
+export const EventoCard = memo(function EventoCard({ evento, localidad, className }: { evento: Evento; localidad?: Localidad | undefined; className?: string }) {
   return (
     <TarjetaInmersiva
       link={{ to: "/eventos/$eventoId", params: { eventoId: evento.id } }}
@@ -21,4 +23,4 @@ export function EventoCard({ evento, localidad, className }: { evento: Evento; l
       className={className}
     />
   );
-}
+});
