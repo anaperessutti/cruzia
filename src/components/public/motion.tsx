@@ -441,7 +441,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
                 else image.addEventListener("load", () => { void image.decode().catch(() => {}); }, { once: true });
               });
             };
-            if ("requestIdleCallback" in window) idle = window.requestIdleCallback(decode, { timeout: 1000 });
+            if (typeof window.requestIdleCallback === "function") idle = window.requestIdleCallback(decode, { timeout: 1000 });
             else decodeTimer = window.setTimeout(decode, 0);
           }, Math.max(0, fin - performance.now()));
         }
