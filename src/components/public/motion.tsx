@@ -193,7 +193,7 @@ function getCardObserver() {
         const cb = cardCallbacks.get(entry.target);
         cardCallbacks.delete(entry.target);
         cardObserver?.unobserve(entry.target);
-        cb?.(Math.min(step, 3) * TIEMPOS.stagger);
+        cb?.(Math.min(step, 2) * TIEMPOS.stagger);
       });
     }
     if (cardObserver) soltarSiVacio(cardObserver, cardCallbacks);

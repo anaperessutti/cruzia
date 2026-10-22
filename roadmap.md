@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Unificar movimiento con Sumate a Cruzia: eliminar encadenamiento, normalizar tarjetas/encabezados y comprobar entradas independientes sin alterar diseño ni datos; esperar captura de Ana.
+- [x] Unificar movimiento con Sumate a Cruzia: encadenamiento eliminado, entradas independientes y parámetros compartidos comprobados a 390/1280px en Inicio, Cupones, Categorías, Huella y Contacto sin errores; referencia Sumate/PageIntro intacta.
+- [ ] Revisar la captura de Ana del movimiento unificado; pendiente de recibirla.
 
 - [x] Optimizar el primer scroll del Home: fondo lvh estable, redimensionado filtrado/agrupado, zoom interno y decodificación anticipada; misma portada de 669px a 390×839, tres imágenes listas, cabecera verificada, sin franja inferior ni errores en Chromium y tres pruebas del umbral aprobadas.
 
