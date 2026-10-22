@@ -31,5 +31,5 @@ function CuponesPage() {
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
     return () => setColeccionIds([]);
   }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds, setSoloCupon]);
-  return <main><section><Secuencia pagina sequenceId="cupones-title" className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p data-m-seq="eyebrow" className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><SplitWords as="h1" enSecuencia className="mt-3 text-titulo text-foreground" text="Cupones que hacen rendir tu verano." /></Secuencia></section><CommerceGrid after="cupones-title" title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
+  return <main><section><Secuencia pagina className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p data-m-seq="eyebrow" className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><SplitWords as="h1" enSecuencia className="mt-3 text-titulo text-foreground" text="Cupones que hacen rendir tu verano." /></Secuencia></section><CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
 }
