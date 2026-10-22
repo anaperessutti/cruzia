@@ -103,39 +103,6 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
   return ref;
 }
 
-// Observer de borde: threshold 0 y rootMargin 0, igual que las tarjetas (se dispara apenas toca el viewport).
-let bordeObserver: IntersectionObserver | null = null;
-const bordeCallbacks = new Map<Element, () => void>();
-function getBordeObserver() {
-  if (bordeObserver || typeof IntersectionObserver === "undefined") return bordeObserver;
-  bordeObserver = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      const cb = bordeCallbacks.get(entry.target);
-      bordeCallbacks.delete(entry.target);
-      bordeObserver?.unobserve(entry.target);
-      cb?.();
-    }
-    if (bordeObserver) soltarSiVacio(bordeObserver, bordeCallbacks);
-  }, { threshold: 0, rootMargin: "0px 0px 0px 0px" });
-  return bordeObserver;
-}
-
-/** Revelado al borde del viewport (threshold 0, rootMargin 0), una sola vez. */
-export function useRevealBorde<T extends HTMLElement = HTMLDivElement>(enabled = true) {
-  const ref = useRef<T>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!enabled || !el || el.classList.contains("m-in")) return;
-    const io = getBordeObserver();
-    if (!io) { el.classList.add("m-in"); return; }
-    bordeCallbacks.set(el, () => activar(el));
-    io.observe(el);
-    return () => { bordeCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, bordeCallbacks); };
-  }, [enabled]);
-  return ref;
-}
-
 type Tag = "div" | "section" | "footer" | "li" | "article" | "ol" | "ul" | "main" | "header";
 type Props = { children: ReactNode; className?: string; as?: Tag; style?: CSSProperties };
 
@@ -317,10 +284,9 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
   return <img {...props} ref={ref} src={requested ? src : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} />;
 }
 
-export function Reveal({ children, className, as: T = "div", style, alBorde = false }: Props & { alBorde?: boolean }) {
-  const ref = useReveal<HTMLDivElement>(!alBorde);
-  const refBorde = useRevealBorde<HTMLDivElement>(alBorde);
-  return <T ref={(alBorde ? refBorde : ref) as never} data-m className={className} style={style}>{children}</T>;
+export function Reveal({ children, className, as: T = "div", style }: Props) {
+  const ref = useReveal<HTMLDivElement>();
+  return <T ref={ref as never} data-m className={className} style={style}>{children}</T>;
 }
 
 export function RevealGroup({ children, className, as: T = "div", style }: Props) {
@@ -345,11 +311,10 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
   );
 }
 
-/** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla (con alBorde, apenas toca el borde del viewport). Con enCabecera, lo dispara el encabezado de colección que lo contiene . */
-export const SplitWords = memo(function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, alBorde = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; alBorde?: boolean; negrita?: string; preservarSaltos?: boolean }) {
+/** Título dividido en palabras. Fuera de una Secuencia, se revela al entrar en pantalla. Con enCabecera, lo dispara el encabezado de colección que lo contiene. */
+export const SplitWords = memo(function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; negrita?: string; preservarSaltos?: boolean }) {
   const suelto = !enSecuencia && !enCabecera;
-  const ref = useReveal<HTMLElement>(suelto && !alBorde);
-  const refBorde = useRevealBorde<HTMLElement>(suelto && alBorde);
+  const ref = useReveal<HTMLElement>(suelto);
   const palabras = text.trim().split(/\s+/);
   const saltos = new Set<number>();
   if (preservarSaltos) {
@@ -360,7 +325,7 @@ export const SplitWords = memo(function SplitWords({ text, as: T = "span", class
     }
   }
   return (
-    <T ref={alBorde ? refBorde : ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
+    <T ref={ref} data-m-words="" {...(enSecuencia ? { "data-m-seq": "title" } : {})} aria-label={text} className={clsx((enSecuencia || enCabecera) && "m-in", className)}>
       {palabras.map((p, i) => (
         <span key={i} aria-hidden="true">
           {saltos.has(i) ? <br /> : null}

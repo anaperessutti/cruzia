@@ -99,7 +99,7 @@ function Page() {
         </div></Reveal>
 
         {perfil && estado === "ok" ? (
-          <div className="mt-8 glass rounded-[32px] p-8">
+          <Reveal key={perfil}><div className="mt-8 glass rounded-[32px] p-8">
             <h2 className="font-display text-2xl font-extrabold text-foreground">
               {perfil === "comercio" ? "¡Listo! Abrimos WhatsApp" : "¡Listo! Abrimos tu correo"}
             </h2>
@@ -113,11 +113,11 @@ function Page() {
                 {perfil === "comercio" ? "Abrir WhatsApp de Cruzia" : "Abrir mi correo"} <ArrowRight />
               </a>
             </Button>
-          </div>
+          </div></Reveal>
         ) : null}
 
         {perfil === "comercio" && estado !== "ok" ? (
-          <form onSubmit={onSubmitComercio} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
+          <Reveal key={perfil}><form onSubmit={onSubmitComercio} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
             <div className="grid gap-2">
               <Label htmlFor="ct-local">Nombre del local</Label>
               <Input id="ct-local" required value={comercio.nombre_local} onChange={(e) => setComercio({ ...comercio, nombre_local: e.target.value })} placeholder="Ej: Panadería La Ribera" />
@@ -142,11 +142,11 @@ function Page() {
             </div>
             {estado === "error" ? <p className="text-sm font-semibold text-destructive">No pudimos enviar tus datos. Probá de nuevo en un momento.</p> : null}
             <Button type="submit" size="lg" disabled={estado === "enviando"}>{estado === "enviando" ? "Enviando…" : "Enviar"}</Button>
-          </form>
+          </form></Reveal>
         ) : null}
 
         {perfil === "usuario" && estado !== "ok" ? (
-          <form onSubmit={onSubmitUsuario} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
+          <Reveal key={perfil}><form onSubmit={onSubmitUsuario} className="mt-8 grid gap-4 glass rounded-[32px] p-6 sm:p-8">
             <div className="grid gap-2">
               <Label htmlFor="ct-nombre">Tu nombre</Label>
               <Input id="ct-nombre" required value={usuario.nombre} onChange={(e) => setUsuario({ ...usuario, nombre: e.target.value })} placeholder="Nombre y apellido" />
@@ -167,7 +167,7 @@ function Page() {
               <Textarea id="ct-msg" rows={5} required value={usuario.mensaje} onChange={(e) => setUsuario({ ...usuario, mensaje: e.target.value })} placeholder="Contanos en qué podemos ayudarte." />
             </div>
             <Button type="submit" size="lg">Enviar</Button>
-          </form>
+          </form></Reveal>
         ) : null}
 
         <RevealGroup className="mt-12 grid gap-4 md:grid-cols-2">
