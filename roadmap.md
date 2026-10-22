@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Limitar precarga de carruseles lejanos, eliminar solo CSS/helpers sin uso y comparar imágenes/listeners al cargar; conservar aspecto, movimiento, grano, GPS y SSR/LCP.
+- [x] Limitar precarga de carruseles lejanos y eliminar CSS/helpers sin uso; imágenes de tarjetas al cargar 15→7 en celular y 15→14 en escritorio, listeners sin cambios ni duplicados.
 
 - [x] Ajustar entradas de Gift Box, Huella y Contacto: títulos/fichas separados, variante alBorde eliminada y formularios/confirmación por perfil verificados en pantalla sin blur; lógica y referencias intactas, compilación sin errores.
 

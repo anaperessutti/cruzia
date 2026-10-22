@@ -316,7 +316,7 @@
 @keyframes m-page { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
 .page-transition { animation: m-page 600ms var(--m-ease-move); }
 
-/* Scroll: bloques, grupos, hijos de carrusel. Solo opacity + transform. */
+/* Scroll: bloques y grupos. Solo opacity + transform. */
 [data-m], [data-m-group] > * {
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
 }
@@ -327,10 +327,6 @@ html.m-js [data-m-group]:not(.m-in) > * { opacity: 0; transform: translate3d(0, 
 .m-run, .m-run > *, .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
 /* Sin filtro cuando se supera el tope de ~24 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
 .m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur > * img { filter: none !important; }
-/* Imágenes de tarjetas (grilla y primer encuadre de carruseles): entran borrosas, grandes y transparentes → nítidas. */
-html.m-js [data-m-group]:not(.m-in) > * img img { opacity: 0; transform: scale(1.05); filter: blur(var(--m-blur-img)); }
-[data-m-group].m-run > * img { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
-[data-m-group].m-in > * img img { opacity: 1; transform: none; filter: none; }
 [data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
 [data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
 [data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
@@ -411,7 +407,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-w], [data-m-seq], [data-m-group] > * img, [data-m-head-el] {
+  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-w], [data-m-seq], [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }
