@@ -1,33 +1,25 @@
 import { memo, useEffect, useRef, useState, type CSSProperties, type ElementType, type ReactNode, type ImgHTMLAttributes } from "react";
 
 import { clsx } from "clsx";
-import { observeStableResize } from "@/lib/stable-resize";
 
 /**
  * Módulo único de movimiento de entrada (tiempos de linear.app).
  * Variables de tiempo: bloque "Movimiento" en src/styles.css (--m-dur, --m-ease, --m-word-stagger, --m-stagger, --m-dist).
  * - <Reveal>: bloque que entra al scrollear (opacity + translateY).
- * - <RevealGroup>: sus hijos directos entran en cascada (90 ms, tope 8).
+ * - <RevealGroup>: sus hijos directos entran en cascada (110 ms, tope 8).
  * - <SplitWords>: título palabra por palabra (al scrollear, o dentro de una <Secuencia>).
  * - <Secuencia>: arranca al cargar (dos frames después del primer pintado); sus hijos marcados con
  *   data-m-seq="eyebrow|title|desc|cta|media|row" toman los retrasos del hero.
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
 
-/**
- * ÚNICA fuente de verdad de los tiempos de movimiento. Las CSS vars de :root se escriben
- * desde este objeto al iniciar la app (aplicarTiemposMovimiento) y heroEnd se calcula con
- * estas constantes: nunca se lee el DOM ni el CSS (getComputedStyle normaliza 1400ms a "1.4s"
- * y parseFloat devolvía 1.4, lo que adelantaba ~1,4 s la entrada de la colección siguiente).
- */
+/** Única fuente de verdad de los parámetros compartidos de movimiento. */
 export const TIEMPOS = {
   dur: 1400,
   easeMove: "cubic-bezier(0.22, 1, 0.36, 1)",
   easeFade: "cubic-bezier(0.4, 0, 0.2, 1)",
   wordStagger: 45,
   stagger: 110,
-  hero: { eyebrow: 300, title: 400, desc: 800, cta: 1100 },
-  pageShift: 250,
 } as const;
 
 let tiemposAplicados = false;
@@ -42,9 +34,6 @@ export function aplicarTiemposMovimiento() {
   s.setProperty("--m-word-stagger", `${TIEMPOS.wordStagger}ms`);
   s.setProperty("--m-stagger", `${TIEMPOS.stagger}ms`);
 }
-
-/** Fin (timestamp de performance.now()) de la secuencia inicial en curso; 0 = no hay secuencia activa. */
-let secuenciaTerminaEn = 0;
 
 /** Cuando un observador compartido se queda sin elementos, se desconecta (se reactiva solo al observar de nuevo). */
 function soltarSiVacio(io: IntersectionObserver, mapa: Map<Element, unknown>) {
@@ -100,19 +89,17 @@ function activar(el: HTMLElement) {
   timer = window.setTimeout(fin, 4800);
 }
 
-export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true, trasHero = false) {
+export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!enabled || !el || el.classList.contains("m-in")) return;
     const io = getObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    // trasHero: el bloque espera al fin de la secuencia del hero (heroEnd − 400 ms); si se scrollea antes, entra por observer.
-    const timed = trasHero ? firstCollectionEntrance(el, -400, () => activar(el)) : null;
-    callbacks.set(el, () => timed ? timed.enter() : activar(el));
+    callbacks.set(el, () => activar(el));
     io.observe(el);
-    return () => { timed?.cleanup(); callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
-  }, [enabled, trasHero]);
+    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
+  }, [enabled]);
   return ref;
 }
 
@@ -171,105 +158,18 @@ function getHeadObserver() {
 }
 
 /** Encabezado de colección: se dispara apenas toca el borde del viewport, igual que las tarjetas. */
-export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(primeraFila = false, after?: string) {
+export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el || el.classList.contains("m-in")) return;
     const io = getHeadObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    const timed = primeraFila || after ? firstCollectionEntrance(el, -400, () => activar(el), after) : null;
-    headCallbacks.set(el, () => timed ? timed.enter() : activar(el));
+    headCallbacks.set(el, () => activar(el));
     io.observe(el);
-    return () => { timed?.cleanup(); headCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, headCallbacks); };
-  }, [primeraFila, after]);
+    return () => { headCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, headCallbacks); };
+  }, []);
   return ref;
-}
-
-function inViewport(el: HTMLElement) {
-  const rect = el.getBoundingClientRect();
-  return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
-}
-
-/** Fin de la entrada calculado desde TIEMPOS (constantes TS), sin leer el DOM ni el CSS:
-    eyebrow 300 ms, palabras 400 ms + stagger por palabra, desc 800 ms, cta 1100 ms;
-    las páginas internas adelantan todo 250 ms (--shift). */
-function heroTextDuration(hero: HTMLElement) {
-  const { dur, wordStagger, hero: demoras, pageShift } = TIEMPOS;
-  const shift = hero.hasAttribute("data-m-page") ? pageShift : 0;
-  // Solo cuenta lo visible: los slides ocultos del hero llevan aria-hidden.
-  const visible = (selector: string) => {
-    for (const el of hero.querySelectorAll(selector)) if (!el.closest('[aria-hidden="true"]')) return true;
-    return false;
-  };
-  let palabras = 0;
-  for (const cont of hero.querySelectorAll("[data-m-words]")) {
-    if (cont.closest('[aria-hidden="true"]')) continue;
-    palabras = Math.max(palabras, cont.querySelectorAll("[data-m-w]").length);
-  }
-  let end = 0;
-  if (visible('[data-m-seq="eyebrow"]')) end = Math.max(end, demoras.eyebrow + dur);
-  if (palabras > 0) end = Math.max(end, demoras.title + (palabras - 1) * wordStagger + dur);
-  if (visible('[data-m-seq="desc"]')) end = Math.max(end, demoras.desc + dur);
-  if (visible('[data-m-seq="cta"]')) end = Math.max(end, demoras.cta + dur);
-  const total = Math.max(0, end - shift);
-  // Red de seguridad: un fin menor a 1 s es siempre un cálculo roto; el hero dura ~2,5 s.
-  return total < 1000 ? 2500 : total;
-}
-
-/** First collection follows the hero's actual end, including late data/layout changes. */
-function firstCollectionEntrance(el: HTMLElement, offset: number, reveal: () => void, after?: string) {
-  let timer = 0;
-  let safetyTimer = 0;
-  let scrolled = false;
-  let finished = false;
-  const heroEnd = () => {
-    const selector = after ? `[data-m-sequence="${CSS.escape(after)}"]` : "[data-m-hero]";
-    const hero = el.closest("main")?.querySelector<HTMLElement>(selector);
-    const end = Number(hero?.dataset['mEnded']);
-    return hero && Number.isFinite(end) ? end : null;
-  };
-  const enter = () => {
-    if (finished || !inViewport(el)) return;
-    const end = heroEnd();
-    if (!scrolled && (end === null || performance.now() < end + offset)) return;
-    finished = true;
-    reveal();
-  };
-  const measure = () => {
-    window.clearTimeout(timer);
-    window.clearTimeout(safetyTimer);
-    enter();
-    if (finished) return;
-    const end = heroEnd();
-    if (end !== null) {
-      if (performance.now() < end + offset) timer = window.setTimeout(measure, end + offset - performance.now());
-      safetyTimer = window.setTimeout(safety, Math.max(0, end + 3000 - performance.now()));
-    }
-  };
-  let recheckFrame = 0;
-  const onScroll = () => { scrolled = true; recheck(); };
-  // Visible content cannot remain stranded if it was measured before data/layout settled.
-  const safety = () => {
-    const end = heroEnd();
-    if (!finished && end !== null && performance.now() >= end + 3000 && inViewport(el)) { finished = true; reveal(); }
-  };
-  const recheck = () => {
-    if (finished || recheckFrame) return;
-    recheckFrame = requestAnimationFrame(() => { recheckFrame = 0; measure(); safety(); });
-  };
-  const main = el.closest("main");
-  const cleanupResize = observeStableResize(() => { measure(); safety(); }, main ? [el, main] : [el]);
-  window.addEventListener("m-hero-start", recheck);
-  window.addEventListener("m-sequence-start", recheck);
-  window.addEventListener("scroll", onScroll, { passive: true });
-  measure();
-  return { enter, cleanup: () => {
-    window.clearTimeout(timer); window.clearTimeout(safetyTimer); cleanupResize(); cancelAnimationFrame(recheckFrame);
-    window.removeEventListener("m-hero-start", recheck);
-    window.removeEventListener("m-sequence-start", recheck);
-    window.removeEventListener("scroll", onScroll);
-  } };
 }
 
 // Card-only observers: other reveals and hero sequences retain their configuration.
@@ -293,7 +193,7 @@ function getCardObserver() {
         const cb = cardCallbacks.get(entry.target);
         cardCallbacks.delete(entry.target);
         cardObserver?.unobserve(entry.target);
-        cb?.(Math.min(step, 2) * 80);
+        cb?.(Math.min(step, 3) * TIEMPOS.stagger);
       });
     }
     if (cardObserver) soltarSiVacio(cardObserver, cardCallbacks);
@@ -301,7 +201,36 @@ function getCardObserver() {
   return cardObserver;
 }
 
-export function CardReveal({ children, className, primeraFila = false, indice = 0, after }: Props & { primeraFila?: boolean; indice?: number; after?: string | undefined }) {
+// Only pending cards participate in fast-scroll recovery; one listener for the whole page.
+const pendingCards = new Map<HTMLElement, () => void>();
+let missedFrame = 0;
+function catchMissedCards() {
+  if (missedFrame || pendingCards.size === 0) return;
+  missedFrame = requestAnimationFrame(() => {
+    missedFrame = 0;
+    const missed = Array.from(pendingCards.keys()).filter((el) => el.getBoundingClientRect().bottom <= 0);
+    for (const el of missed) {
+      el.classList.add("m-card-fast");
+      el.style.setProperty("--m-card-delay", "0ms");
+      pendingCards.get(el)?.();
+    }
+  });
+}
+function removePendingCard(el: HTMLElement) {
+  pendingCards.delete(el);
+  if (pendingCards.size !== 0) return;
+  window.removeEventListener("scroll", catchMissedCards);
+  cancelAnimationFrame(missedFrame);
+  missedFrame = 0;
+}
+function addPendingCard(el: HTMLElement, reveal: () => void) {
+  if (pendingCards.size === 0) window.addEventListener("scroll", catchMissedCards, { passive: true });
+  pendingCards.set(el, reveal);
+  // Also recover cards mounted above the viewport after late data or navigation.
+  catchMissedCards();
+}
+
+export function CardReveal({ children, className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -311,57 +240,42 @@ export function CardReveal({ children, className, primeraFila = false, indice = 
     let cleanupTimer = 0;
     let imageTimer = 0;
     let done = false;
+    let removeImageListener = () => {};
+    const io = getCardObserver();
     const reveal = () => {
       if (done) return;
       done = true;
+      removePendingCard(el);
+      cardCallbacks.delete(el);
+      io?.unobserve(el);
+      if (io) soltarSiVacio(io, cardCallbacks);
       const show = () => {
         window.clearTimeout(imageTimer);
         el.removeEventListener("m-image-ready", show);
         el.classList.add("m-in");
-        cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), 1100);
+        cleanupTimer = window.setTimeout(() => el.classList.add("m-card-done"), TIEMPOS.dur + 300);
       };
       const image = el.querySelector<HTMLImageElement>("img[data-m-card-image]");
       if (image && image.dataset['ready'] !== "true" && !el.classList.contains("m-card-fast")) {
         el.addEventListener("m-image-ready", show, { once: true });
-        imageTimer = window.setTimeout(show, 400);
+        imageTimer = window.setTimeout(show, 300);
         removeImageListener = () => el.removeEventListener("m-image-ready", show);
       } else show();
     };
-    let removeImageListener = () => {};
-    const timed = primeraFila || after ? firstCollectionEntrance(el, -300, reveal, after) : null;
     const enter = (delay: number) => {
       el.style.setProperty("--m-card-delay", `${delay}ms`);
-      if (timed) timed.enter(); else reveal();
+      reveal();
     };
-    // La lectura de layout se agrupa en un solo frame por ráfaga de scroll.
-    // Solo corre DESPUÉS de terminada la secuencia inicial: nunca revela tarjetas durante la carga.
-    let rafPendiente = 0;
-    const catchMissed = () => {
-      if (done || timed || rafPendiente) return;
-      rafPendiente = requestAnimationFrame(() => {
-        rafPendiente = 0;
-        if (done) return;
-        if (performance.now() < secuenciaTerminaEn) return;
-        if (el.getBoundingClientRect().bottom <= 0) {
-          el.classList.add("m-card-fast");
-          el.style.setProperty("--m-card-delay", "0ms");
-          reveal();
-        }
-      });
-    };
-    const io = getCardObserver();
-    if (io) { cardCallbacks.set(el, enter); io.observe(el); }
+    if (io) { cardCallbacks.set(el, enter); io.observe(el); addPendingCard(el, reveal); }
     else enter(0);
-    window.addEventListener("scroll", catchMissed, { passive: true });
     return () => {
-      timed?.cleanup(); window.removeEventListener("scroll", catchMissed);
-      cancelAnimationFrame(rafPendiente);
+      removePendingCard(el);
       cardCallbacks.delete(el); io?.unobserve(el);
       if (io) soltarSiVacio(io, cardCallbacks);
       window.clearTimeout(cleanupTimer);
       window.clearTimeout(imageTimer); removeImageListener();
     };
-  }, [primeraFila, indice, after]);
+  }, []);
   return <div ref={ref} data-m-card="" className={className}>{children}</div>;
 }
 
@@ -409,54 +323,29 @@ export function Reveal({ children, className, as: T = "div", style, alBorde = fa
   return <T ref={(alBorde ? refBorde : ref) as never} data-m className={className} style={style}>{children}</T>;
 }
 
-export function RevealGroup({ children, className, as: T = "div", style, trasHero = false }: Props & { trasHero?: boolean }) {
-  const ref = useReveal<HTMLDivElement>(true, trasHero);
+export function RevealGroup({ children, className, as: T = "div", style }: Props) {
+  const ref = useReveal<HTMLDivElement>();
   return <T ref={ref as never} data-m-group className={className} style={style}>{children}</T>;
 }
 
-/** Secuencia de carga (hero de la home o encabezado de página con `pagina`, que arranca 250 ms antes). */
-export function Secuencia({ children, className, as: T = "div", style, pagina = false, hero = false, sequenceId, ...rest }: Props & { pagina?: boolean; hero?: boolean; sequenceId?: string; "aria-label"?: string; "aria-roledescription"?: string } & Record<string, unknown>) {
+/** Secuencia de carga independiente; `pagina` conserva los retrasos de PageIntro. */
+export function Secuencia({ children, className, as: T = "div", style, pagina = false, ...rest }: Props & { pagina?: boolean; "aria-label"?: string; "aria-roledescription"?: string } & Record<string, unknown>) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     let r2 = 0;
-    let decodeTimer = 0;
-    let idle: number | undefined;
-    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => {
-      activar(el);
-      if (hero || sequenceId) {
-        el.dataset['mStarted'] = String(performance.now());
-        const fin = performance.now() + heroTextDuration(el);
-        el.dataset['mEnded'] = String(fin);
-        secuenciaTerminaEn = fin;
-        window.dispatchEvent(new Event(hero ? "m-hero-start" : "m-sequence-start"));
-        if (hero && el.classList.contains("home-premium-hero")) {
-          decodeTimer = window.setTimeout(() => {
-            const decode = () => {
-              const cards = el.closest("main")?.querySelectorAll<HTMLImageElement>('img[data-m-card-image]');
-              Array.from(cards ?? []).slice(0, 3).forEach((image) => {
-                image.dispatchEvent(new Event("m-preload"));
-                if (image.complete && image.currentSrc) void image.decode().catch(() => {});
-                else image.addEventListener("load", () => { void image.decode().catch(() => {}); }, { once: true });
-              });
-            };
-            if (typeof window.requestIdleCallback === "function") idle = window.requestIdleCallback(decode, { timeout: 1000 });
-            else decodeTimer = window.setTimeout(decode, 0);
-          }, Math.max(0, fin - performance.now()));
-        }
-      }
-    }); });
-    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); window.clearTimeout(decodeTimer); if (idle !== undefined) window.cancelIdleCallback(idle); };
-  }, [hero, sequenceId]);
+    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => activar(el)); });
+    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
+  }, []);
   return (
-    <T ref={ref as never} data-m-seq-root="" data-m-sequence={sequenceId} {...(pagina ? { "data-m-page": "" } : {})} {...(hero ? { "data-m-hero": "" } : {})} className={className} style={style} {...rest}>
+    <T ref={ref as never} data-m-seq-root="" {...(pagina ? { "data-m-page": "" } : {})} className={className} style={style} {...rest}>
       {children}
     </T>
   );
 }
 
-/** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla (con alBorde, apenas toca el borde del viewport). Con enCabecera, lo dispara el encabezado de colección que lo contiene (variante rápida). */
+/** Título dividido en palabras. Fuera de una Secuencia, se revela solo al entrar en pantalla (con alBorde, apenas toca el borde del viewport). Con enCabecera, lo dispara el encabezado de colección que lo contiene . */
 export const SplitWords = memo(function SplitWords({ text, as: T = "span", className, enSecuencia = false, enCabecera = false, alBorde = false, negrita, preservarSaltos = false }: { text: string; as?: ElementType; className?: string; enSecuencia?: boolean; enCabecera?: boolean; alBorde?: boolean; negrita?: string; preservarSaltos?: boolean }) {
   const suelto = !enSecuencia && !enCabecera;
   const ref = useReveal<HTMLElement>(suelto && !alBorde);

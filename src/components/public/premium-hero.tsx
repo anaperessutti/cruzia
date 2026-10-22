@@ -98,7 +98,7 @@ export function PremiumHero() {
   return (
     <Secuencia
       as="section"
-      hero
+      pagina
       aria-label="Destacados de Cruzia"
       aria-roledescription="carrusel"
       className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"

@@ -86,14 +86,14 @@ function Page() {
       {/* Manifiesto */}
       <section>
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 md:grid-cols-[1.2fr_1fr] md:items-end lg:px-8">
-          <Secuencia hero>
+          <Secuencia pagina>
             <p data-m-seq="eyebrow" className="flex items-center gap-2 text-sobretitulo font-bold text-secondary"><Heart className="size-4" /> Huella Solidaria</p>
             <SplitWords as="h1" enSecuencia className="mt-5 max-w-3xl text-titulo text-foreground" text="Antes que una red de beneficios, somos vecinos de La Costa." />
             <p data-m-seq="desc" className="mt-6 max-w-2xl text-cuerpo text-foreground/80">
               Somos parte de estos barrios y queremos crecer con ellos. Por eso acompañamos iniciativas e instituciones del Partido de la Costa que cuidan, reúnen y hacen más linda la vida de nuestros vecinos. Es nuestra manera de devolver un poco de todo lo que esta comunidad nos da.
             </p>
           </Secuencia>
-          <RevealGroup trasHero className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
+          <RevealGroup className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
               { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },

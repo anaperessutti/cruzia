@@ -338,36 +338,30 @@ html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data
 
 /* Individual scroll cards: never apply filter to the progressive-blur container. */
 [data-m-card] {
-  transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move);
+  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
   transition-delay: var(--m-card-delay, 0ms);
 }
-html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 20px, 0); }
+html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 24px, 0); }
 html.m-js :is([data-m-card], [data-m-head]):not(.m-in) { visibility: hidden; }
 [data-m-card].m-in, [data-m-head].m-in { visibility: visible; }
 [data-m-card].m-in { opacity: 1; transform: none; }
 img[data-m-card-image] { transition: opacity 700ms var(--m-ease-fade); }
 img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
 [data-m-card] img[data-m-card-image] {
-  transition: opacity 700ms var(--m-ease-fade), transform 700ms var(--m-ease-move), filter 700ms var(--m-ease-fade);
+  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade);
   transition-delay: var(--m-card-delay, 0ms);
 }
 html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); filter: blur(8px); }
 [data-m-card].m-in img { transform: none; filter: none; }
 [data-m-card].m-card-done img { filter: none; transition-delay: 0ms; }
-@media (max-width: 767px) {
-  [data-m-card] { transition-duration: 900ms; }
-  html.m-js [data-m-card]:not(.m-in) { transform: translate3d(0, 24px, 0); }
-  [data-m-card] img[data-m-card-image] { transition-duration: 900ms; }
-}
 [data-m-card].m-card-fast, [data-m-card].m-card-fast img[data-m-card-image] {
   transition: opacity 250ms var(--m-ease-fade); transition-delay: 0ms; transform: none; filter: none;
 }
 /* Safari keeps the progressive-blur layers in an opaque compositing context. */
 html.m-js [data-m-card].m-card-webkit { opacity: 1; }
-[data-m-card].m-card-webkit [data-m-card-content] { transition: opacity 800ms var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
+[data-m-card].m-card-webkit [data-m-card-content] { transition: opacity var(--m-dur) var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
 html.m-js [data-m-card].m-card-webkit:not(.m-in) :is(img[data-m-card-image], [data-m-card-content]) { opacity: 0; }
 [data-m-card].m-card-webkit.m-in [data-m-card-content] { opacity: 1; }
-@media (max-width: 767px) { [data-m-card].m-card-webkit [data-m-card-content] { transition-duration: 900ms; } }
 [data-m-card].m-card-fast [data-m-card-content] { transition: opacity 250ms var(--m-ease-fade); }
 /* Only shorten the small-screen hero when the first collection would fall below the fold. */
 @media (max-width: 430px) {
@@ -388,13 +382,11 @@ html.m-js [data-m-words]:not(.m-in) [data-m-w], html.m-js [data-m-seq-root]:not(
 [data-m-words].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 [data-m-seq-root].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
 
-/* Encabezados de colección: variante rápida (800 ms), disparada apenas tocan el viewport.
-   El título arranca junto con la primera tarjeta de su fila (retraso 0, 30 ms entre palabras). */
-[data-m-head] [data-m-words] [data-m-w] { transition-duration: 800ms; transition-delay: calc(var(--w, 0) * 30ms); }
+/* Encabezados de colección: parámetros generales, disparados por su propio observer. */
 html.m-js [data-m-head]:not(.m-in) [data-m-w] { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(8px); }
 [data-m-head].m-in [data-m-w] { opacity: 1; transform: none; filter: none; }
-[data-m-head-el="eyebrow"] { transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move), filter 800ms var(--m-ease-fade); }
-[data-m-head-el="cta"] { transition: opacity 800ms var(--m-ease-fade), transform 800ms var(--m-ease-move); transition-delay: 80ms; }
+[data-m-head-el="eyebrow"] { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
+[data-m-head-el="cta"] { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move); transition-delay: 80ms; }
 html.m-js [data-m-head]:not(.m-in) [data-m-head-el="eyebrow"] { opacity: 0; transform: translate3d(0, 8px, 0); filter: blur(6px); }
 html.m-js [data-m-head]:not(.m-in) [data-m-head-el="cta"] { opacity: 0; transform: translate3d(0, 8px, 0); }
 [data-m-head].m-in [data-m-head-el] { opacity: 1; transform: none; filter: none; }
@@ -472,9 +464,6 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 .immersive-card:not(:has(img[data-ready="true"])) .pblur { visibility: hidden; }
 .immersive-card-link:not(:has(img[data-ready="true"])) { box-shadow: none; }
 html.m-js [data-m-card]:not(.m-in) .pblur-shade { opacity: 0; }
-html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) > [aria-hidden],
-html.m-js [data-m-first-collection]:not(:has([data-m-head].m-in)) button { visibility: hidden; }
-@media (max-width: 767px) { .immersive-card .pblur-shade { transition-duration: 900ms; } }
 /* Barra inferior de Gift Box: carbón translúcido como la tarjeta "Combiná tu pack". */
 .barra-gift { position: relative; background-color: rgb(28 28 29 / 0.82); backdrop-filter: blur(20px); border-top: 1px solid rgb(255 255 255 / 0.10); border-radius: 0; }
 .barra-gift::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .05;

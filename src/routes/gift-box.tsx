@@ -143,7 +143,7 @@ function GiftBoxPage() {
     <main className="theme-gift bg-gift text-gift-foreground">
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
-          <Secuencia hero>
+          <Secuencia pagina>
             <p data-m-seq="eyebrow" className="text-sobretitulo font-bold text-primary-foreground">Gift Box · Regalá La Costa</p>
             <SplitWords as="h1" enSecuencia preservarSaltos className="mt-5 text-titulo" text={"Una caja.\nMuchas experiencias."} />
             <p data-m-seq="desc" className="mt-6 max-w-xl text-cuerpo text-primary-foreground/80">
@@ -151,7 +151,7 @@ function GiftBoxPage() {
               una tarde de surf. Todo en una sola caja.
             </p>
           </Secuencia>
-          <RevealGroup as="ol" trasHero className="space-y-4">
+          <RevealGroup as="ol" className="space-y-4">
             {PASOS.map((paso, index) => (
                <li key={paso.titulo} className="flex gap-4 glass-dark rounded-[28px] p-5">
                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gift-accent/15 text-primary-foreground">
