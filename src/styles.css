@@ -316,21 +316,17 @@
 @keyframes m-page { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
 .page-transition { animation: m-page 600ms var(--m-ease-move); }
 
-/* Scroll: bloques, grupos, hijos de carrusel. Solo opacity + transform. */
-[data-m], [data-m-group] > *, [data-m] [data-m-child] {
+/* Scroll: bloques y grupos. Solo opacity + transform. */
+[data-m], [data-m-group] > * {
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
 }
-[data-m-group] > *, [data-m] [data-m-child] { transition-delay: calc(var(--i, 0) * var(--m-stagger)); }
+[data-m-group] > * { transition-delay: calc(var(--i, 0) * var(--m-stagger)); }
 html.m-js [data-m]:not(.m-in) { opacity: 0; transform: translate3d(0, var(--m-dist), 0); }
-html.m-js [data-m-group]:not(.m-in) > *, html.m-js [data-m]:not(.m-in) [data-m-child] { opacity: 0; transform: translate3d(0, 24px, 0); }
-[data-m].m-in, [data-m-group].m-in > *, [data-m].m-in [data-m-child] { opacity: 1; transform: none; }
-.m-run, .m-run > *, .m-run [data-m-child], .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
+html.m-js [data-m-group]:not(.m-in) > * { opacity: 0; transform: translate3d(0, 24px, 0); }
+[data-m].m-in, [data-m-group].m-in > * { opacity: 1; transform: none; }
+.m-run, .m-run > *, .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
 /* Sin filtro cuando se supera el tope de ~24 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
-.m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur [data-m-child], .m-noblur > * img, .m-noblur [data-m-child] img { filter: none !important; }
-/* Imágenes de tarjetas (grilla y primer encuadre de carruseles): entran borrosas, grandes y transparentes → nítidas. */
-html.m-js [data-m-group]:not(.m-in) > * img, html.m-js [data-m]:not(.m-in) [data-m-child] img { opacity: 0; transform: scale(1.05); filter: blur(var(--m-blur-img)); }
-[data-m-group].m-run > * img, [data-m].m-run [data-m-child] img { transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade); }
-[data-m-group].m-in > * img, [data-m].m-in [data-m-child] img { opacity: 1; transform: none; filter: none; }
+.m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur > * img { filter: none !important; }
 [data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
 [data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
 [data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
@@ -401,7 +397,6 @@ html.m-js [data-m-head]:not(.m-in) [data-m-head-el="cta"] { opacity: 0; transfor
 [data-m-seq="desc"] { --d: 800ms; --y: 10px; }
 [data-m-seq="cta"] { --d: 1100ms; --y: 10px; }
 [data-m-seq="media"] { --d: 200ms; transition-duration: 1500ms; }
-[data-m-seq="row"] { --d: 1300ms; --y: 24px; transition-duration: 1500ms; }
 html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq]:not([data-m-seq="title"]) { opacity: 0; transform: translate3d(0, var(--y, 0), 0); }
 /* Sobretítulos y descripciones entran borrosos y se aclaran; botones y bloques con vidrio, sin filter. */
 html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="eyebrow"], html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="desc"] { filter: blur(var(--m-blur-text)); }
@@ -412,7 +407,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition { animation: none; }
-  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m] [data-m-child], [data-m-w], [data-m-seq], [data-m-group] > * img, [data-m-head-el] {
+  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-w], [data-m-seq], [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }

@@ -3,16 +3,6 @@ import type { ReactNode } from "react";
 import { Secuencia, SplitWords } from "./motion";
 import { cn } from "@/lib/utils";
 
-/** Título editorial: liviano, con la palabra clave en Bold. Por defecto, la última palabra. */
-export function TituloLigero({ texto, negrita }: { texto: string; negrita?: string | undefined }) {
-  const clave = negrita ?? texto.trim().split(/\s+/).slice(-1)[0] ?? "";
-  const i = texto.lastIndexOf(clave);
-  if (!clave || i < 0) return <span>{texto}</span>;
-  return (
-    <span>{texto}</span>
-  );
-}
-
 /** Encabezado de página sobre el lienzo continuo (sin franjas). */
 export function PageIntro({ rotulo, titulo, negrita, intro, children, className }: { rotulo: string; titulo: string; negrita?: string | undefined; intro?: ReactNode; children?: ReactNode; className?: string | undefined }) {
   return (

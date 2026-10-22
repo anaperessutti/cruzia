@@ -9,7 +9,7 @@ import { clsx } from "clsx";
  * - <RevealGroup>: sus hijos directos entran en cascada (110 ms, tope 8).
  * - <SplitWords>: título palabra por palabra (al scrollear, o dentro de una <Secuencia>).
  * - <Secuencia>: arranca al cargar (dos frames después del primer pintado); sus hijos marcados con
- *   data-m-seq="eyebrow|title|desc|cta|media|row" toman los retrasos del hero.
+ *   data-m-seq="eyebrow|title|desc|cta|media" toman los retrasos del hero.
  * Los elementos solo arrancan ocultos si <html> tiene la clase "m-js" (script inline del <head>).
  */
 
