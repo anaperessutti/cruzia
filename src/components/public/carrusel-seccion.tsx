@@ -38,12 +38,14 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
 
-  const medir = useCallback(() => {
+  const medir = useCallback((scrollHorizontal = false) => {
     const el = scrollerRef.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setPuedeAtras(el.scrollLeft > 4);
     setPuedeAdelante(el.scrollLeft < max - 4);
+    const section = el.closest("section");
+    if (!scrollHorizontal && section && section.getBoundingClientRect().top - window.innerHeight >= 2.5 * window.innerHeight) return;
     const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-card="real"]'));
     const right = el.getBoundingClientRect().right;
     const lastVisible = cards.reduce((last, card, index) => card.getBoundingClientRect().left < right ? index : last, -1);
@@ -54,10 +56,10 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     medir();
     const el = scrollerRef.current;
     if (!el) return;
-    const stopResize = observeStableResize(medir, [el]);
+    const stopResize = observeStableResize(() => medir(), [el]);
     const onScroll = () => {
       if (scrollFrame.current) return;
-      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(); });
+      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(true); });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => { stopResize(); el.removeEventListener("scroll", onScroll); cancelAnimationFrame(scrollFrame.current); scrollFrame.current = 0; };
