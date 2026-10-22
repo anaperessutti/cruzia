@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Unificar movimiento con Sumate a Cruzia: eliminar encadenamiento, normalizar tarjetas/encabezados y comprobar entradas independientes sin alterar diseño ni datos; esperar captura de Ana.
+
 - [x] Optimizar el primer scroll del Home: fondo lvh estable, redimensionado filtrado/agrupado, zoom interno y decodificación anticipada; misma portada de 669px a 390×839, tres imágenes listas, cabecera verificada, sin franja inferior ni errores en Chromium y tres pruebas del umbral aprobadas.
 
 - [x] Extender el fondo a los bordes seguros del iPhone y sumar safe-area a cabecera/contenido/pie/paneles; medidas, actualización de metrics, separación Gift Box/pie e insets cero/no-cero comprobados en Chromium/WebKit sin errores. Diagnósticos conservados.
