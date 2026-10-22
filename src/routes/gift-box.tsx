@@ -173,8 +173,10 @@ function GiftBoxPage() {
         {/* Centinela del alto de la sección: un elemento de 0px se salta al hacer scroll rápido. */}
         <div ref={centinela} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 bottom-0 !animate-none" />
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <h2 className="text-subtitulo">Armador de experiencias</h2>
-          <p className="mt-2 text-cuerpo text-primary-foreground/80">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
+          <Reveal>
+            <h2 className="text-subtitulo">Armador de experiencias</h2>
+            <p className="mt-2 text-cuerpo text-primary-foreground/80">Tocá las tarjetas que quieras incluir. El total se actualiza solo.</p>
+          </Reveal>
 
           {items.isLoading ? (
             <p className="mt-10 text-primary-foreground/60">Cargando experiencias…</p>
@@ -184,11 +186,11 @@ function GiftBoxPage() {
                 const deCategoria = (items.data ?? []).filter((item) => item.categoria === categoria.id);
                 if (deCategoria.length === 0) return null;
                 return (
-                  <Reveal key={categoria.id}>
-                    <div className="flex flex-wrap items-baseline gap-3">
+                  <div key={categoria.id}>
+                    <Reveal><div className="flex flex-wrap items-baseline gap-3">
                        <h3 className="font-display text-2xl font-bold text-primary-foreground">{categoria.titulo}</h3>
                       <p className="text-sm text-primary-foreground/60">{categoria.detalle}</p>
-                    </div>
+                    </div></Reveal>
                     <RevealGroup className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {deCategoria.map((item) => {
                         const activo = Boolean(seleccion[item.id]);
@@ -221,7 +223,7 @@ function GiftBoxPage() {
                         );
                       })}
                     </RevealGroup>
-                  </Reveal>
+                  </div>
                 );
               })}
             </div>

@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Ajustar entradas de Gift Box, Huella y Contacto: títulos/fichas separados, variante alBorde eliminada y formularios/confirmación por perfil verificados en pantalla sin blur; lógica y referencias intactas, compilación sin errores.
+
 - [x] Unificar movimiento con Sumate a Cruzia: encadenamiento eliminado, entradas independientes y parámetros compartidos comprobados a 390/1280px en Inicio, Cupones, Categorías, Huella y Contacto sin errores; referencia Sumate/PageIntro intacta.
 - [ ] Revisar la captura de Ana del movimiento unificado; pendiente de recibirla.
 
