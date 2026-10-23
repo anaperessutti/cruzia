@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/auna-costa-hero.webp";
 import { Logo } from "@/components/brand/logo";
 import { estaCerca } from "@/lib/geo";
+import { optimizarImagen } from "@/lib/imagen";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";
 import { cn } from "@/lib/utils";
 import { usePublicDirectory } from "./public-directory-provider";
@@ -30,6 +31,22 @@ function BotonFlecha({ children }: { children: React.ReactNode }) {
 }
 
 const AUTOPLAY_MS = 6000;
+
+function imagenDeSlide(slide: Slide | null): string {
+  if (!slide) return heroImage;
+  if (slide.tipo === "evento") return slide.evento.imagen_url ?? heroImage;
+  return slide.promo?.flyer_url ?? slide.comercio.galeria[0] ?? heroImage;
+}
+
+/** Fondo previo: la foto empaquetada con el mismo velo, visible hasta que la imagen del slide está decodificada. */
+function FondoPrevio({ oculto = false }: { oculto?: boolean }) {
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 z-20 transition-opacity duration-[600ms] ease-out", oculto ? "opacity-0" : "opacity-100")}>
+      <img src={heroImage} alt="" decoding="async" className="h-full w-full object-cover" />
+      <div className="veil-radial absolute inset-0" />
+    </div>
+  );
+}
 
 export function PremiumHero() {
   const { data, userCoords, isLoading } = usePublicDirectory();
@@ -71,8 +88,28 @@ export function PremiumHero() {
   const seleccion = elegiblesParaEsteVisitante
     .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
     .slice(0, 7);
-  // Mientras cargan los datos no hay slide institucional oscuro: se muestra el fondo claro del sitio.
-  const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : isLoading ? [] : [null];
+  // La selección se congela con los primeros datos disponibles: si el GPS u otros
+  // datos cambian durante la visita, el slide 0 no se recalcula ni se repinta.
+  const seleccionCongelada = useRef<Slide[] | null>(null);
+  if (seleccionCongelada.current === null && !isLoading) seleccionCongelada.current = seleccion;
+  const congelada = seleccionCongelada.current;
+  const slides: (Slide | null)[] = congelada === null ? [] : congelada.length > 0 ? congelada : [null];
+
+  // La imagen del primer slide se precarga y decodifica antes de mostrarse (máx. 900 ms):
+  // si vence el plazo, se muestra igual. Mientras tanto se ve el fondo previo empaquetado.
+  const primeraImagen = slides.length > 0 ? imagenDeSlide(slides[0] ?? null) : null;
+  const [imagenLista, setImagenLista] = useState(false);
+  useEffect(() => {
+    if (!primeraImagen || imagenLista) return;
+    let cancelado = false;
+    const mostrar = () => { if (!cancelado) setImagenLista(true); };
+    const timer = window.setTimeout(mostrar, 900);
+    const img = new Image();
+    img.onload = () => { img.decode().then(mostrar).catch(mostrar).finally(() => window.clearTimeout(timer)); };
+    img.onerror = () => { window.clearTimeout(timer); mostrar(); };
+    img.src = optimizarImagen(primeraImagen);
+    return () => { cancelado = true; window.clearTimeout(timer); };
+  }, [primeraImagen, imagenLista]);
 
   // Fundido cruzado con autoplay, pausa al tocar y swipe.
   const [activo, setActivo] = useState(0);
@@ -93,7 +130,11 @@ export function PremiumHero() {
   // Mientras cargan los datos la sección queda vacía; la Secuencia se monta recién cuando
   // hay slides, así la entrada (sobretítulo → título → descripción → botón) se ve completa.
   if (slides.length === 0) {
-    return <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip" />;
+    return (
+      <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip">
+        <FondoPrevio />
+      </section>
+    );
   }
   return (
     <Secuencia
@@ -113,6 +154,7 @@ export function PremiumHero() {
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
     >
+      <FondoPrevio oculto={imagenLista} />
       {slides.map((slide, index) => {
         const visible = index === activo;
         if (!slide) return <SlideInstitucional key="brand" visible={visible} />;
