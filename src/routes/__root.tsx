@@ -4,7 +4,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -16,6 +15,8 @@ import { PublicDirectoryProvider } from "@/components/public/public-directory-pr
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
 import { aplicarTiemposMovimiento } from "@/components/public/motion";
+import { usePathnameRenderizado } from "@/lib/use-pathname-renderizado";
+import { PreloadPublicRoutes } from "@/components/public/preload-public-routes";
 
 function NotFoundComponent() {
   return (
@@ -105,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       // Marca "m-js" antes del primer render: solo con ella los elementos animados arrancan ocultos.
-      { children: `document.documentElement.classList.add("m-js");` },
+      { children: `document.documentElement.classList.add("m-js");setTimeout(function(){if(!document.documentElement.hasAttribute("data-hydrated"))document.documentElement.classList.remove("m-js");},4000);` },
     ],
   }),
   shellComponent: RootShell,
@@ -128,14 +129,11 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-/** Transición de página: envuelve SOLO el contenido de cada ruta y se reinicia con key=pathname. */
+/** Key only the resolved route content; scrolling belongs to the router. */
 function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  const pathname = usePathnameRenderizado();
   return (
-    <div key={pathname} className={`page-transition ${className ?? ""}`}>
+    <div key={pathname} className={className}>
       {children}
     </div>
   );
@@ -143,15 +141,20 @@ function PageTransition({ children, className }: { children: ReactNode; classNam
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const isAdmin = useRouterState({ select: (state) => state.location.pathname.startsWith("/admin") });
-  const isGift = useRouterState({ select: (state) => state.location.pathname.startsWith("/gift-box") });
-  const conFiltros = useRouterState({ select: (state) => state.location.pathname === "/cupones" || state.location.pathname === "/categorias" });
-  const isHome = useRouterState({ select: (state) => state.location.pathname === "/" || state.location.pathname.startsWith("/comercio/") });
+  const pathname = usePathnameRenderizado();
+  const isAdmin = pathname.startsWith("/admin");
+  const isGift = pathname.startsWith("/gift-box");
+  const conFiltros = pathname === "/cupones" || pathname === "/categorias";
+  const isHome = pathname === "/" || pathname.startsWith("/comercio/");
+  useEffect(() => {
+    document.documentElement.setAttribute("data-hydrated", "true");
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       {isAdmin ? <Outlet /> : (
         <PublicDirectoryProvider>
+          <PreloadPublicRoutes />
           {/* Lienzo continuo: un solo fondo con halos + grano para todas las páginas públicas. */}
           <div className={`site-public ${isGift ? "theme-gift" : ""} relative isolate flex min-h-screen flex-col overflow-x-clip`}>
             <div aria-hidden="true" className={`fondo-fijo ${isGift ? "fondo-gift" : ""}`}><div className="halo-gray absolute -left-40 top-[15%] size-[44rem]" /></div>

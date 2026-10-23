@@ -20,3 +20,5 @@
 - Use observeStableResize for public motion/carousel resize work: ignore small height-only toolbar changes and batch meaningful updates in a frame to avoid first-scroll layout churn.
 - Top Slider masks and blurred copies stay outside image transforms; animate only the sharp internal image and release its compositing hint when the transition ends to avoid repainting static effects.
 - Shared motion blocks enter independently through their own observers; Secuencia starts two frames after mounting, with optional pagina styling and no cross-block scheduling, so late data and filters cannot wait for another block.
+- Use usePathnameRenderizado for shared chrome and keyed route content; resolvedLocation keeps them aligned with committed content, and only the router owns scroll restoration.
+- Mount idle public-route preloading inside the public provider, not the document shell; save-data connections skip preloading and mounting does not navigate or apply route filters.

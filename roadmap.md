@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Ajustar ruta renderizada, precarga pública, cierre del menú, filtros al montar y respaldo de hidratación; navegación arriba desde el primer frame, Atrás restaura 1200px, Cupones limpia el switch al salir, cierre 200ms y respaldo 4000ms verificados.
+
 - [x] Limitar precarga de carruseles lejanos y eliminar CSS/helpers sin uso; imágenes de tarjetas al cargar 15→7 en celular y 15→14 en escritorio, listeners sin cambios ni duplicados.
 
 - [x] Ajustar entradas de Gift Box, Huella y Contacto: títulos/fichas separados, variante alBorde eliminada y formularios/confirmación por perfil verificados en pantalla sin blur; lógica y referencias intactas, compilación sin errores.

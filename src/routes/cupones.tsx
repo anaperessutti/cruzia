@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { CommerceGrid } from "@/components/public/commerce-grid";
 import { usePublicDirectory } from "@/components/public/public-directory-provider";
@@ -23,13 +23,19 @@ export const Route = createFileRoute("/cupones")({
 });
 
 function CuponesPage() {
+  const [aplicado, setAplicado] = useState(false);
   const search = Route.useSearch();
   const { setSoloCupon, setLocalidadIds, setColeccionIds } = usePublicDirectory();
   useEffect(() => {
     setSoloCupon(true);
     setColeccionIds(search.coleccion?.split(",").filter(Boolean) ?? []);
     if (search.localidades) setLocalidadIds(search.localidades.split(",").filter(Boolean));
-    return () => setColeccionIds([]);
+    setAplicado(true);
+    return () => {
+      setColeccionIds([]);
+      setSoloCupon(false);
+      setAplicado(false);
+    };
   }, [search.coleccion, search.localidades, setColeccionIds, setLocalidadIds, setSoloCupon]);
-  return <main><section><Secuencia pagina className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p data-m-seq="eyebrow" className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><SplitWords as="h1" enSecuencia className="mt-3 text-titulo text-foreground" text="Cupones que hacen rendir tu verano." /></Secuencia></section><CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /></main>;
+  return <main><section><Secuencia pagina className="mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 lg:px-8"><p data-m-seq="eyebrow" className="text-sobretitulo font-medium text-primary">Beneficios vigentes</p><SplitWords as="h1" enSecuencia className="mt-3 text-titulo text-foreground" text="Cupones que hacen rendir tu verano." /></Secuencia></section>{aplicado ? <CommerceGrid title={search.favoritos ? "Favoritos de la Costa" : "Comercios con cupón"} /> : null}</main>;
 }

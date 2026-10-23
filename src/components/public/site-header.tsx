@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown, Instagram, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,6 +6,7 @@ import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { usePathnameRenderizado } from "@/lib/use-pathname-renderizado";
 import { usePublicDirectory } from "./public-directory-provider";
 import { SearchDialog } from "./search-dialog";
 import { StickyFilters } from "./sticky-filters";
@@ -41,7 +42,7 @@ function useEstadoCabecera(bloqueada: boolean) {
 
 export function SiteHeader() {
   const { data } = usePublicDirectory();
-  const path = useRouterState({ select: (st) => st.location.pathname });
+  const path = usePathnameRenderizado();
   const gift = path.startsWith("/gift-box");
   const conHero = path === "/" || path.startsWith("/comercio/");
   const conFiltros = path === "/cupones" || path === "/categorias";
@@ -86,7 +87,7 @@ export function SiteHeader() {
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
-            <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
+            <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=closed]:!duration-200 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
               <SheetHeader className="relative z-10 pb-4 text-left">
                 <SheetTitle><Logo variant="isotype" tone={gift ? "dark" : "light"} height={42} decorative /><span className="sr-only">Menú</span></SheetTitle>
                 <SheetDescription className="sr-only">Secciones de Cruzia</SheetDescription>
