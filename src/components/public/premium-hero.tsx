@@ -97,7 +97,7 @@ export function PremiumHero() {
 
   // La imagen del primer slide se precarga y decodifica antes de mostrarse (máx. 900 ms):
   // si vence el plazo, se muestra igual. Mientras tanto se ve el fondo previo empaquetado.
-  const primeraImagen = slides.length > 0 ? imagenDeSlide(slides[0]) : null;
+  const primeraImagen = slides.length > 0 ? imagenDeSlide(slides[0] ?? null) : null;
   const [imagenLista, setImagenLista] = useState(false);
   useEffect(() => {
     if (!primeraImagen || imagenLista) return;
