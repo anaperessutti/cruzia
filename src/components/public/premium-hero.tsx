@@ -157,9 +157,10 @@ export function PremiumHero() {
             <div className="absolute inset-0"><div data-m-seq="media" className="absolute inset-0">
             <div className={cn("absolute inset-0 transition-opacity duration-[600ms] ease-out", imagenLista ? "opacity-100" : "opacity-0")}>
               {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} zoomInterno imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
+              <div aria-hidden="true" className="veil-radial absolute inset-0" />
             </div>
             </div>
-            <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
+            </div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
               <div className="max-w-2xl text-primary-foreground">
                 <div data-m-seq="eyebrow" className="glass-dark mb-5 inline-flex rounded-full px-3.5 py-1.5 text-slider-eyebrow">{localidad ? `${localidad} · ${etiqueta}` : etiqueta}</div>
