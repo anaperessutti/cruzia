@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { isValidElement, useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import { CardReveal, SplitWords, useRevealCabecera } from "./motion";
+import { SplitWords, useRevealCabecera, useRevealFila } from "./motion";
 import { cn } from "@/lib/utils";
 import { observeStableResize } from "@/lib/stable-resize";
 
@@ -10,6 +10,9 @@ import { observeStableResize } from "@/lib/stable-resize";
  * Scroll nativo con snap, sin barra visible; flechas de vidrio solo en desktop.
  * Limita a 10 tarjetas reales y cierra con la tarjeta "Ver todo".
  * No tiene lógica de datos: recibe las tarjetas ya resueltas.
+ * La fila se revela como una unidad (useRevealFila): las primeras 4 tarjetas entran
+ * en cascada con --i; el resto y "Ver todo" son estáticos. La precarga de imágenes
+ * la hace solo el observer de CardImage.
  */
 interface CarruselSeccionProps {
   titulo: string;
@@ -31,26 +34,20 @@ export function BurbujaFlecha({ className }: { className?: string }) {
 }
 
 export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas = [], destacada = false, className }: CarruselSeccionProps) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRevealFila<HTMLDivElement>(true);
   const scrollFrame = useRef(0);
-  const cabeceraRef = useRevealCabecera<HTMLDivElement>();
+  const cabeceraRef = useRevealCabecera<HTMLDivElement>(true);
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
   const tarjetasVisibles = tarjetas.slice(0, 10);
 
-  const medir = useCallback((scrollHorizontal = false) => {
+  const medir = useCallback(() => {
     const el = scrollerRef.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
     setPuedeAtras(el.scrollLeft > 4);
     setPuedeAdelante(el.scrollLeft < max - 4);
-    const section = el.closest("section");
-    if (!scrollHorizontal && section && section.getBoundingClientRect().top - window.innerHeight >= 2.5 * window.innerHeight) return;
-    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-card="real"]'));
-    const right = el.getBoundingClientRect().right;
-    const lastVisible = cards.reduce((last, card, index) => card.getBoundingClientRect().left < right ? index : last, -1);
-    cards.slice(0, lastVisible + 4).forEach((card) => card.querySelector("img[data-m-card-image]")?.dispatchEvent(new Event("m-preload")));
-  }, []);
+  }, [scrollerRef]);
 
   useEffect(() => {
     medir();
@@ -59,11 +56,11 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     const stopResize = observeStableResize(() => medir(), [el]);
     const onScroll = () => {
       if (scrollFrame.current) return;
-      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(true); });
+      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(); });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => { stopResize(); el.removeEventListener("scroll", onScroll); cancelAnimationFrame(scrollFrame.current); scrollFrame.current = 0; };
-  }, [medir, tarjetasVisibles.length]);
+  }, [medir, scrollerRef, tarjetasVisibles.length]);
 
   const desplazar = (direccion: number) => {
     const el = scrollerRef.current;
@@ -94,26 +91,26 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
       <div className="relative mt-5">
         <div
           ref={scrollerRef}
+          data-m-row=""
           className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
         >
           {tarjetasVisibles.map((tarjeta, index) => (
-            // Stagger solo en las tarjetas del primer encuadre; las de afuera quedan siempre visibles.
+            // Cascada solo en las primeras 4 (primer encuadre); las demás y "Ver todo", estáticas.
             <div
-              key={index}
+              key={isValidElement(tarjeta) && tarjeta.key != null ? tarjeta.key : index}
               data-carousel-card="real"
+              {...(index < 4 ? { style: { "--i": index } as CSSProperties } : { "data-m-static": "" })}
               className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
             >
-              <CardReveal className="h-full">{tarjeta}</CardReveal>
+              {tarjeta}
             </div>
           ))}
 
-          <div data-carousel-card="ver-todo" className={cn("shrink-0 snap-start", ancho)}>
-            <CardReveal className="h-full">
+          <div data-carousel-card="ver-todo" data-m-static="" className={cn("shrink-0 snap-start", ancho)}>
             <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="frost frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1">
               <span className="relative text-xl font-semibold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
               <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
             </a>
-            </CardReveal>
           </div>
         </div>
 
