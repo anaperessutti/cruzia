@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
-import heroImage from "@/assets/auna-costa-hero.webp";
 import { Logo } from "@/components/brand/logo";
 import { estaCerca } from "@/lib/geo";
 import { optimizarImagen } from "@/lib/imagen";
@@ -32,20 +31,10 @@ function BotonFlecha({ children }: { children: React.ReactNode }) {
 
 const AUTOPLAY_MS = 6000;
 
-function imagenDeSlide(slide: Slide | null): string {
-  if (!slide) return heroImage;
-  if (slide.tipo === "evento") return slide.evento.imagen_url ?? heroImage;
-  return slide.promo?.flyer_url ?? slide.comercio.galeria[0] ?? heroImage;
-}
-
-/** Fondo previo: la foto empaquetada con el mismo velo, visible hasta que la imagen del slide está decodificada. */
-function FondoPrevio({ oculto = false }: { oculto?: boolean }) {
-  return (
-    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 z-20 transition-opacity duration-[600ms] ease-out", oculto ? "opacity-0" : "opacity-100")}>
-      <img src={heroImage} alt="" decoding="async" className="h-full w-full object-cover" />
-      <div className="veil-radial absolute inset-0" />
-    </div>
-  );
+function imagenDeSlide(slide: Slide | null): string | null {
+  if (!slide) return null;
+  if (slide.tipo === "evento") return slide.evento.imagen_url?.trim() || null;
+  return slide.promo?.flyer_url?.trim() || slide.comercio.galeria.find((imagen) => imagen.trim()) || null;
 }
 
 export function PremiumHero() {
@@ -86,6 +75,7 @@ export function PremiumHero() {
 
   // Paso 2: recién sobre ese pool ya filtrado se sortea y se aplica el tope de 7 slides.
   const seleccion = elegiblesParaEsteVisitante
+    .filter((slide) => imagenDeSlide(slide) !== null)
     .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
     .slice(0, 7);
   // La selección se congela con los primeros datos disponibles: si el GPS u otros
@@ -96,7 +86,7 @@ export function PremiumHero() {
   const slides: (Slide | null)[] = congelada === null ? [] : congelada.length > 0 ? congelada : [null];
 
   // La imagen del primer slide se precarga y decodifica antes de mostrarse (máx. 900 ms):
-  // si vence el plazo, se muestra igual. Mientras tanto se ve el fondo previo empaquetado.
+  // si vence el plazo, se muestra igual. Mientras tanto se ve el lienzo liso del sitio.
   const primeraImagen = slides.length > 0 ? imagenDeSlide(slides[0] ?? null) : null;
   const [imagenLista, setImagenLista] = useState(false);
   useEffect(() => {
@@ -131,9 +121,7 @@ export function PremiumHero() {
   // hay slides, así la entrada (sobretítulo → título → descripción → botón) se ve completa.
   if (slides.length === 0) {
     return (
-      <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip">
-        <FondoPrevio />
-      </section>
+      <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip bg-background" />
     );
   }
   return (
@@ -142,7 +130,7 @@ export function PremiumHero() {
       pagina
       aria-label="Destacados de Cruzia"
       aria-roledescription="carrusel"
-      className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip"
+      className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip bg-background"
       onTouchStart={(e: React.TouchEvent) => { toqueX.current = e.touches[0]?.clientX ?? null; setPausado(true); }}
       onTouchEnd={(e: React.TouchEvent) => {
         const inicio = toqueX.current;
@@ -154,12 +142,12 @@ export function PremiumHero() {
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
     >
-      <FondoPrevio oculto={imagenLista} />
       {slides.map((slide, index) => {
         const visible = index === activo;
         if (!slide) return <SlideInstitucional key="brand" visible={visible} />;
         const esEvento = slide.tipo === "evento";
-        const imagen = (esEvento ? slide.evento.imagen_url : slide.promo?.flyer_url ?? slide.comercio.galeria[0]) ?? heroImage;
+        const imagen = imagenDeSlide(slide);
+        if (!imagen) return null;
         const titulo = (esEvento ? slide.evento.titulo : slide.promo?.titulo ?? slide.comercio.nombre) ?? "";
         const texto = esEvento ? slide.evento.descripcion : slide.promo?.descripcion ?? slide.comercio.descripcion;
         const localidad = localidadById.get((esEvento ? slide.evento.localidad_id : slide.comercio.localidad_id) ?? "");
@@ -167,7 +155,9 @@ export function PremiumHero() {
         return (
           <div key={slide.id} aria-hidden={!visible} className={cn("absolute inset-0 transition-opacity duration-1000 ease-out", visible ? "z-10 opacity-100" : "z-0 opacity-0")}>
             <div className="absolute inset-0"><div data-m-seq="media" className="absolute inset-0">
-            {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} zoomInterno imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
+            <div className={cn("absolute inset-0 transition-opacity duration-[600ms] ease-out", imagenLista ? "opacity-100" : "opacity-0")}>
+              {cargadas.has(index) ? <FadeOrganic src={imagen} alt={titulo} prioridad={index === 0} zoomInterno imgClassName={cn("transition-transform duration-[6500ms] ease-out", visible ? "scale-100" : "scale-105")} /> : null}
+            </div>
             </div>
             <div aria-hidden="true" className="veil-radial absolute inset-0" /></div>
             <div className="relative mx-auto flex h-full max-w-7xl items-end px-5 pb-[52%] sm:px-8 sm:pb-[24%]">
