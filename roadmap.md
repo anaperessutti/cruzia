@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Ajustar ruta renderizada, precarga pública, cierre del menú, filtros al montar y respaldo de hidratación; verificar navegación arriba y restauración al volver.
+- [x] Ajustar ruta renderizada, precarga pública, cierre del menú, filtros al montar y respaldo de hidratación; navegación arriba desde el primer frame, Atrás restaura 1200px, Cupones limpia el switch al salir, cierre 200ms y respaldo 4000ms verificados.
 
 - [x] Limitar precarga de carruseles lejanos y eliminar CSS/helpers sin uso; imágenes de tarjetas al cargar 15→7 en celular y 15→14 en escritorio, listeners sin cambios ni duplicados.
 
