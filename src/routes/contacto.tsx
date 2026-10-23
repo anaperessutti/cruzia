@@ -78,7 +78,7 @@ function Page() {
       <PageIntro rotulo="Hablemos" titulo="Estamos a un clic de distancia." negrita="un clic" />
 
       <section className="relative mx-auto -mt-12 max-w-3xl px-4 pb-16 sm:px-6 lg:px-8">
-        <Reveal><div role="tablist" aria-label="¿Quién sos?" className="glass grid grid-cols-2 gap-1 rounded-full p-1.5">
+        <Reveal alCargar><div role="tablist" aria-label="¿Quién sos?" className="glass grid grid-cols-2 gap-1 rounded-full p-1.5">
           {([
             { key: "comercio" as const, icon: Store, titulo: "Soy un Comercio", texto: "Quiero sumar mi negocio a Cruzia" },
             { key: "usuario" as const, icon: User, titulo: "Soy un Usuario", texto: "Tengo una consulta o una sugerencia." },

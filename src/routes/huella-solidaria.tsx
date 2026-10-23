@@ -93,7 +93,7 @@ function Page() {
               Somos parte de estos barrios y queremos crecer con ellos. Por eso acompañamos iniciativas e instituciones del Partido de la Costa que cuidan, reúnen y hacen más linda la vida de nuestros vecinos. Es nuestra manera de devolver un poco de todo lo que esta comunidad nos da.
             </p>
           </Secuencia>
-          <RevealGroup className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
+          <RevealGroup alCargar className="grid gap-4 sm:grid-cols-3 md:grid-cols-1">
             {[
               { icon: Users, titulo: "Cerca", texto: "Cuidando a nuestra comunidad" },
               { icon: Hand, titulo: "Concreto", texto: "Acciones con resultados reales" },
