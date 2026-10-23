@@ -32,6 +32,22 @@ function BotonFlecha({ children }: { children: React.ReactNode }) {
 
 const AUTOPLAY_MS = 6000;
 
+function imagenDeSlide(slide: Slide | null): string {
+  if (!slide) return heroImage;
+  if (slide.tipo === "evento") return slide.evento.imagen_url ?? heroImage;
+  return slide.promo?.flyer_url ?? slide.comercio.galeria[0] ?? heroImage;
+}
+
+/** Fondo previo: la foto empaquetada con el mismo velo, visible hasta que la imagen del slide está decodificada. */
+function FondoPrevio({ oculto = false }: { oculto?: boolean }) {
+  return (
+    <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 z-20 transition-opacity duration-[600ms] ease-out", oculto ? "opacity-0" : "opacity-100")}>
+      <img src={heroImage} alt="" decoding="async" className="h-full w-full object-cover" />
+      <div className="veil-radial absolute inset-0" />
+    </div>
+  );
+}
+
 export function PremiumHero() {
   const { data, userCoords, isLoading } = usePublicDirectory();
   const planById = new Map(data.planes.map((plan) => [plan.id, plan]));
@@ -114,7 +130,11 @@ export function PremiumHero() {
   // Mientras cargan los datos la sección queda vacía; la Secuencia se monta recién cuando
   // hay slides, así la entrada (sobretítulo → título → descripción → botón) se ve completa.
   if (slides.length === 0) {
-    return <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip" />;
+    return (
+      <section aria-label="Destacados de Cruzia" className="home-premium-hero relative h-[86svh] min-h-[540px] max-h-[800px] w-full overflow-clip">
+        <FondoPrevio />
+      </section>
+    );
   }
   return (
     <Secuencia
@@ -134,6 +154,7 @@ export function PremiumHero() {
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
     >
+      <FondoPrevio oculto={imagenLista} />
       {slides.map((slide, index) => {
         const visible = index === activo;
         if (!slide) return <SlideInstitucional key="brand" visible={visible} />;
