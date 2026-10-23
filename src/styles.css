@@ -316,42 +316,45 @@
 [data-m], [data-m-group] > * {
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
 }
-[data-m-group] > * { transition-delay: calc(var(--i, 0) * var(--m-stagger)); }
+[data-m] { transition-delay: var(--m-base, 0ms); }
+[data-m-group] > * { transition-delay: calc(var(--i, 0) * var(--m-stagger) + var(--m-base, 0ms)); }
 html.m-js [data-m]:not(.m-in) { opacity: 0; transform: translate3d(0, var(--m-dist), 0); }
 html.m-js [data-m-group]:not(.m-in) > * { opacity: 0; transform: translate3d(0, 24px, 0); }
 [data-m].m-in, [data-m-group].m-in > * { opacity: 1; transform: none; }
+/* Terminada la entrada, los hijos responden al toque o hover sin el retraso de cascada. */
+[data-m-group].m-in:not(.m-run) > * { transition-delay: 0ms; }
 .m-run, .m-run > *, .m-run [data-m-w], .m-run [data-m-seq] { will-change: opacity, transform, filter; }
-/* Sin filtro cuando se supera el tope de ~24 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
+/* Sin filtro cuando se supera el tope de ~12 elementos con blur simultáneos (m-noblur la pone motion.tsx). */
 .m-noblur, .m-noblur [data-m-w], .m-noblur [data-m-seq], .m-noblur > * img { filter: none !important; }
 [data-m-group] > *:nth-child(1) { --i: 0; } [data-m-group] > *:nth-child(2) { --i: 1; }
 [data-m-group] > *:nth-child(3) { --i: 2; } [data-m-group] > *:nth-child(4) { --i: 3; }
-[data-m-group] > *:nth-child(5) { --i: 4; } [data-m-group] > *:nth-child(6) { --i: 5; }
-[data-m-group] > *:nth-child(7) { --i: 6; } [data-m-group] > *:nth-child(n+8) { --i: 7; }
+[data-m-group] > *:nth-child(n+5) { --i: 4; }
 
 /* Individual scroll cards: never apply filter to the progressive-blur container. */
 [data-m-card] {
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
-  transition-delay: var(--m-card-delay, 0ms);
+  transition-delay: calc(var(--m-card-delay, 0ms) + var(--m-base, 0ms));
 }
 html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 24px, 0); }
-html.m-js :is([data-m-card], [data-m-head]):not(.m-in) { visibility: hidden; }
-[data-m-card].m-in, [data-m-head].m-in { visibility: visible; }
+html.m-js :is([data-m-card], [data-m-head], [data-m-row]):not(.m-in) { visibility: hidden; }
+[data-m-card].m-in, [data-m-head].m-in, [data-m-row].m-in { visibility: visible; }
 [data-m-card].m-in { opacity: 1; transform: none; }
 img[data-m-card-image] { transition: opacity 700ms var(--m-ease-fade); }
 img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
+/* La imagen entra con opacity + scale, sin blur (el blur queda para títulos y textos del hero). */
 [data-m-card] img[data-m-card-image] {
-  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move), filter var(--m-dur) var(--m-ease-fade);
-  transition-delay: var(--m-card-delay, 0ms);
+  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
+  transition-delay: calc(var(--m-card-delay, 0ms) + var(--m-base, 0ms));
 }
-html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); filter: blur(8px); }
-[data-m-card].m-in img { transform: none; filter: none; }
-[data-m-card].m-card-done img { filter: none; transition-delay: 0ms; }
+html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); }
+[data-m-card].m-in img { transform: none; }
+[data-m-card].m-card-done img { transition-delay: 0ms; }
 [data-m-card].m-card-fast, [data-m-card].m-card-fast img[data-m-card-image] {
   transition: opacity 250ms var(--m-ease-fade); transition-delay: 0ms; transform: none; filter: none;
 }
 /* Safari keeps the progressive-blur layers in an opaque compositing context. */
 html.m-js [data-m-card].m-card-webkit { opacity: 1; }
-[data-m-card].m-card-webkit [data-m-card-content] { transition: opacity var(--m-dur) var(--m-ease-fade); transition-delay: var(--m-card-delay, 0ms); }
+[data-m-card].m-card-webkit [data-m-card-content] { transition: opacity var(--m-dur) var(--m-ease-fade); transition-delay: calc(var(--m-card-delay, 0ms) + var(--m-base, 0ms)); }
 html.m-js [data-m-card].m-card-webkit:not(.m-in) :is(img[data-m-card-image], [data-m-card-content]) { opacity: 0; }
 [data-m-card].m-card-webkit.m-in [data-m-card-content] { opacity: 1; }
 [data-m-card].m-card-fast [data-m-card-content] { transition: opacity 250ms var(--m-ease-fade); }
