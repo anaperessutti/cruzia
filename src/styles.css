@@ -312,10 +312,6 @@
   --m-dist: 14px;
 }
 
-/* Transición de página: sin fill-mode → no retiene transform al terminar. */
-@keyframes m-page { from { transform: translate3d(0, 10px, 0); } to { transform: none; } }
-.page-transition { animation: m-page 600ms var(--m-ease-move); }
-
 /* Scroll: bloques y grupos. Solo opacity + transform. */
 [data-m], [data-m-group] > * {
   transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
@@ -406,7 +402,6 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 [data-m-seq-root].m-in [data-m-seq] { opacity: 1; transform: none; filter: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-transition { animation: none; }
   [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-w], [data-m-seq], [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
