@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/auna-costa-hero.webp";
 import { Logo } from "@/components/brand/logo";
 import { estaCerca } from "@/lib/geo";
+import { optimizarImagen } from "@/lib/imagen";
 import type { Comercio, Cupon, Evento } from "@/lib/public-data";
 import { cn } from "@/lib/utils";
 import { usePublicDirectory } from "./public-directory-provider";
@@ -71,8 +72,28 @@ export function PremiumHero() {
   const seleccion = elegiblesParaEsteVisitante
     .sort((a, b) => (ordenAleatorio.get(a.id) ?? 0) - (ordenAleatorio.get(b.id) ?? 0))
     .slice(0, 7);
-  // Mientras cargan los datos no hay slide institucional oscuro: se muestra el fondo claro del sitio.
-  const slides: (Slide | null)[] = seleccion.length > 0 ? seleccion : isLoading ? [] : [null];
+  // La selección se congela con los primeros datos disponibles: si el GPS u otros
+  // datos cambian durante la visita, el slide 0 no se recalcula ni se repinta.
+  const seleccionCongelada = useRef<Slide[] | null>(null);
+  if (seleccionCongelada.current === null && !isLoading) seleccionCongelada.current = seleccion;
+  const congelada = seleccionCongelada.current;
+  const slides: (Slide | null)[] = congelada === null ? [] : congelada.length > 0 ? congelada : [null];
+
+  // La imagen del primer slide se precarga y decodifica antes de mostrarse (máx. 900 ms):
+  // si vence el plazo, se muestra igual. Mientras tanto se ve el fondo previo empaquetado.
+  const primeraImagen = slides.length > 0 ? imagenDeSlide(slides[0]) : null;
+  const [imagenLista, setImagenLista] = useState(false);
+  useEffect(() => {
+    if (!primeraImagen || imagenLista) return;
+    let cancelado = false;
+    const mostrar = () => { if (!cancelado) setImagenLista(true); };
+    const timer = window.setTimeout(mostrar, 900);
+    const img = new Image();
+    img.onload = () => { img.decode().then(mostrar).catch(mostrar).finally(() => window.clearTimeout(timer)); };
+    img.onerror = () => { window.clearTimeout(timer); mostrar(); };
+    img.src = optimizarImagen(primeraImagen);
+    return () => { cancelado = true; window.clearTimeout(timer); };
+  }, [primeraImagen, imagenLista]);
 
   // Fundido cruzado con autoplay, pausa al tocar y swipe.
   const [activo, setActivo] = useState(0);
