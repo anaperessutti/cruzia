@@ -201,22 +201,25 @@ let ultimoTiempo = 0;
 let velocidad = 0;
 let ultimoRapido = -Infinity;
 let reposoTimer = 0;
+let scrollPendiente = false;
 function catchMissedCards(event?: Event) {
-  if (event) {
-    const ahora = performance.now();
-    velocidad = suavizarVelocidad(velocidad, window.scrollY - ultimoY, ahora - ultimoTiempo);
-    ultimoY = window.scrollY;
-    ultimoTiempo = ahora;
-    if (velocidad > UMBRAL_SCROLL_RAPIDO) {
-      ultimoRapido = ahora;
-      window.clearTimeout(reposoTimer);
-      reposoTimer = window.setTimeout(() => { scrollRapido = false; velocidad = 0; }, REPOSO_SCROLL_RAPIDO);
-    }
-    scrollRapido = sigueRapido(velocidad, ahora, ultimoRapido);
-  }
+  if (event) scrollPendiente = true;
   if (missedFrame || pendingCards.size === 0) return;
   missedFrame = requestAnimationFrame(() => {
     missedFrame = 0;
+    if (scrollPendiente) {
+      scrollPendiente = false;
+      const ahora = performance.now();
+      velocidad = suavizarVelocidad(velocidad, window.scrollY - ultimoY, ahora - ultimoTiempo);
+      ultimoY = window.scrollY;
+      ultimoTiempo = ahora;
+      if (velocidad > UMBRAL_SCROLL_RAPIDO) {
+        ultimoRapido = ahora;
+        window.clearTimeout(reposoTimer);
+        reposoTimer = window.setTimeout(() => { scrollRapido = false; velocidad = 0; }, REPOSO_SCROLL_RAPIDO);
+      }
+      scrollRapido = sigueRapido(velocidad, ahora, ultimoRapido);
+    }
     for (const [el, entrada] of pendingCards) {
       if (scrollRapido ? !entrada.anticipar : !entrada.tarjeta) continue;
       const rect = el.getBoundingClientRect();
