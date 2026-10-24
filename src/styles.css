@@ -412,30 +412,6 @@ html.m-js .m-fast img[data-m-card-image][data-ready="false"] { opacity: 0 !impor
 html.m-js [data-m-row]:not(.m-in) img[data-m-card-image] { transform: scale(1.04); }
 [data-m-row].m-in img[data-m-card-image] { transform: none; }
 
-/* Arrival-based Home entrances only; initial load keeps the shared timings above. */
-html.m-js [data-m-row].m-ahead > *:not([data-m-static]) {
-  transition: opacity 700ms var(--m-ease-move), transform 700ms var(--m-ease-move);
-  transition-delay: calc(var(--i, 0) * 70ms);
-}
-html.m-js [data-m-row].m-late > *:not([data-m-static]) {
-  transition: opacity 400ms var(--m-ease-move);
-  transition-delay: 0ms;
-  transform: none;
-}
-html.m-js [data-m-row]:is(.m-ahead, .m-late) > [data-m-static] { transition: none; }
-html.m-js [data-m-head].m-ahead :is([data-m-w], [data-m-head-el]) {
-  transition: opacity 700ms var(--m-ease-move), transform 700ms var(--m-ease-move), filter 700ms var(--m-ease-move);
-  transition-delay: 0ms;
-}
-html.m-js [data-m-head].m-ahead [data-m-w] { transition-delay: calc(var(--w, 0) * 30ms); }
-html.m-js [data-m-head].m-late :is([data-m-w], [data-m-head-el]) {
-  transition: opacity 400ms var(--m-ease-move);
-  transition-delay: 0ms;
-  transform: none;
-  filter: none;
-}
-html.m-js [data-m-row]:is(.m-ahead, .m-late).m-in:not(.m-run) > * { transition-delay: 0ms; }
-
 /* Secuencia de carga. --shift: 250ms en páginas internas. */
 [data-m-seq-root] { --shift: 0ms; }
 [data-m-seq-root][data-m-page] { --shift: 250ms; }

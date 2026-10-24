@@ -1,6 +1,6 @@
 import { describe, test } from "node:test";
 import { strictEqual, deepStrictEqual } from "node:assert";
-import { suavizarVelocidad, sigueRapido, UMBRAL_SCROLL_RAPIDO, REPOSO_SCROLL_RAPIDO, estadoLlegadaColeccion } from "./motion";
+import { suavizarVelocidad, sigueRapido, UMBRAL_SCROLL_RAPIDO, REPOSO_SCROLL_RAPIDO } from "./motion";
 import { seleccionarTarjetasCarrusel } from "./carrusel-seccion";
 
 describe("adaptive scroll rules", () => {
@@ -20,24 +20,5 @@ describe("adaptive scroll rules", () => {
   });
   test("keeps exactly the first six real cards", () => {
     deepStrictEqual(seleccionarTarjetasCarrusel([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), [1, 2, 3, 4, 5, 6]);
-  });
-});
-
-describe("Home collection arrival rules", () => {
-  test("anticipates downward arrival at 700ms, not beyond", () => {
-    strictEqual(estadoLlegadaColeccion(1700, 2000, 1000, 1, 1), "m-ahead");
-    strictEqual(estadoLlegadaColeccion(1701, 2001, 1000, 1, 1), null);
-  });
-  test("uses the bottom edge for upward travel", () => {
-    strictEqual(estadoLlegadaColeccion(-1000, -700, 1000, -1, 1), "m-ahead");
-    strictEqual(estadoLlegadaColeccion(-1001, -701, 1000, -1, 1), null);
-  });
-  test("uses a minimum speed of 0.15px/ms", () => {
-    strictEqual(estadoLlegadaColeccion(1105, 1400, 1000, 1, 0), "m-ahead");
-    strictEqual(estadoLlegadaColeccion(1106, 1400, 1000, 1, 0), null);
-  });
-  test("intersection reveals late in either direction", () => {
-    strictEqual(estadoLlegadaColeccion(900, 1200, 1000, 1, 2), "m-late");
-    strictEqual(estadoLlegadaColeccion(-100, 100, 1000, -1, 2), "m-late");
   });
 });
