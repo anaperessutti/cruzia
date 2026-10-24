@@ -44,19 +44,7 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
   const [filters, setFilters] = useState<Filters>({ localidadIds: [], coleccionIds: [], soloCupon: false });
   const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [detectedLocalidadId, setDetectedLocalidadId] = useState<string | null>(null);
-  // Arranca con la última ubicación conocida (visitas anteriores); el GPS la actualiza después.
-  const [userCoords, setUserCoords] = useState<Coords | null>(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      const raw = window.localStorage.getItem("cruzia:ultima-ubicacion");
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as { lat?: unknown; lng?: unknown };
-      if (typeof parsed.lat === "number" && typeof parsed.lng === "number" && Number.isFinite(parsed.lat) && Number.isFinite(parsed.lng)) {
-        return { lat: parsed.lat, lng: parsed.lng };
-      }
-    } catch { /* valor inválido: se ignora */ }
-    return null;
-  });
+  const [userCoords, setUserCoords] = useState<Coords | null>(null);
   // Si la usuaria ya eligió localidades a mano, el GPS nunca pisa esa selección.
   const manualSelectionRef = useRef(false);
   const requestedRef = useRef(false);
@@ -87,13 +75,6 @@ export function PublicDirectoryProvider({ children }: { children: ReactNode }) {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         setUserCoords({ lat: coords.latitude, lng: coords.longitude });
-        // Se guarda redondeada a 2 decimales (~1 km) para la próxima visita.
-        try {
-          window.localStorage.setItem("cruzia:ultima-ubicacion", JSON.stringify({
-            lat: Math.round(coords.latitude * 100) / 100,
-            lng: Math.round(coords.longitude * 100) / 100,
-          }));
-        } catch { /* almacenamiento no disponible: se ignora */ }
         const nearest = candidates
           .slice()
           .sort(
