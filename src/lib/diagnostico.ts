@@ -10,14 +10,14 @@ function iniciarFps() {
   const tick = (t: number) => {
     frames.push(t);
     prev = t;
-    while (frames.length && t - frames[0] > 2000) frames.shift();
+    while (frames.length && t - frames[0]! > 2000) frames.shift();
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
   setInterval(() => {
     let peor = 0;
-    for (let i = 1; i < frames.length; i++) peor = Math.max(peor, frames[i] - frames[i - 1]);
-    const span = frames.length > 1 ? frames[frames.length - 1] - frames[0] : 0;
+    for (let i = 1; i < frames.length; i++) peor = Math.max(peor, frames[i]! - frames[i - 1]!);
+    const span = frames.length > 1 ? frames[frames.length - 1]! - frames[0]! : 0;
     const fps = span > 0 ? Math.round(((frames.length - 1) * 1000) / span) : 0;
     el.textContent = `fps ${fps} | peor frame ${Math.round(peor)} ms`;
     void prev;
