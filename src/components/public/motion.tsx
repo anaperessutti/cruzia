@@ -334,13 +334,16 @@ function getImageObserver() {
   return imageObserver;
 }
 
-export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+export function CardImage({ src, fallbackSrc, ...props }: ImgHTMLAttributes<HTMLImageElement> & { fallbackSrc?: string | undefined }) {
   const ref = useRef<HTMLImageElement>(null);
   const [requested, setRequested] = useState(false);
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    setFailed(false);
+    setReady(false);
     const preload = () => { setRequested(true); imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); };
     const io = getImageObserver();
     el.addEventListener("m-preload", preload);
@@ -353,7 +356,10 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
     try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
     setReady(true);
   };
-  return <img {...props} ref={ref} src={requested ? src : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} />;
+  // Red de seguridad: si la URL principal falla, cambia una sola vez al fallback.
+  const alFallar = () => { if (!failed && fallbackSrc && fallbackSrc !== src) setFailed(true); };
+  const srcActual = failed && fallbackSrc ? fallbackSrc : src;
+  return <img {...props} ref={ref} src={requested ? srcActual : undefined} loading="eager" decoding="async" data-m-card-image="" data-ready={ready} onLoad={() => void loaded()} onError={alFallar} />;
 }
 
 export function Reveal({ children, className, as: T = "div", style, alCargar = false }: Props) {
