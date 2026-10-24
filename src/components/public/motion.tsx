@@ -175,7 +175,7 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(alCarg
       edgeCallbacks.delete(el);
       io.unobserve(el);
       soltarSiVacio(io, edgeCallbacks);
-      activar(el, alCargar ? baseAlCargar(rect) : 0);
+      activarColeccion(el, rect, alCargar);
     };
     edgeCallbacks.set(el, reveal);
     addPendingCard(el, reveal, true, false);
@@ -197,11 +197,29 @@ export let scrollRapido = false;
 const pendingCards = new Map<HTMLElement, { reveal: (rect: DOMRectReadOnly) => void; anticipar: boolean; tarjeta: boolean }>();
 let missedFrame = 0;
 let ultimoY = 0;
+let direccionScroll = 1;
 let ultimoTiempo = 0;
 let velocidad = 0;
 let ultimoRapido = -Infinity;
 let reposoTimer = 0;
 let scrollPendiente = false;
+/** Predicción direccional exclusiva de filas y encabezados; el observer cubre el scroll lento. */
+export function estadoLlegadaColeccion(top: number, bottom: number, alto: number, direccion: number, rapidez: number) {
+  const distancia = Math.max(0, direccion >= 0 ? top - alto : -bottom);
+  if (distancia === 0) return "m-late";
+  return distancia / Math.max(rapidez, 0.15) <= 700 ? "m-ahead" : null;
+}
+
+function activarColeccion(el: HTMLElement, rect: DOMRectReadOnly, alCargar: boolean) {
+  if (window.scrollY < 40) {
+    activar(el, alCargar ? baseAlCargar(rect) : 0);
+    return;
+  }
+  const estado = estadoLlegadaColeccion(rect.top, rect.bottom, window.innerHeight, direccionScroll, velocidad);
+  el.classList.add(estado ?? "m-late");
+  activar(el, 0, false);
+}
+
 function catchMissedCards(event?: Event) {
   if (event) scrollPendiente = true;
   if (missedFrame || pendingCards.size === 0) return;
@@ -210,7 +228,9 @@ function catchMissedCards(event?: Event) {
     if (scrollPendiente) {
       scrollPendiente = false;
       const ahora = performance.now();
-      velocidad = suavizarVelocidad(velocidad, window.scrollY - ultimoY, ahora - ultimoTiempo);
+      const desplazamiento = window.scrollY - ultimoY;
+      if (desplazamiento !== 0) direccionScroll = Math.sign(desplazamiento);
+      velocidad = suavizarVelocidad(velocidad, desplazamiento, ahora - ultimoTiempo);
       ultimoY = window.scrollY;
       ultimoTiempo = ahora;
       if (velocidad > UMBRAL_SCROLL_RAPIDO) {
@@ -221,6 +241,11 @@ function catchMissedCards(event?: Event) {
       scrollRapido = sigueRapido(velocidad, ahora, ultimoRapido);
     }
     for (const [el, entrada] of pendingCards) {
+      if (entrada.anticipar && window.scrollY >= 40) {
+        const rect = el.getBoundingClientRect();
+        if (estadoLlegadaColeccion(rect.top, rect.bottom, window.innerHeight, direccionScroll, velocidad)) entrada.reveal(rect);
+        continue;
+      }
       if (scrollRapido ? !entrada.anticipar : !entrada.tarjeta) continue;
       const rect = el.getBoundingClientRect();
       if (scrollRapido ? rect.top < window.innerHeight * 2.2 : rect.bottom <= 0) {
@@ -267,11 +292,16 @@ export function useRevealFila<T extends HTMLElement = HTMLDivElement>(alCargar =
       io?.unobserve(el);
       if (io) soltarSiVacio(io, edgeCallbacks);
     };
+    const reveal = (rect: DOMRectReadOnly) => { soltar(); activarColeccion(el, rect, alCargar); };
     if (io) {
-      edgeCallbacks.set(el, (rect) => { soltar(); activar(el, alCargar ? baseAlCargar(rect) : 0); });
+      edgeCallbacks.set(el, reveal);
       io.observe(el);
-      addPendingCard(el, () => { soltar(); activar(el, 0); }, true, false);
-    } else activar(el, 0);
+      addPendingCard(el, (rect) => {
+        if (window.scrollY < 40) { soltar(); activar(el, 0); }
+        else reveal(rect);
+      }, true, false);
+    } else if (window.scrollY < 40) activar(el, 0);
+    else activarColeccion(el, el.getBoundingClientRect(), alCargar);
     return () => { soltar(); };
   }, [alCargar]);
   return ref;
