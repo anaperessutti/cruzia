@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Ajustar solo filas y encabezados de Inicio con entrada por tiempo de llegada; conservar carga inicial, precarga y listener compartido, verificar y esperar captura de Ana.
+- [x] Ajustar solo filas y encabezados de Inicio con m-ahead/m-late por tiempo de llegada; carga inicial, precarga y listener compartido conservados, ocho pruebas y Home en Chromium con movimiento reducido aprobadas, compilación sin errores. Captura pendiente de Ana.
 
 - [x] Adaptar entradas al scroll rápido y restaurar precarga por fila en Inicio; máximo seis tarjetas reales, pruebas de umbral/reposo/límite aprobadas y scroll rápido verificado a 390px sin errores; referencias intactas. Captura real pendiente de Ana.
 
