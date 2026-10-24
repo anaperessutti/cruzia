@@ -336,8 +336,8 @@ html.m-js [data-m-group]:not(.m-in) > * { opacity: 0; transform: translate3d(0, 
   transition-delay: calc(var(--m-card-delay, 0ms) + var(--m-base, 0ms));
 }
 html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 24px, 0); }
-html.m-js :is([data-m-card], [data-m-head], [data-m-row]):not(.m-in) { visibility: hidden; }
-[data-m-card].m-in, [data-m-head].m-in, [data-m-row].m-in { visibility: visible; }
+html.m-js :is([data-m-card], [data-m-head]):not(.m-in) { visibility: hidden; }
+[data-m-card].m-in, [data-m-head].m-in { visibility: visible; }
 [data-m-card].m-in { opacity: 1; transform: none; }
 img[data-m-card-image] { transition: opacity 400ms var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move); }
 img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
@@ -359,17 +359,70 @@ html.m-js [data-m-card].m-card-webkit:not(.m-in) :is(img[data-m-card-image], [da
 [data-m-card].m-card-webkit.m-in [data-m-card-content] { opacity: 1; }
 [data-m-card].m-card-fast [data-m-card-content] { transition: opacity 250ms var(--m-ease-fade); }
 
-/* Filas de carrusel: la fila entra como unidad; las primeras tarjetas (--i) en cascada, el resto estático. */
-[data-m-row] > * {
-  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
-  transition-delay: calc(var(--i, 0) * var(--m-stagger) + var(--m-base, 0ms));
+/* Inicio — entradas hr- exclusivamente CSS. Sin soporte, filas posteriores visibles y estáticas.
+   Nunca aplicar opacity/filter a los wrappers que contienen progressive blur. */
+:root {
+  --hr-dist: 28px;
+  --hr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hr-card-ini: 12%;
+  --hr-card-fin: 42%;
+  --hr-paso: 3%;
 }
-html.m-js [data-m-row]:not(.m-in) > *:not([data-m-static]) { opacity: 0; transform: translate3d(0, 24px, 0); }
-[data-m-row].m-in > * { opacity: 1; transform: none; }
-[data-m-row].m-in:not(.m-run) > * { transition-delay: 0ms; }
-/* Safari: mismo motivo que m-card-webkit; las tarjetas de la fila entran solo con desplazamiento. */
-html.m-js [data-m-row].m-row-webkit:not(.m-in) { visibility: visible; }
-html.m-js [data-m-row].m-row-webkit:not(.m-in) > *:not([data-m-static]) { opacity: 1; }
+@keyframes hr-fade {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hr-sube {
+  from { transform: translate3d(0, var(--hr-dist), 0); }
+  to { transform: none; }
+}
+@keyframes hr-fade-solo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@supports (animation-timeline: view()) {
+  .hr-fila:not(.hr-primera) { view-timeline-name: --hr-sec; view-timeline-axis: block; }
+  .hr-fila:not(.hr-primera) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) {
+    animation: hr-fade linear both;
+    animation-timing-function: var(--hr-ease);
+    animation-timeline: --hr-sec;
+    animation-range: entry 0% entry 22%;
+  }
+  .hr-fila:not(.hr-primera) [data-hr="titulo"] { animation-range: entry 3% entry 25%; }
+  .hr-fila:not(.hr-primera) [data-hr="cta"] { animation-name: hr-fade-solo; animation-range: entry 6% entry 28%; }
+  .hr-fila:not(.hr-primera) [data-hr="card"] {
+    animation: hr-sube linear both;
+    animation-timing-function: var(--hr-ease);
+    animation-timeline: --hr-sec;
+    animation-range-start: entry calc(var(--hr-card-ini) + var(--i) * var(--hr-paso));
+    animation-range-end: entry calc(var(--hr-card-fin) + var(--i) * var(--hr-paso));
+  }
+  .hr-fila:not(.hr-primera) [data-hr="card"] [data-hr="contenido"] {
+    animation: hr-fade-solo linear both;
+    animation-timing-function: var(--hr-ease);
+    animation-timeline: --hr-sec;
+    animation-range-start: entry calc(var(--hr-card-ini) + var(--i) * var(--hr-paso));
+    animation-range-end: entry calc(var(--hr-card-fin) + var(--i) * var(--hr-paso));
+  }
+}
+/* Primera fila: tiempos finitos desde su montaje, independiente del soporte de ViewTimeline. */
+.hr-primera :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) {
+  animation: hr-fade 900ms var(--hr-ease) both;
+  animation-delay: 800ms;
+}
+.hr-primera [data-hr="titulo"] { animation-delay: 880ms; }
+.hr-primera [data-hr="cta"] { animation-name: hr-fade-solo; animation-delay: 960ms; }
+.hr-primera [data-hr="card"] {
+  animation: hr-sube 900ms var(--hr-ease) both;
+  animation-delay: calc(950ms + var(--i) * 70ms);
+}
+.hr-primera [data-hr="card"] [data-hr="contenido"] {
+  animation: hr-fade-solo 900ms var(--hr-ease) both;
+  animation-delay: calc(950ms + var(--i) * 70ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hr-fila [data-hr] { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
 
 /* Only shorten the small-screen hero when the first collection would fall below the fold. */
 @media (max-width: 430px) {
@@ -408,9 +461,6 @@ html.m-js :is(.m-fast, .m-fast > *, .m-fast img, .m-fast [data-m-w], .m-fast [da
 /* Do not remove the permanent optical blur from progressive-blur layers or copies. */
 html.m-js :is(.m-fast, .m-fast > *, .m-fast img[data-m-card-image], .m-fast [data-m-w], .m-fast [data-m-head-el], .m-fast [data-m-card-content]) { filter: none !important; }
 html.m-js .m-fast img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
-/* Row images use the same sharp-image-only scale as individual cards. */
-html.m-js [data-m-row]:not(.m-in) img[data-m-card-image] { transform: scale(1.04); }
-[data-m-row].m-in img[data-m-card-image] { transform: none; }
 
 /* Secuencia de carga. --shift: 250ms en páginas internas. */
 [data-m-seq-root] { --shift: 0ms; }
@@ -431,7 +481,7 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 [data-m-seq-root].m-in [data-m-seq] { opacity: 1; transform: none; filter: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-row] > *, [data-m-w], [data-m-seq], [data-m-head-el] {
+  [data-m-card], [data-m-card-content], img[data-m-card-image], [data-m], [data-m-group] > *, [data-m-w], [data-m-seq], [data-m-head-el] {
     transition: opacity 200ms linear !important; transition-delay: 0ms !important; transform: none !important; filter: none !important;
   }
 }
