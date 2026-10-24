@@ -170,15 +170,18 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(alCarg
     if (!el || el.classList.contains("m-in")) return;
     const io = getEdgeObserver();
     if (!io) { el.classList.add("m-in"); return; }
+    // This hook is also used by CommerceGrid: arrival motion belongs only to carousel sections.
+    const llegada = Boolean(el.closest("section")?.querySelector("[data-m-row]"));
     const reveal = (rect: DOMRectReadOnly) => {
       removePendingCard(el);
       edgeCallbacks.delete(el);
       io.unobserve(el);
       soltarSiVacio(io, edgeCallbacks);
-      activarColeccion(el, rect, alCargar);
+      if (llegada) activarColeccion(el, rect, alCargar);
+      else activar(el, alCargar ? baseAlCargar(rect) : 0);
     };
     edgeCallbacks.set(el, reveal);
-    addPendingCard(el, reveal, true, false);
+    addPendingCard(el, reveal, true, false, llegada);
     io.observe(el);
     return () => { removePendingCard(el); edgeCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, edgeCallbacks); };
   }, [alCargar]);
@@ -194,7 +197,7 @@ export function sigueRapido(velocidad: number, ahora: number, ultimoRapido: numb
   return velocidad > UMBRAL_SCROLL_RAPIDO || ahora - ultimoRapido < REPOSO_SCROLL_RAPIDO;
 }
 export let scrollRapido = false;
-const pendingCards = new Map<HTMLElement, { reveal: (rect: DOMRectReadOnly) => void; anticipar: boolean; tarjeta: boolean }>();
+const pendingCards = new Map<HTMLElement, { reveal: (rect: DOMRectReadOnly) => void; anticipar: boolean; tarjeta: boolean; llegada: boolean }>();
 let missedFrame = 0;
 let ultimoY = 0;
 let direccionScroll = 1;
@@ -241,7 +244,7 @@ function catchMissedCards(event?: Event) {
       scrollRapido = sigueRapido(velocidad, ahora, ultimoRapido);
     }
     for (const [el, entrada] of pendingCards) {
-      if (entrada.anticipar && window.scrollY >= 40) {
+      if (entrada.llegada && window.scrollY >= 40) {
         const rect = el.getBoundingClientRect();
         if (estadoLlegadaColeccion(rect.top, rect.bottom, window.innerHeight, direccionScroll, velocidad)) entrada.reveal(rect);
         continue;
@@ -263,13 +266,13 @@ function removePendingCard(el: HTMLElement) {
   cancelAnimationFrame(missedFrame);
   missedFrame = 0;
 }
-function addPendingCard(el: HTMLElement, reveal: (rect: DOMRectReadOnly) => void, anticipar = false, tarjeta = true) {
+function addPendingCard(el: HTMLElement, reveal: (rect: DOMRectReadOnly) => void, anticipar = false, tarjeta = true, llegada = false) {
   if (pendingCards.size === 0) {
     ultimoY = window.scrollY;
     ultimoTiempo = performance.now();
     window.addEventListener("scroll", catchMissedCards, { passive: true });
   }
-  pendingCards.set(el, { reveal, anticipar, tarjeta });
+  pendingCards.set(el, { reveal, anticipar, tarjeta, llegada });
   // Also recover cards mounted above the viewport after late data or navigation.
   catchMissedCards();
 }
@@ -299,7 +302,7 @@ export function useRevealFila<T extends HTMLElement = HTMLDivElement>(alCargar =
       addPendingCard(el, (rect) => {
         if (window.scrollY < 40) { soltar(); activar(el, 0); }
         else reveal(rect);
-      }, true, false);
+      }, true, false, true);
     } else if (window.scrollY < 40) activar(el, 0);
     else activarColeccion(el, el.getBoundingClientRect(), alCargar);
     return () => { soltar(); };
