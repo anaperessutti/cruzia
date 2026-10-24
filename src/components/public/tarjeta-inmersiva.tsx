@@ -2,7 +2,7 @@ import { Link, type LinkProps } from "@tanstack/react-router";
 import { ArrowRight, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { optimizarImagen } from "@/lib/imagen";
+import { imagenTarjeta, optimizarImagen } from "@/lib/imagen";
 import { cn } from "@/lib/utils";
 import { CardImage } from "./motion";
 
@@ -38,7 +38,7 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
         <div aria-hidden="true" className="frost-neutral frost-grain absolute inset-0" />
         {imagen ? (
           <>
-            <CardImage src={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
+            <CardImage src={imagenTarjeta(imagen)} fallbackSrc={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
             <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
           </>
         ) : null}
