@@ -249,6 +249,34 @@ function addPendingCard(el: HTMLElement, reveal: (rect: DOMRectReadOnly) => void
   catchMissedCards();
 }
 
+/**
+ * Fila de carrusel: se revela como una unidad al tocar el borde del viewport.
+ * Las primeras tarjetas (marcadas con --i) entran en cascada; el resto es estático (data-m-static).
+ */
+export function useRevealFila<T extends HTMLElement = HTMLDivElement>(alCargar = false) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.classList.contains("m-in")) return;
+    // WebKit must not composite backdrop-filter underneath an opacity-animated ancestor.
+    if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg/.test(navigator.userAgent)) el.classList.add("m-row-webkit");
+    const io = getEdgeObserver();
+    const soltar = () => {
+      removePendingCard(el);
+      edgeCallbacks.delete(el);
+      io?.unobserve(el);
+      if (io) soltarSiVacio(io, edgeCallbacks);
+    };
+    if (io) {
+      edgeCallbacks.set(el, (rect) => { soltar(); activar(el, alCargar ? baseAlCargar(rect) : 0); });
+      io.observe(el);
+      addPendingCard(el, () => { soltar(); activar(el, 0); }, true, false);
+    } else activar(el, 0);
+    return () => { soltar(); };
+  }, [alCargar]);
+  return ref;
+}
+
 export function CardReveal({ children, className, alCargar = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -320,7 +348,7 @@ export function CardImage({ src, fallbackSrc, ...props }: ImgHTMLAttributes<HTML
     const io = getImageObserver();
     el.addEventListener("m-preload", preload);
     // Carousel images are requested by their shared row observer, not the clipped image observer.
-    if (io && !el.closest(".hr-fila")) { imageCallbacks.set(el, preload); io.observe(el); }
+    if (io && !el.closest("[data-m-row]")) { imageCallbacks.set(el, preload); io.observe(el); }
     else if (!io) preload();
     return () => { el.removeEventListener("m-preload", preload); imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); };
   }, [src]);
