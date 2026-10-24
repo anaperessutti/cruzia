@@ -74,7 +74,7 @@ export function HomeCarousels() {
     );
   /** Premium con cupón activo: va ~6% más ancha. */
   const anchasDe = (tarjetas: TarjetaGrilla[]) =>
-    tarjetas.slice(0, 10).map((t) => t.tipo === "comercio" && nivelDeTarjeta(planById.get(t.comercio.plan_id), t.cupon) === "premium");
+    tarjetas.slice(0, 6).map((t) => t.tipo === "comercio" && nivelDeTarjeta(planById.get(t.comercio.plan_id), t.cupon) === "premium");
   /** Coordenadas usadas para el orden por cercanía de cada tarjeta. */
   const puntoDe = (tarjeta: TarjetaGrilla) =>
     tarjeta.tipo === "evento" ? { lat: tarjeta.evento.lat, lng: tarjeta.evento.lng } : tarjeta.comercio;
