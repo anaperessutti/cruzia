@@ -37,10 +37,14 @@ function iniciarFps() {
   }, 500);
 }
 
-if (typeof window !== "undefined") {
+let iniciado = false;
+
+/** Idempotente. Sin ?x=fps no hace nada ni registra requestAnimationFrame. */
+export function iniciarDiagnostico() {
+  if (iniciado || typeof window === "undefined") return;
   const valores = (new URLSearchParams(window.location.search).get("x") ?? "").split(",").map((v) => v.trim());
-  if (valores.includes("fps")) {
-    if (document.readyState === "complete") iniciarFps();
-    else window.addEventListener("load", iniciarFps, { once: true });
-  }
+  if (!valores.includes("fps")) return;
+  iniciado = true;
+  if (document.readyState === "complete") iniciarFps();
+  else window.addEventListener("load", iniciarFps, { once: true });
 }

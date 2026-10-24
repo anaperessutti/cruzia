@@ -17,7 +17,7 @@ import { SiteHeader } from "@/components/public/site-header";
 import { aplicarTiemposMovimiento } from "@/components/public/motion";
 import { usePathnameRenderizado } from "@/lib/use-pathname-renderizado";
 import { PreloadPublicRoutes } from "@/components/public/preload-public-routes";
-import "@/lib/diagnostico";
+import { iniciarDiagnostico } from "@/lib/diagnostico";
 
 function NotFoundComponent() {
   return (
@@ -151,6 +151,7 @@ function RootComponent() {
   useEffect(() => {
     document.documentElement.setAttribute("data-hydrated", "true");
   }, []);
+  useEffect(() => { iniciarDiagnostico(); }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
