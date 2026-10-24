@@ -138,7 +138,7 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
           {rotulo ? <span data-hr="eyebrow" className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
-          <h2 data-hr="titulo" className="mt-1 block text-subtitulo text-foreground">{titulo}</h2>
+          <h2 data-hr="titulo" className="mt-1 block text-subtitulo text-foreground"><span className="text-subtitulo">{titulo}</span></h2>
         </a>
         <a href={destinoUrl} data-hr="cta" className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
           Ver todo <BurbujaFlecha />

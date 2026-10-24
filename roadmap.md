@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Refactorizar exclusivamente las entradas de Inicio con CSS nativo; limpiar filas antiguas, preservar precarga y archivos protegidos, medir scroll lento/rápido, timelines y respaldo visible.
+- [x] Refactorizar exclusivamente las entradas de Inicio con CSS nativo; filas antiguas eliminadas, precarga y archivos protegidos conservados. Chromium 390px: scroll 0.3/3 px/ms sin contenido oculto al 45%, ViewTimeline/DocumentTimeline confirmados, respaldo sin soporte y movimiento reducido visibles. Primera fila completa 2.08s tras montaje (3.95s desde navegación por carga de datos); captura real pendiente de Ana.
 
 - [x] Adaptar entradas al scroll rápido y restaurar precarga por fila en Inicio; máximo seis tarjetas reales, pruebas de umbral/reposo/límite aprobadas y scroll rápido verificado a 390px sin errores; referencias intactas. Captura real pendiente de Ana.
 
