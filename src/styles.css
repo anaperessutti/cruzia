@@ -339,12 +339,12 @@ html.m-js [data-m-card]:not(.m-in) { opacity: 0; transform: translate3d(0, 24px,
 html.m-js :is([data-m-card], [data-m-head], [data-m-row]):not(.m-in) { visibility: hidden; }
 [data-m-card].m-in, [data-m-head].m-in, [data-m-row].m-in { visibility: visible; }
 [data-m-card].m-in { opacity: 1; transform: none; }
-img[data-m-card-image] { transition: opacity 700ms var(--m-ease-fade); }
+img[data-m-card-image] { transition: opacity 400ms var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move); }
 img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
 /* La imagen entra con opacity + scale, sin blur (el blur queda para títulos y textos del hero). */
 [data-m-card] img[data-m-card-image] {
-  transition: opacity var(--m-dur) var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
-  transition-delay: calc(var(--m-card-delay, 0ms) + var(--m-base, 0ms));
+  transition: opacity 400ms var(--m-ease-fade), transform var(--m-dur) var(--m-ease-move);
+  transition-delay: 0ms;
 }
 html.m-js [data-m-card]:not(.m-in) img { transform: scale(1.04); }
 [data-m-card].m-in img { transform: none; }
@@ -398,6 +398,19 @@ html.m-js [data-m-head]:not(.m-in) [data-m-w] { opacity: 0; transform: translate
 html.m-js [data-m-head]:not(.m-in) [data-m-head-el="eyebrow"] { opacity: 0; transform: translate3d(0, 8px, 0); filter: blur(6px); }
 html.m-js [data-m-head]:not(.m-in) [data-m-head-el="cta"] { opacity: 0; transform: translate3d(0, 8px, 0); }
 [data-m-head].m-in [data-m-head-el] { opacity: 1; transform: none; filter: none; }
+
+/* Adaptive entries: a single short fade, with no base delay, cascade, blur or movement. */
+html.m-js :is(.m-fast, .m-fast > *, .m-fast img, .m-fast [data-m-w], .m-fast [data-m-head-el], .m-fast [data-m-card-content]) {
+  transition: opacity 220ms var(--m-ease-fade) !important;
+  transition-delay: 0ms !important;
+  transform: none !important;
+}
+/* Do not remove the permanent optical blur from progressive-blur layers or copies. */
+html.m-js :is(.m-fast, .m-fast > *, .m-fast img[data-m-card-image], .m-fast [data-m-w], .m-fast [data-m-head-el], .m-fast [data-m-card-content]) { filter: none !important; }
+html.m-js .m-fast img[data-m-card-image][data-ready="false"] { opacity: 0 !important; }
+/* Row images use the same sharp-image-only scale as individual cards. */
+html.m-js [data-m-row]:not(.m-in) img[data-m-card-image] { transform: scale(1.04); }
+[data-m-row].m-in img[data-m-card-image] { transform: none; }
 
 /* Secuencia de carga. --shift: 250ms en páginas internas. */
 [data-m-seq-root] { --shift: 0ms; }

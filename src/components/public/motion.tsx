@@ -81,15 +81,18 @@ let filtrosActivos = 0;
 const MAX_FILTROS = 12;
 
 /** Activa el elemento: will-change solo mientras dura la animación (m-run se quita al terminar). */
-function activar(el: HTMLElement, base = 0) {
-  const conFiltro = filtrosActivos < MAX_FILTROS;
+function activar(el: HTMLElement, base = 0, adaptativo = true) {
+  const rapido = adaptativo && scrollRapido;
+  if (rapido) { base = 0; el.classList.add("m-fast"); el.style.removeProperty("--m-card-delay"); }
+  const conFiltro = !rapido && filtrosActivos < MAX_FILTROS;
   if (conFiltro) filtrosActivos += 1;
   else el.classList.add("m-noblur");
-  el.style.setProperty("--m-base", `${base}ms`);
+  if (rapido) el.style.removeProperty("--m-base");
+  else el.style.setProperty("--m-base", `${base}ms`);
   el.classList.add("m-run", "m-in");
   let timer = 0;
   const fin = () => {
-    el.classList.remove("m-run");
+    el.classList.remove("m-run", "m-fast");
     el.style.removeProperty("--m-base");
     if (conFiltro) filtrosActivos -= 1;
     el.removeEventListener("transitionend", alTerminar);
@@ -100,10 +103,10 @@ function activar(el: HTMLElement, base = 0) {
   const alTerminar = (e: TransitionEvent) => {
     if (e.propertyName !== "opacity") return;
     pendientes += 1;
-    if (e.target === el || pendientes > 40) fin();
+    if (rapido || e.target === el || pendientes > 40) fin();
   };
   el.addEventListener("transitionend", alTerminar);
-  timer = window.setTimeout(fin, TIEMPOS.dur + base + 1600);
+  timer = window.setTimeout(fin, rapido ? 260 : TIEMPOS.dur + base + 1600);
 }
 
 export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true, alCargar = false) {
@@ -113,9 +116,14 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(enabled = true
     if (!enabled || !el || el.classList.contains("m-in")) return;
     const io = getObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    callbacks.set(el, (rect) => activar(el, alCargar ? baseAlCargar(rect) : 0));
+    const reveal = (rect: DOMRectReadOnly) => {
+      removePendingCard(el);
+      activar(el, alCargar ? baseAlCargar(rect) : 0);
+    };
+    callbacks.set(el, reveal);
+    addPendingCard(el, reveal, false, false);
     io.observe(el);
-    return () => { callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
+    return () => { removePendingCard(el); callbacks.delete(el); io.unobserve(el); soltarSiVacio(io, callbacks); };
   }, [enabled, alCargar]);
   return ref;
 }
@@ -162,25 +170,64 @@ export function useRevealCabecera<T extends HTMLElement = HTMLDivElement>(alCarg
     if (!el || el.classList.contains("m-in")) return;
     const io = getEdgeObserver();
     if (!io) { el.classList.add("m-in"); return; }
-    edgeCallbacks.set(el, (rect) => activar(el, alCargar ? baseAlCargar(rect) : 0));
+    const reveal = (rect: DOMRectReadOnly) => {
+      removePendingCard(el);
+      edgeCallbacks.delete(el);
+      io.unobserve(el);
+      soltarSiVacio(io, edgeCallbacks);
+      activar(el, alCargar ? baseAlCargar(rect) : 0);
+    };
+    edgeCallbacks.set(el, reveal);
+    addPendingCard(el, reveal, true, false);
     io.observe(el);
-    return () => { edgeCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, edgeCallbacks); };
+    return () => { removePendingCard(el); edgeCallbacks.delete(el); io.unobserve(el); soltarSiVacio(io, edgeCallbacks); };
   }, [alCargar]);
   return ref;
 }
 
-// Only pending cards participate in fast-scroll recovery; one listener for the whole page.
-const pendingCards = new Map<HTMLElement, () => void>();
+export const UMBRAL_SCROLL_RAPIDO = 1.1;
+export const REPOSO_SCROLL_RAPIDO = 150;
+export function suavizarVelocidad(anterior: number, distancia: number, ms: number) {
+  return anterior * 0.65 + Math.abs(distancia) / Math.max(ms, 1) * 0.35;
+}
+export function sigueRapido(velocidad: number, ahora: number, ultimoRapido: number) {
+  return velocidad > UMBRAL_SCROLL_RAPIDO || ahora - ultimoRapido < REPOSO_SCROLL_RAPIDO;
+}
+export let scrollRapido = false;
+const pendingCards = new Map<HTMLElement, { reveal: (rect: DOMRectReadOnly) => void; anticipar: boolean; tarjeta: boolean }>();
 let missedFrame = 0;
-function catchMissedCards() {
+let ultimoY = 0;
+let ultimoTiempo = 0;
+let velocidad = 0;
+let ultimoRapido = -Infinity;
+let reposoTimer = 0;
+let scrollPendiente = false;
+function catchMissedCards(event?: Event) {
+  if (event) scrollPendiente = true;
   if (missedFrame || pendingCards.size === 0) return;
   missedFrame = requestAnimationFrame(() => {
     missedFrame = 0;
-    const missed = Array.from(pendingCards.keys()).filter((el) => el.getBoundingClientRect().bottom <= 0);
-    for (const el of missed) {
-      el.classList.add("m-card-fast");
-      el.style.setProperty("--m-card-delay", "0ms");
-      pendingCards.get(el)?.();
+    if (scrollPendiente) {
+      scrollPendiente = false;
+      const ahora = performance.now();
+      velocidad = suavizarVelocidad(velocidad, window.scrollY - ultimoY, ahora - ultimoTiempo);
+      ultimoY = window.scrollY;
+      ultimoTiempo = ahora;
+      if (velocidad > UMBRAL_SCROLL_RAPIDO) {
+        ultimoRapido = ahora;
+        window.clearTimeout(reposoTimer);
+        reposoTimer = window.setTimeout(() => { scrollRapido = false; velocidad = 0; }, REPOSO_SCROLL_RAPIDO);
+      }
+      scrollRapido = sigueRapido(velocidad, ahora, ultimoRapido);
+    }
+    for (const [el, entrada] of pendingCards) {
+      if (scrollRapido ? !entrada.anticipar : !entrada.tarjeta) continue;
+      const rect = el.getBoundingClientRect();
+      if (scrollRapido ? rect.top < window.innerHeight * 2.2 : rect.bottom <= 0) {
+        if (!scrollRapido) el.classList.add("m-card-fast");
+        el.style.removeProperty("--m-card-delay");
+        entrada.reveal(rect);
+      }
     }
   });
 }
@@ -191,9 +238,13 @@ function removePendingCard(el: HTMLElement) {
   cancelAnimationFrame(missedFrame);
   missedFrame = 0;
 }
-function addPendingCard(el: HTMLElement, reveal: () => void) {
-  if (pendingCards.size === 0) window.addEventListener("scroll", catchMissedCards, { passive: true });
-  pendingCards.set(el, reveal);
+function addPendingCard(el: HTMLElement, reveal: (rect: DOMRectReadOnly) => void, anticipar = false, tarjeta = true) {
+  if (pendingCards.size === 0) {
+    ultimoY = window.scrollY;
+    ultimoTiempo = performance.now();
+    window.addEventListener("scroll", catchMissedCards, { passive: true });
+  }
+  pendingCards.set(el, { reveal, anticipar, tarjeta });
   // Also recover cards mounted above the viewport after late data or navigation.
   catchMissedCards();
 }
@@ -219,7 +270,7 @@ export function useRevealFila<T extends HTMLElement = HTMLDivElement>(alCargar =
     if (io) {
       edgeCallbacks.set(el, (rect) => { soltar(); activar(el, alCargar ? baseAlCargar(rect) : 0); });
       io.observe(el);
-      addPendingCard(el, () => { soltar(); activar(el, 0); });
+      addPendingCard(el, () => { soltar(); activar(el, 0); }, true, false);
     } else activar(el, 0);
     return () => { soltar(); };
   }, [alCargar]);
@@ -244,16 +295,15 @@ export function CardReveal({ children, className, alCargar = false }: Props) {
       edgeCallbacks.delete(el);
       io?.unobserve(el);
       if (io) soltarSiVacio(io, edgeCallbacks);
-      el.classList.add("m-in");
+      activar(el, base);
       cleanupTimer = window.setTimeout(() => {
         el.classList.add("m-card-done");
         el.style.removeProperty("--m-base");
-      }, TIEMPOS.dur + base + 300);
+      }, scrollRapido ? 260 : TIEMPOS.dur + base + 300);
     };
     const enter = (rect: DOMRectReadOnly, delay: number) => {
-      el.style.setProperty("--m-card-delay", `${delay}ms`);
-      const base = alCargar ? baseAlCargar(rect) : 0;
-      el.style.setProperty("--m-base", `${base}ms`);
+      if (!scrollRapido) el.style.setProperty("--m-card-delay", `${delay}ms`);
+      const base = !scrollRapido && alCargar ? baseAlCargar(rect) : 0;
       reveal(base);
     };
     if (io) { edgeCallbacks.set(el, enter); io.observe(el); addPendingCard(el, () => reveal(0)); }
@@ -291,11 +341,13 @@ export function CardImage({ src, ...props }: ImgHTMLAttributes<HTMLImageElement>
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const preload = () => setRequested(true);
+    const preload = () => { setRequested(true); imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); };
     const io = getImageObserver();
-    if (io) { imageCallbacks.set(el, preload); io.observe(el); }
-    else preload();
-    return () => { imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); };
+    el.addEventListener("m-preload", preload);
+    // Carousel images are requested by their shared row observer, not the clipped image observer.
+    if (io && !el.closest("[data-m-row]")) { imageCallbacks.set(el, preload); io.observe(el); }
+    else if (!io) preload();
+    return () => { el.removeEventListener("m-preload", preload); imageCallbacks.delete(el); io?.unobserve(el); if (io) soltarSiVacio(io, imageCallbacks); };
   }, [src]);
   const loaded = async () => {
     try { await ref.current?.decode(); } catch { /* load still supplies a usable image */ }
@@ -321,7 +373,7 @@ export function Secuencia({ children, className, as: T = "div", style, pagina = 
     const el = ref.current;
     if (!el) return;
     let r2 = 0;
-    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => activar(el)); });
+    const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => activar(el, 0, false)); });
     return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
   }, []);
   return (

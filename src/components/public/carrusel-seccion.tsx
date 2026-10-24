@@ -8,11 +8,11 @@ import { observeStableResize } from "@/lib/stable-resize";
 /**
  * Carrusel horizontal reutilizable para filas del Home.
  * Scroll nativo con snap, sin barra visible; flechas de vidrio solo en desktop.
- * Limita a 10 tarjetas reales y cierra con la tarjeta "Ver todo".
+ * Limita a 6 tarjetas reales y cierra con la tarjeta "Ver todo".
  * No tiene lógica de datos: recibe las tarjetas ya resueltas.
  * La fila se revela como una unidad (useRevealFila): las primeras 4 tarjetas entran
  * en cascada con --i; el resto y "Ver todo" son estáticos. La precarga de imágenes
- * la hace solo el observer de CardImage.
+ * la coordinan dos observers compartidos de filas: cercanía y viewport real.
  */
 interface CarruselSeccionProps {
   titulo: string;
@@ -29,6 +29,44 @@ interface CarruselSeccionProps {
   className?: string;
 }
 
+export const MAX_TARJETAS_CARRUSEL = 6;
+export function seleccionarTarjetasCarrusel<T>(tarjetas: T[]): T[] {
+  return tarjetas.slice(0, MAX_TARJETAS_CARRUSEL);
+}
+
+const precargasFilas = new Map<Element, (cantidad: number) => void>();
+let observerCercano: IntersectionObserver | null = null;
+let observerVisible: IntersectionObserver | null = null;
+function observarPrecargaFila(el: HTMLElement, cargar: (cantidad: number) => void) {
+  if (typeof IntersectionObserver === "undefined") { cargar(6); return () => {}; }
+  observerCercano ??= new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      precargasFilas.get(entry.target)?.(4);
+      observerCercano?.unobserve(entry.target);
+    }
+  }, { threshold: 0, rootMargin: "0px 0px 200% 0px" });
+  observerVisible ??= new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      precargasFilas.get(entry.target)?.(6);
+      precargasFilas.delete(entry.target);
+      observerVisible?.unobserve(entry.target);
+      observerCercano?.unobserve(entry.target);
+    }
+    if (!precargasFilas.size) { observerVisible?.disconnect(); observerCercano?.disconnect(); }
+  }, { threshold: 0 });
+  precargasFilas.set(el, cargar);
+  observerCercano.observe(el);
+  observerVisible.observe(el);
+  return () => {
+    precargasFilas.delete(el);
+    observerCercano?.unobserve(el);
+    observerVisible?.unobserve(el);
+    if (!precargasFilas.size) { observerCercano?.disconnect(); observerVisible?.disconnect(); }
+  };
+}
+
 export function BurbujaFlecha({ className }: { className?: string }) {
   return <span className={cn("grid size-8 place-items-center rounded-full bg-foreground text-background transition-transform duration-300 group-hover:translate-x-1", className)}><ArrowRight className="size-4" /></span>;
 }
@@ -39,7 +77,26 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
   const cabeceraRef = useRevealCabecera<HTMLDivElement>(true);
   const [puedeAtras, setPuedeAtras] = useState(false);
   const [puedeAdelante, setPuedeAdelante] = useState(false);
-  const tarjetasVisibles = tarjetas.slice(0, 10);
+  const tarjetasVisibles = seleccionarTarjetasCarrusel(tarjetas);
+
+  const precargar = useCallback((cantidad: number, horizontal = false) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-carousel-card="real"]'));
+    let inicio = 0;
+    if (horizontal) {
+      const limite = el.scrollLeft + el.clientWidth;
+      const visibles = cards.filter((card) => card.offsetLeft < limite && card.offsetLeft + card.offsetWidth > el.scrollLeft);
+      const ultima = visibles.at(-1);
+      if (!ultima) return;
+      inicio = cards.indexOf(ultima) + 1;
+    }
+    for (const card of cards.slice(inicio, inicio + cantidad)) {
+      for (const image of card.querySelectorAll<HTMLImageElement>("img[data-m-card-image]")) {
+        image.dispatchEvent(new Event("m-preload"));
+      }
+    }
+  }, [scrollerRef]);
 
   const medir = useCallback(() => {
     const el = scrollerRef.current;
@@ -54,13 +111,14 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
     const el = scrollerRef.current;
     if (!el) return;
     const stopResize = observeStableResize(() => medir(), [el]);
+    const stopPreload = observarPrecargaFila(el, precargar);
     const onScroll = () => {
       if (scrollFrame.current) return;
-      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(); });
+      scrollFrame.current = requestAnimationFrame(() => { scrollFrame.current = 0; medir(); precargar(3, true); });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
-    return () => { stopResize(); el.removeEventListener("scroll", onScroll); cancelAnimationFrame(scrollFrame.current); scrollFrame.current = 0; };
-  }, [medir, scrollerRef, tarjetasVisibles.length]);
+    return () => { stopResize(); stopPreload(); el.removeEventListener("scroll", onScroll); cancelAnimationFrame(scrollFrame.current); scrollFrame.current = 0; };
+  }, [medir, precargar, scrollerRef, tarjetas]);
 
   const desplazar = (direccion: number) => {
     const el = scrollerRef.current;
