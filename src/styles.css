@@ -563,42 +563,40 @@ html.m-js .home-premium-hero[data-m-seq-root]:not(.m-in) .slider-entry-zoom { tr
 @media (prefers-reduced-motion: reduce) { .barra-gift-sticky, .barra-gift-sticky[data-visible="false"] { transform: none; transition: opacity 250ms ease, visibility 250ms; } }
 
 
-/* ===== Filas de carrusel de Inicio (hr-): entrada por fila con useFilaReveal (fila-reveal.ts).
-   Dos observers compartidos (cercanía y entrada); sin listeners de scroll ni timers en JS.
-   Ninguna tarjeta con foto es visible hasta que su foto está lista (data-ready). ===== */
-:root { --hr-dur: 900ms; --hr-dist: 24px; --hr-paso: 70ms; --hr-ease: var(--m-ease-move); }
-.hr-fila [data-hr] { transition: opacity var(--hr-dur) var(--hr-ease), transform var(--hr-dur) var(--hr-ease); }
+/* ===== Filas de carrusel de Inicio (hr-): velocidad compartida, fotos listas por fila.
+   Primera fila CSS-only; respaldos sin timers en JS. ===== */
+:root { --hr-dur-op: 1100ms; --hr-dur-tr: 900ms; --hr-ease-op: var(--m-ease-fade); --hr-ease-tr: var(--m-ease-move); --hr-paso: 70ms; --hr-dist: 24px; }
+.hr-fila [data-hr] { transition: opacity var(--hr-dur-op) var(--hr-ease-op), transform var(--hr-dur-tr) var(--hr-ease-tr); }
 .hr-fila [data-hr="titulo"] { transition-delay: 60ms; }
 .hr-fila [data-hr="cta"] { transition-delay: 120ms; }
 .hr-fila [data-hr="card"] { transition-delay: calc(var(--i, 0) * var(--hr-paso)); }
-.hr-fila.hr-tarde [data-hr] { transition-duration: 500ms; transition-delay: 0ms; }
-/* Filas posteriores: estado oculto, solo con html.m-js */
+/* Filas posteriores: las primeras cuatro tarjetas esperan juntas a todas sus fotos. */
 html.m-js .hr-fila:not(.hr-primera):not(.hr-in) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { opacity: 0; transform: translate3d(0, 12px, 0); }
 html.m-js .hr-fila:not(.hr-primera) [data-hr="card"] { opacity: 0; visibility: hidden; transform: translate3d(0, var(--hr-dist), 0); }
-html.m-js .hr-fila:not(.hr-primera).hr-in [data-hr="card"]:not(:has(img[data-m-card-image][data-ready="false"])) { opacity: 1; visibility: visible; transform: none; }
-/* Respaldos en CSS puro */
+html.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] { opacity: 1; visibility: visible; transform: none; animation: hr-card-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(var(--i, 0) * var(--hr-paso)); }
+/* Respaldos por fila, no por foto individual. */
 @keyframes hr-seguro { to { opacity: 1; visibility: visible; transform: none; } }
-html.m-js .hr-fila.hr-cerca:not(.hr-in):not(.hr-primera) [data-hr] { animation: hr-seguro 1ms linear 1800ms both; }
-html.m-js .hr-fila:not(.hr-primera).hr-in [data-hr="card"]:has(img[data-m-card-image][data-ready="false"]) { animation: hr-seguro 1ms linear 2200ms both; }
-/* Primera fila: al cargar, solo CSS, con html.m-js */
-@keyframes hr-texto-in { from { opacity: 0; transform: translate3d(0, 12px, 0); } to { opacity: 1; transform: none; } }
-@keyframes hr-card-in { from { opacity: 0; visibility: hidden; transform: translate3d(0, var(--hr-dist), 0); } to { opacity: 1; visibility: visible; transform: none; } }
-html.m-js .hr-primera :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { animation: hr-texto-in var(--hr-dur) var(--hr-ease) both; }
+html.m-js .hr-fila.hr-cerca:not(.hr-in):not(.hr-primera) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { animation: hr-seguro 1ms linear 1800ms both; }
+html.m-js .hr-fila:is(.hr-in, .hr-primera):has([data-hr="card"] img[data-m-card-image][data-ready="false"]) [data-hr="card"] { animation: hr-seguro 1ms linear 2200ms both; }
+/* Primera fila: opacity y transform usan curvas y duraciones independientes. */
+@keyframes hr-texto-op { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hr-texto-tr { from { transform: translate3d(0, 12px, 0); } to { transform: none; } }
+@keyframes hr-card-op { from { opacity: 0; visibility: hidden; } to { opacity: 1; visibility: visible; } }
+@keyframes hr-card-tr { from { transform: translate3d(0, var(--hr-dist), 0); } to { transform: none; } }
+html.m-js .hr-primera :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { animation: hr-texto-op var(--hr-dur-op) var(--hr-ease-op) both, hr-texto-tr var(--hr-dur-tr) var(--hr-ease-tr) both; }
 html.m-js .hr-primera [data-hr="eyebrow"] { animation-delay: 500ms; }
 html.m-js .hr-primera [data-hr="titulo"] { animation-delay: 560ms; }
 html.m-js .hr-primera [data-hr="cta"] { animation-delay: 620ms; }
-html.m-js .hr-primera [data-hr="card"] { opacity: 0; visibility: hidden; transform: translate3d(0, var(--hr-dist), 0); animation: hr-seguro 1ms linear 2200ms both; }
-html.m-js .hr-primera [data-hr="card"]:not(:has(img[data-m-card-image][data-ready="false"])) { animation: hr-card-in var(--hr-dur) var(--hr-ease) both; animation-delay: calc(300ms + var(--i, 0) * var(--hr-paso)); }
-/* Variante segura para Safari (?x=hrseguro): el wrapper de tarjeta nunca recibe opacity (solo visibility y transform);
-   el fundido pasa a [data-m-card-content] con las mismas condiciones de activación y los mismos tiempos. */
+html.m-js .hr-primera [data-hr="card"] { opacity: 0; visibility: hidden; transform: translate3d(0, var(--hr-dist), 0); }
+html.m-js .hr-primera:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] { animation: hr-card-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(300ms + var(--i, 0) * var(--hr-paso)); }
+/* Variante Safari: wrapper opaco, contenido con el mismo fundido y condición de fila. */
 html.x-hrseguro.m-js .hr-fila [data-hr="card"] { opacity: 1 !important; }
-html.x-hrseguro.m-js .hr-fila [data-hr="card"] [data-m-card-content] { transition: opacity var(--hr-dur) var(--hr-ease); transition-delay: calc(var(--i, 0) * var(--hr-paso)); }
-html.x-hrseguro.m-js .hr-fila.hr-tarde [data-hr="card"] [data-m-card-content] { transition-duration: 500ms; transition-delay: 0ms; }
-html.x-hrseguro.m-js .hr-fila:not(.hr-primera):not(.hr-in) [data-hr="card"] [data-m-card-content] { opacity: 0; }
-html.x-hrseguro.m-js .hr-fila:not(.hr-primera).hr-in [data-hr="card"]:not(:has(img[data-m-card-image][data-ready="false"])) [data-m-card-content] { opacity: 1; }
-html.x-hrseguro.m-js .hr-fila:not(.hr-primera).hr-in [data-hr="card"]:has(img[data-m-card-image][data-ready="false"]) [data-m-card-content] { animation: hr-seguro 1ms linear 2200ms both; }
-html.x-hrseguro.m-js .hr-primera [data-hr="card"] [data-m-card-content] { opacity: 0; animation: hr-seguro 1ms linear 2200ms both; }
-html.x-hrseguro.m-js .hr-primera [data-hr="card"]:not(:has(img[data-m-card-image][data-ready="false"])) [data-m-card-content] { animation: hr-card-in var(--hr-dur) var(--hr-ease) both; animation-delay: calc(300ms + var(--i, 0) * var(--hr-paso)); }
+html.x-hrseguro.m-js .hr-fila [data-hr="card"] [data-m-card-content] { transition: opacity var(--hr-dur-op) var(--hr-ease-op), transform var(--hr-dur-tr) var(--hr-ease-tr); transition-delay: calc(var(--i, 0) * var(--hr-paso)); }
+html.x-hrseguro.m-js .hr-fila:not(.hr-primera) [data-hr="card"] [data-m-card-content] { opacity: 0; }
+html.x-hrseguro.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] [data-m-card-content] { opacity: 1; animation: hr-texto-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(var(--i, 0) * var(--hr-paso)); }
+html.x-hrseguro.m-js .hr-fila:is(.hr-in, .hr-primera):has([data-hr="card"] img[data-m-card-image][data-ready="false"]) [data-hr="card"] [data-m-card-content] { animation: hr-seguro 1ms linear 2200ms both; }
+html.x-hrseguro.m-js .hr-primera [data-hr="card"] [data-m-card-content] { opacity: 0; }
+html.x-hrseguro.m-js .hr-primera:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] [data-m-card-content] { animation: hr-texto-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(300ms + var(--i, 0) * var(--hr-paso)); }
 /* Movimiento reducido */
 @media (prefers-reduced-motion: reduce) { html.m-js .hr-fila [data-hr] { opacity: 1 !important; visibility: visible !important; transform: none !important; animation: none !important; transition: none !important; } }
 
