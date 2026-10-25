@@ -573,7 +573,7 @@ html.m-js .home-premium-hero[data-m-seq-root]:not(.m-in) .slider-entry-zoom { tr
 /* Filas posteriores: las primeras cuatro tarjetas esperan juntas a todas sus fotos. */
 html.m-js .hr-fila:not(.hr-primera):not(.hr-in) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { opacity: 0; transform: translate3d(0, 12px, 0); }
 html.m-js .hr-fila:not(.hr-primera) [data-hr="card"] { opacity: 0; visibility: hidden; transform: translate3d(0, var(--hr-dist), 0); }
-html.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] { opacity: 1; visibility: visible; transform: none; }
+html.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] { opacity: 1; visibility: visible; transform: none; animation: hr-card-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(var(--i, 0) * var(--hr-paso)); }
 /* Respaldos por fila, no por foto individual. */
 @keyframes hr-seguro { to { opacity: 1; visibility: visible; transform: none; } }
 html.m-js .hr-fila.hr-cerca:not(.hr-in):not(.hr-primera) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { animation: hr-seguro 1ms linear 1800ms both; }
@@ -593,7 +593,7 @@ html.m-js .hr-primera:not(:has([data-hr="card"] img[data-m-card-image][data-read
 html.x-hrseguro.m-js .hr-fila [data-hr="card"] { opacity: 1 !important; }
 html.x-hrseguro.m-js .hr-fila [data-hr="card"] [data-m-card-content] { transition: opacity var(--hr-dur-op) var(--hr-ease-op), transform var(--hr-dur-tr) var(--hr-ease-tr); transition-delay: calc(var(--i, 0) * var(--hr-paso)); }
 html.x-hrseguro.m-js .hr-fila:not(.hr-primera) [data-hr="card"] [data-m-card-content] { opacity: 0; }
-html.x-hrseguro.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] [data-m-card-content] { opacity: 1; }
+html.x-hrseguro.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] [data-m-card-content] { opacity: 1; animation: hr-texto-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(var(--i, 0) * var(--hr-paso)); }
 html.x-hrseguro.m-js .hr-fila:is(.hr-in, .hr-primera):has([data-hr="card"] img[data-m-card-image][data-ready="false"]) [data-hr="card"] [data-m-card-content] { animation: hr-seguro 1ms linear 2200ms both; }
 html.x-hrseguro.m-js .hr-primera [data-hr="card"] [data-m-card-content] { opacity: 0; }
 html.x-hrseguro.m-js .hr-primera:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] [data-m-card-content] { animation: hr-texto-op var(--hr-dur-op) var(--hr-ease-op) both, hr-card-tr var(--hr-dur-tr) var(--hr-ease-tr) both; animation-delay: calc(300ms + var(--i, 0) * var(--hr-paso)); }
