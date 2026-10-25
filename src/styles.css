@@ -576,7 +576,7 @@ html.m-js .hr-fila:not(.hr-primera) [data-hr="card"] { opacity: 0; visibility: h
 html.m-js .hr-fila:not(.hr-primera).hr-in:not(:has([data-hr="card"] img[data-m-card-image][data-ready="false"])) [data-hr="card"] { opacity: 1; visibility: visible; transform: none; }
 /* Respaldos por fila, no por foto individual. */
 @keyframes hr-seguro { to { opacity: 1; visibility: visible; transform: none; } }
-html.m-js .hr-fila.hr-cerca:not(.hr-in):not(.hr-primera) [data-hr] { animation: hr-seguro 1ms linear 1800ms both; }
+html.m-js .hr-fila.hr-cerca:not(.hr-in):not(.hr-primera) :is([data-hr="eyebrow"], [data-hr="titulo"], [data-hr="cta"]) { animation: hr-seguro 1ms linear 1800ms both; }
 html.m-js .hr-fila:is(.hr-in, .hr-primera):has([data-hr="card"] img[data-m-card-image][data-ready="false"]) [data-hr="card"] { animation: hr-seguro 1ms linear 2200ms both; }
 /* Primera fila: opacity y transform usan curvas y duraciones independientes. */
 @keyframes hr-texto-op { from { opacity: 0; } to { opacity: 1; } }
