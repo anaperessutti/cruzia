@@ -79,13 +79,14 @@ function getIoEntra() {
         if (!entry.isIntersecting || !filasObservadas.has(entry.target)) continue;
         const el = entry.target;
         const vel = velocidadActual();
-        let dur = 1100;
+        let dur = 1400;
         if (medida && el instanceof HTMLElement) {
-          const f = entry.intersectionRatio > 0.3 ? 0 : Math.min(1, Math.max(0, (1.2 - vel) / 1.0));
-          dur = 300 + 800 * f;
+          const f = entry.intersectionRatio > 0.3 ? 0 : Math.min(1, Math.max(0, (1.2 - vel) / 0.8));
+          dur = 300 + 1100 * f;
           el.style.setProperty("--hr-dur-op", `${dur}ms`);
-          el.style.setProperty("--hr-dur-tr", `${250 + 650 * f}ms`);
-          el.style.setProperty("--hr-paso", `${20 + 50 * f}ms`);
+          el.style.setProperty("--hr-dur-tr", `${250 + 1150 * f}ms`);
+          el.style.setProperty("--hr-paso", `${20 + 90 * f}ms`);
+          el.style.setProperty("--hr-f", `${f}`);
         }
         if (mostrarFps) window.__hrUltimo = { vel, dur };
         el.classList.add("hr-in");
