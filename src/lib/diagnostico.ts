@@ -14,6 +14,7 @@ function iniciarFps() {
     "padding:4px 8px",
     "border-radius:6px",
     "pointer-events:none",
+    "white-space:pre",
   ].join(";");
   el.textContent = "diag fps…";
   // Fuera de <body>: React no lo administra y no puede quitarlo al re-renderizar.
@@ -23,17 +24,19 @@ function iniciarFps() {
   const frames: number[] = [];
   const tick = (t: number) => {
     frames.push(t);
-    while (frames.length && t - frames[0]! > 2000) frames.shift();
+    while (frames.length && t - (frames[0] ?? t) > 2000) frames.shift();
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
 
   setInterval(() => {
     let peor = 0;
-    for (let i = 1; i < frames.length; i++) peor = Math.max(peor, frames[i]! - frames[i - 1]!);
-    const span = frames.length > 1 ? frames[frames.length - 1]! - frames[0]! : 0;
+    for (let i = 1; i < frames.length; i++) peor = Math.max(peor, (frames[i] ?? 0) - (frames[i - 1] ?? 0));
+    const span = frames.length > 1 ? (frames.at(-1) ?? 0) - (frames[0] ?? 0) : 0;
     const fps = span > 0 ? Math.round(((frames.length - 1) * 1000) / span) : 0;
-    el.textContent = `fps ${fps} | peor frame ${Math.round(peor)} ms`;
+    const fila = window.__hrUltimo;
+    el.textContent = `fps ${fps} | peor frame ${Math.round(peor)} ms`
+      + (fila ? `\nvel ${fila.vel.toFixed(2)} px/ms | fundido ${Math.round(fila.dur)} ms` : "");
   }, 500);
 }
 
