@@ -138,17 +138,19 @@ export function HomeCarousels() {
           titulo="Favoritos de la Costa"
           rotulo="Elegidos para vos"
           destacada
+          primera
           anchas={anchasDe(favoritos)}
           destinoUrl={`/cupones?soloCupon=true&favoritos=true${localidadesQuery}`}
           tarjetas={favoritos.map(renderTarjeta)}
           imagenes={imagenesDe(favoritos)}
         />
       ) : null}
-      {filasOrdenadas.map(({ coleccion, tarjetas }) => (
+      {filasOrdenadas.map(({ coleccion, tarjetas }, index) => (
         <CarruselSeccion
           key={coleccion.id}
           titulo={coleccion.nombre}
           rotulo="Colección"
+          primera={favoritos.length === 0 && index === 0}
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
           tarjetas={tarjetas.map(renderTarjeta)}
           imagenes={imagenesDe(tarjetas)}
