@@ -66,12 +66,6 @@ export function HomeCarousels() {
         rubro={rubroById.get(tarjeta.comercio.rubro_id ?? "")}
       />
     );
-  const imagenesDe = (tarjetas: TarjetaGrilla[]) =>
-    tarjetas.map((tarjeta) =>
-      tarjeta.tipo === "evento"
-        ? tarjeta.evento.imagen_url
-        : tarjeta.cupon?.flyer_url ?? tarjeta.comercio.galeria[0] ?? null,
-    );
   /** Premium con cupón activo: va ~6% más ancha. */
   const anchasDe = (tarjetas: TarjetaGrilla[]) =>
     tarjetas.slice(0, 6).map((t) => t.tipo === "comercio" && nivelDeTarjeta(planById.get(t.comercio.plan_id), t.cupon) === "premium");
@@ -142,7 +136,6 @@ export function HomeCarousels() {
           anchas={anchasDe(favoritos)}
           destinoUrl={`/cupones?soloCupon=true&favoritos=true${localidadesQuery}`}
           tarjetas={favoritos.map(renderTarjeta)}
-          imagenes={imagenesDe(favoritos)}
         />
       ) : null}
       {filasOrdenadas.map(({ coleccion, tarjetas }, index) => (
@@ -153,7 +146,6 @@ export function HomeCarousels() {
           primera={favoritos.length === 0 && index === 0}
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
           tarjetas={tarjetas.map(renderTarjeta)}
-          imagenes={imagenesDe(tarjetas)}
         />
       ))}
     </div>
