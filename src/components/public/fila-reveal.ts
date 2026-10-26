@@ -1,8 +1,18 @@
 import { useEffect, useRef } from "react";
 
-/** Home rows: shared proximity/entry observers and one passive scroll listener.
- * Pending rows own the listener; activation releases them without timers or rAF.
- * The first row stays CSS-only. Photo readiness is coordinated by row-level :has().
+import { REPOSO_SCROLL_RAPIDO, TIEMPOS, UMBRAL_SCROLL_RAPIDO, sigueRapido, suavizarVelocidad } from "./motion";
+
+/**
+ * Filas de Inicio: misma entrada que las tarjetas de Gift Box.
+ * - La cabecera (rótulo + título) y la tira de tarjetas se revelan por separado, cada una cuando ella
+ *   misma entra en pantalla (umbral 0.12, margen inferior −8 %: el mismo observer de Reveal/RevealGroup).
+ *   Nada se muestra antes de que el elemento esté a la vista.
+ * - Hay dos modos, elegidos en el instante de entrada: lento (curva completa de Gift Box) y rápido
+ *   (un fundido corto, sin movimiento ni blur). La velocidad se mide una vez por frame, con las mismas
+ *   funciones que usa motion.tsx, y no depende de la separación entre eventos de scroll.
+ * - Clases que se agregan a la <section>: hr-cab / hr-cab-fast (cabecera), hr-in / hr-in-fast (tarjetas)
+ *   y hr-run (solo mientras dura la cascada, para devolver el retraso de los hijos a 0).
+ * La primera fila no usa observers: entra solo con CSS al cargar.
  */
 declare global {
   interface Window {
@@ -10,29 +20,38 @@ declare global {
   }
 }
 
-let ioCerca: IntersectionObserver | null = null;
-let ioEntra: IntersectionObserver | null = null;
-const filasObservadas = new Set<Element>();
+const DUR_RAPIDO = 220;
+const MARGEN_VISIBLE = "0px 0px -8% 0px";
+const UMBRAL_VISIBLE = 0.12;
+/** Un frame más corto que esto se acumula en el siguiente: evita picos por tiempos casi nulos. */
+const MIN_MUESTRA_MS = 8;
+
+type Abrir = (rapido: boolean) => void;
+
+const pendientes = new Map<Element, Abrir>();
+let io: IntersectionObserver | null = null;
 let escuchando = false;
+let frame = 0;
 let yAnterior = 0;
 let tAnterior = 0;
 let velocidad = 0;
-let medida = false;
+let ultimoRapido = -Infinity;
 let mostrarFps = false;
 
-function medirVelocidad() {
+function muestrear() {
+  frame = 0;
   const ahora = performance.now();
-  const dt = ahora - tAnterior;
-  if (dt <= 0) return;
-  const vInst = Math.abs(window.scrollY - yAnterior) / dt;
-  velocidad = dt > 150 ? vInst : 0.6 * velocidad + 0.4 * vInst;
+  const ms = ahora - tAnterior;
+  if (ms < MIN_MUESTRA_MS) return;
+  if (ms > REPOSO_SCROLL_RAPIDO) velocidad = 0;
+  velocidad = suavizarVelocidad(velocidad, window.scrollY - yAnterior, ms);
   yAnterior = window.scrollY;
   tAnterior = ahora;
-  medida = true;
+  if (velocidad > UMBRAL_SCROLL_RAPIDO) ultimoRapido = ahora;
 }
 
-function velocidadActual() {
-  return performance.now() - tAnterior > 150 ? 0 : velocidad;
+function alScroll() {
+  if (!frame) frame = requestAnimationFrame(muestrear);
 }
 
 function iniciarScroll() {
@@ -40,87 +59,102 @@ function iniciarScroll() {
   yAnterior = window.scrollY;
   tAnterior = performance.now();
   velocidad = 0;
-  medida = false;
+  ultimoRapido = -Infinity;
   mostrarFps = (new URLSearchParams(window.location.search).get("x") ?? "")
     .split(",").some((valor) => valor.trim() === "fps");
-  window.addEventListener("scroll", medirVelocidad, { passive: true });
+  window.addEventListener("scroll", alScroll, { passive: true });
   escuchando = true;
 }
 
-function soltarSiVacios() {
-  if (filasObservadas.size !== 0) return;
-  ioCerca?.disconnect();
-  ioEntra?.disconnect();
-  if (escuchando) window.removeEventListener("scroll", medirVelocidad);
+function soltarSiVacio() {
+  if (pendientes.size !== 0) return;
+  io?.disconnect();
+  if (escuchando) window.removeEventListener("scroll", alScroll);
+  cancelAnimationFrame(frame);
+  frame = 0;
   escuchando = false;
 }
 
-function getIoCerca() {
-  if (ioCerca || typeof IntersectionObserver === "undefined") return ioCerca;
-  ioCerca = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        entry.target.classList.add("hr-cerca");
-        ioCerca?.unobserve(entry.target);
-      }
-      soltarSiVacios();
-    },
-    { threshold: 0, rootMargin: "0px 0px 100% 0px" },
-  );
-  return ioCerca;
+function velocidadActual() {
+  const ahora = performance.now();
+  const vel = ahora - tAnterior > REPOSO_SCROLL_RAPIDO ? 0 : velocidad;
+  return { vel, rapido: sigueRapido(vel, ahora, ultimoRapido) };
 }
 
-function getIoEntra() {
-  if (ioEntra || typeof IntersectionObserver === "undefined") return ioEntra;
-  ioEntra = new IntersectionObserver(
+function getIo() {
+  if (io || typeof IntersectionObserver === "undefined") return io;
+  io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        if (!entry.isIntersecting || !filasObservadas.has(entry.target)) continue;
-        const el = entry.target;
-        const vel = velocidadActual();
-        let dur = 1400;
-        if (medida && el instanceof HTMLElement) {
-          const f = entry.intersectionRatio > 0.3 ? 0 : Math.min(1, Math.max(0, (1.2 - vel) / 0.8));
-          dur = 300 + 1100 * f;
-          el.style.setProperty("--hr-dur-op", `${dur}ms`);
-          el.style.setProperty("--hr-dur-tr", `${250 + 1150 * f}ms`);
-          el.style.setProperty("--hr-paso", `${20 + 90 * f}ms`);
-          el.style.setProperty("--hr-f", `${f}`);
-        }
-        if (mostrarFps) window.__hrUltimo = { vel, dur };
-        el.classList.add("hr-in");
-        ioEntra?.unobserve(el);
-        ioCerca?.unobserve(el);
-        filasObservadas.delete(el);
+        const abrir = pendientes.get(entry.target);
+        if (!abrir) continue;
+        // Una fila que ya quedó por encima de la pantalla (carga tardía, scroll restaurado) se muestra sin animar.
+        const pasada = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+        if (!entry.isIntersecting && !pasada) continue;
+        pendientes.delete(entry.target);
+        io?.unobserve(entry.target);
+        const { vel, rapido } = pasada ? { vel: 0, rapido: true } : velocidadActual();
+        if (mostrarFps) window.__hrUltimo = { vel, dur: rapido ? DUR_RAPIDO : TIEMPOS.dur };
+        abrir(rapido);
       }
-      soltarSiVacios();
+      soltarSiVacio();
     },
-    { threshold: 0, rootMargin: "0px 0px 12% 0px" },
+    { threshold: UMBRAL_VISIBLE, rootMargin: MARGEN_VISIBLE },
   );
-  return ioEntra;
+  return io;
+}
+
+function observar(el: Element, abrir: Abrir) {
+  const observer = getIo();
+  if (!observer) { abrir(true); return; }
+  pendientes.set(el, abrir);
+  iniciarScroll();
+  observer.observe(el);
+}
+
+function soltar(el: Element) {
+  pendientes.delete(el);
+  io?.unobserve(el);
+  soltarSiVacio();
 }
 
 export function useFilaReveal<T extends HTMLElement>(primera = false) {
   const ref = useRef<T>(null);
   useEffect(() => {
-    const el = ref.current;
-    if (!el || primera || el.classList.contains("hr-in")) return;
-    const cerca = getIoCerca();
-    const entra = getIoEntra();
-    if (!cerca || !entra) {
-      el.classList.add("hr-in");
-      return;
+    const fila = ref.current;
+    if (!fila || primera) return;
+    let timer = 0;
+    const abrirCabecera: Abrir = (rapido) => {
+      if (rapido) fila.classList.add("hr-cab-fast");
+      fila.classList.add("hr-cab");
+    };
+    const abrirTarjetas: Abrir = (rapido) => {
+      if (rapido) fila.classList.add("hr-in-fast");
+      fila.classList.add("hr-in", "hr-run");
+      window.clearTimeout(timer);
+      timer = window.setTimeout(
+        () => fila.classList.remove("hr-run"),
+        rapido ? DUR_RAPIDO + 200 : TIEMPOS.dur + 5 * TIEMPOS.stagger + 300,
+      );
+    };
+    const cabecera = fila.querySelector<HTMLElement>('[data-hr-obs="cab"]') ?? fila;
+    const tarjetas = fila.querySelector<HTMLElement>('[data-hr-obs="tarjetas"]') ?? fila;
+    const registrados: Element[] = [];
+    const pideCabecera = !fila.classList.contains("hr-cab");
+    const pideTarjetas = !fila.classList.contains("hr-in");
+    if (cabecera === tarjetas) {
+      // Sin los marcadores esperados, la fila entera dispara ambas partes a la vez.
+      if (pideCabecera || pideTarjetas) {
+        observar(fila, (rapido) => { abrirCabecera(rapido); abrirTarjetas(rapido); });
+        registrados.push(fila);
+      }
+    } else {
+      if (pideCabecera) { observar(cabecera, abrirCabecera); registrados.push(cabecera); }
+      if (pideTarjetas) { observar(tarjetas, abrirTarjetas); registrados.push(tarjetas); }
     }
-    filasObservadas.add(el);
-    iniciarScroll();
-    cerca.observe(el);
-    entra.observe(el);
     return () => {
-      filasObservadas.delete(el);
-      cerca.unobserve(el);
-      entra.unobserve(el);
-      soltarSiVacios();
+      for (const el of registrados) soltar(el);
+      window.clearTimeout(timer);
     };
   }, [primera]);
   return ref;

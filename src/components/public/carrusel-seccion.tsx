@@ -10,8 +10,9 @@ import { observeStableResize } from "@/lib/stable-resize";
  * Scroll nativo con snap, sin barra visible; flechas de vidrio solo en desktop.
  * Limita a 6 tarjetas reales y cierra con la tarjeta "Ver todo".
  * No tiene lógica de datos: recibe las tarjetas ya resueltas.
- * La fila se revela como una unidad con useFilaReveal (reglas hr- de styles.css):
- * las primeras 4 tarjetas entran en cascada con --i; el resto y "Ver todo" son estáticos.
+ * La cabecera (rótulo + título, único enlace a "Ver todo" arriba) y la tira de tarjetas se revelan por separado
+ * con useFilaReveal (reglas hr- de styles.css), cada una cuando entra en pantalla: las primeras 4 tarjetas
+ * entran en cascada con --i y la tarjeta final "Ver todo" es el último paso si la fila tiene 4 o menos.
  * La precarga de imágenes la coordinan dos observers compartidos de filas: cercanía y viewport real.
  */
 interface CarruselSeccionProps {
@@ -138,35 +139,38 @@ export function CarruselSeccion({ titulo, rotulo, destinoUrl, tarjetas, anchas =
   return (
     <section ref={seccionRef} aria-label={titulo} className={cn("hr-fila", primera && "hr-primera", "relative", className)}>
       {destacada ? <div aria-hidden="true" className="halo-accent pointer-events-none absolute -top-20 left-1/2 -z-10 h-[34rem] w-[60rem] max-w-[160vw] -translate-x-1/2" /> : null}
-      <div className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div data-hr-obs="cab" className="mx-auto flex max-w-7xl items-end justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <a href={destinoUrl} className="min-w-0">
           {rotulo ? <span data-hr="eyebrow" className="text-sobretitulo font-medium block text-primary">{rotulo}</span> : null}
           <span data-hr="titulo" className="mt-1 block text-subtitulo text-foreground">{titulo}</span>
         </a>
-        <a href={destinoUrl} data-hr="cta" className="glass group flex shrink-0 items-center gap-2 rounded-full py-1 pl-4 pr-1 text-sm font-medium text-foreground">
-          Ver todo <BurbujaFlecha />
-        </a>
       </div>
 
-      <div className="relative mt-5">
+      <div data-hr-obs="tarjetas" className="relative mt-5">
         <div
           ref={scrollerRef}
           data-m-row=""
           className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
         >
           {tarjetasVisibles.map((tarjeta, index) => (
-            // Cascada solo en las primeras 4 (primer encuadre); las demás y "Ver todo", estáticas.
+            // Cascada solo en las primeras 4; las demás, estáticas. data-hr-blur marca cuáles se ven al entrar
+            // (1: las dos primeras, también en celular; 2: la 3.ª y la 4.ª, desde 640 px).
             <div
               key={isValidElement(tarjeta) && tarjeta.key != null ? tarjeta.key : index}
               data-carousel-card="real"
-              {...(index < 4 ? { "data-hr": "card", style: { "--i": index } as CSSProperties } : {})}
+              {...(index < 4 ? { "data-hr": "card", "data-hr-blur": index < 2 ? "1" : "2", style: { "--i": index } as CSSProperties } : {})}
               className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
             >
               {tarjeta}
             </div>
           ))}
 
-          <div data-carousel-card="ver-todo" className={cn("shrink-0 snap-start", ancho)}>
+          {/* Último paso de la cascada cuando la fila tiene 4 tarjetas o menos; en filas largas queda lejos y es estática. */}
+          <div
+            data-carousel-card="ver-todo"
+            {...(tarjetasVisibles.length <= 4 ? { "data-hr": "card", style: { "--i": tarjetasVisibles.length } as CSSProperties } : {})}
+            className={cn("shrink-0 snap-start", ancho)}
+          >
             <a href={destinoUrl} aria-label={`Ver todo en ${titulo}`} className="frost frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1">
               <span className="relative text-xl font-semibold leading-tight">Ver todo en <span className="block">{titulo}</span></span>
               <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
