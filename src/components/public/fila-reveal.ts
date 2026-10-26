@@ -16,13 +16,9 @@ import {
  * - Hay dos modos, elegidos en el instante de entrada: lento (curva completa de Gift Box) y rápido
  *   (un fundido corto, sin movimiento ni blur). La velocidad se mide una vez por frame, con las mismas
  *   funciones que usa motion.tsx, y no depende de la separación entre eventos de scroll.
- * - Fotos: las tarjetas que se ven al entrar (2 en celular, 4 desde 640 px) esperan sus fotos JUNTAS, hasta
- *   ESPERA_FOTOS ms; así entran siempre en orden y con 110 ms de diferencia. En modo rápido no se espera:
- *   la tarjeta entra con su fondo neutro y la foto se funde sola al llegar. Cada tarjeta recibe la clase
- *   hr-listo cuando sus fotos están listas (reemplaza a los selectores :has()).
- * - Clases que se agregan a la <section>: hr-cab / hr-cab-fast (cabecera), hr-in / hr-in-fast (la fila está a la
- *   vista), hr-go (arranca la cascada de tarjetas) y hr-run (solo mientras dura, para devolver el retraso a 0).
- * La primera fila no usa observers de scroll: espera sus fotos al montarse y arranca con hr-go.
+ * - Clases que se agregan a la <section>: hr-cab / hr-cab-fast (cabecera), hr-in / hr-in-fast (tarjetas)
+ *   y hr-run (solo mientras dura la cascada, para devolver el retraso de los hijos a 0).
+ * La primera fila no usa observers: entra solo con CSS al cargar.
  */
 declare global {
   interface Window {
@@ -31,9 +27,6 @@ declare global {
 }
 
 const DUR_RAPIDO = 220;
-/** Tope de espera de las fotos de las tarjetas visibles antes de arrancar la cascada. */
-const ESPERA_FOTOS = 700;
-const ESPERA_FOTOS_PRIMERA = 1000;
 const MARGEN_VISIBLE = "0px 0px -8% 0px";
 const UMBRAL_VISIBLE = 0.12;
 /** Un frame más corto que esto se acumula en el siguiente: evita picos por tiempos casi nulos. */
@@ -135,97 +128,24 @@ function soltar(el: Element) {
   soltarSiVacio();
 }
 
-function tarjetasDe(fila: HTMLElement) {
-  return Array.from(fila.querySelectorAll<HTMLElement>('[data-hr="card"]'));
-}
-
-/** Marca hr-listo en las tarjetas cuyas fotos ya están decodificadas (o que no tienen foto). */
-function marcarListas(fila: HTMLElement) {
-  for (const card of tarjetasDe(fila)) {
-    if (card.classList.contains("hr-listo")) continue;
-    const fotos = Array.from(card.querySelectorAll<HTMLImageElement>("img[data-m-card-image]"));
-    if (fotos.every((foto) => foto.dataset["ready"] === "true")) card.classList.add("hr-listo");
-  }
-}
-
 export function useFilaReveal<T extends HTMLElement>(primera = false) {
   const ref = useRef<T>(null);
   useEffect(() => {
     const fila = ref.current;
-    if (!fila) return;
+    if (!fila || primera) return;
     let timer = 0;
-    let timerEspera = 0;
-    let lanzado = fila.classList.contains("hr-go");
-    let alCambiarFotos: (() => void) | null = null;
-
-    marcarListas(fila);
-    const vigia =
-      typeof MutationObserver === "undefined"
-        ? null
-        : new MutationObserver(() => {
-            marcarListas(fila);
-            alCambiarFotos?.();
-          });
-    vigia?.observe(fila, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["data-ready"],
-    });
-
-    const lanzar = () => {
-      if (lanzado) return;
-      lanzado = true;
-      alCambiarFotos = null;
-      window.clearTimeout(timerEspera);
-      fila.classList.add("hr-go", "hr-run");
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        () => fila.classList.remove("hr-run"),
-        (fila.classList.contains("hr-in-fast") ? DUR_RAPIDO : TIEMPOS.dur + 5 * TIEMPOS.stagger) +
-          300 +
-          (primera ? 300 : 0),
-      );
-    };
-    /** Espera las fotos de las tarjetas visibles (juntas) hasta el tope, o arranca ya si no hace falta. */
-    const esperarFotosYLanzar = (rapido: boolean) => {
-      if (lanzado) return;
-      marcarListas(fila);
-      if (rapido) {
-        for (const card of tarjetasDe(fila)) card.classList.add("hr-listo");
-        lanzar();
-        return;
-      }
-      const visibles = window.matchMedia?.("(min-width: 640px)").matches ? 4 : 2;
-      const grupo = tarjetasDe(fila).slice(0, visibles);
-      const lista = () => grupo.every((card) => card.classList.contains("hr-listo"));
-      if (lista()) {
-        lanzar();
-        return;
-      }
-      alCambiarFotos = () => {
-        if (lista()) lanzar();
-      };
-      timerEspera = window.setTimeout(lanzar, primera ? ESPERA_FOTOS_PRIMERA : ESPERA_FOTOS);
-    };
-
-    if (primera) {
-      esperarFotosYLanzar(false);
-      return () => {
-        vigia?.disconnect();
-        window.clearTimeout(timer);
-        window.clearTimeout(timerEspera);
-      };
-    }
-
     const abrirCabecera: Abrir = (rapido) => {
       if (rapido) fila.classList.add("hr-cab-fast");
       fila.classList.add("hr-cab");
     };
     const abrirTarjetas: Abrir = (rapido) => {
       if (rapido) fila.classList.add("hr-in-fast");
-      fila.classList.add("hr-in");
-      esperarFotosYLanzar(rapido);
+      fila.classList.add("hr-in", "hr-run");
+      window.clearTimeout(timer);
+      timer = window.setTimeout(
+        () => fila.classList.remove("hr-run"),
+        rapido ? DUR_RAPIDO + 200 : TIEMPOS.dur + 5 * TIEMPOS.stagger + 300,
+      );
     };
     const cabecera = fila.querySelector<HTMLElement>('[data-hr-obs="cab"]') ?? fila;
     const tarjetas = fila.querySelector<HTMLElement>('[data-hr-obs="tarjetas"]') ?? fila;
@@ -253,9 +173,7 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
     }
     return () => {
       for (const el of registrados) soltar(el);
-      vigia?.disconnect();
       window.clearTimeout(timer);
-      window.clearTimeout(timerEspera);
     };
   }, [primera]);
   return ref;

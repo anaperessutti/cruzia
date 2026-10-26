@@ -35,6 +35,8 @@ interface CarruselSeccionProps {
   destacada?: boolean;
   /** Primera fila visible al cargar: entra solo con CSS, sin observers. */
   primera?: boolean;
+  /** Se mantiene por compatibilidad. */
+  imagenes?: (string | null)[];
   className?: string;
 }
 

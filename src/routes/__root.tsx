@@ -108,7 +108,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       // Marca "m-js" antes del primer render: solo con ella los elementos animados arrancan ocultos.
       { children: `document.documentElement.classList.add("m-js");setTimeout(function(){if(!document.documentElement.hasAttribute("data-hydrated"))document.documentElement.classList.remove("m-js");},4000);` },
-      { children: `(function(){try{var h=document.documentElement,v=(new URLSearchParams(location.search).get("x")||"").split(","),w=["noblur","nofx","noanim","cv","hrseguro","hrsinblur"];for(var i=0;i<v.length;i++){var s=v[i].trim();if(w.indexOf(s)>-1){h.classList.add("x-"+s);if(s==="noanim")h.classList.remove("m-js");}}}catch(e){}})();` },
+      { children: `(function(){try{var h=document.documentElement,v=(new URLSearchParams(location.search).get("x")||"").split(","),w=["noblur","nofx","noanim","cv","blur6","hrseguro","hrsinblur"];for(var i=0;i<v.length;i++){var s=v[i].trim();if(w.indexOf(s)>-1){h.classList.add("x-"+s);if(s==="noanim")h.classList.remove("m-js");}}}catch(e){}})();` },
     ],
   }),
   shellComponent: RootShell,
