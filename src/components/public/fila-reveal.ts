@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import { REPOSO_SCROLL_RAPIDO, TIEMPOS, UMBRAL_SCROLL_RAPIDO, sigueRapido, suavizarVelocidad } from "./motion";
+import {
+  REPOSO_SCROLL_RAPIDO,
+  TIEMPOS,
+  UMBRAL_SCROLL_RAPIDO,
+  sigueRapido,
+  suavizarVelocidad,
+} from "./motion";
 
 /**
  * Filas de Inicio: misma entrada que las tarjetas de Gift Box.
@@ -61,7 +67,8 @@ function iniciarScroll() {
   velocidad = 0;
   ultimoRapido = -Infinity;
   mostrarFps = (new URLSearchParams(window.location.search).get("x") ?? "")
-    .split(",").some((valor) => valor.trim() === "fps");
+    .split(",")
+    .some((valor) => valor.trim() === "fps");
   window.addEventListener("scroll", alScroll, { passive: true });
   escuchando = true;
 }
@@ -106,7 +113,10 @@ function getIo() {
 
 function observar(el: Element, abrir: Abrir) {
   const observer = getIo();
-  if (!observer) { abrir(true); return; }
+  if (!observer) {
+    abrir(true);
+    return;
+  }
   pendientes.set(el, abrir);
   iniciarScroll();
   observer.observe(el);
@@ -145,12 +155,21 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
     if (cabecera === tarjetas) {
       // Sin los marcadores esperados, la fila entera dispara ambas partes a la vez.
       if (pideCabecera || pideTarjetas) {
-        observar(fila, (rapido) => { abrirCabecera(rapido); abrirTarjetas(rapido); });
+        observar(fila, (rapido) => {
+          abrirCabecera(rapido);
+          abrirTarjetas(rapido);
+        });
         registrados.push(fila);
       }
     } else {
-      if (pideCabecera) { observar(cabecera, abrirCabecera); registrados.push(cabecera); }
-      if (pideTarjetas) { observar(tarjetas, abrirTarjetas); registrados.push(tarjetas); }
+      if (pideCabecera) {
+        observar(cabecera, abrirCabecera);
+        registrados.push(cabecera);
+      }
+      if (pideTarjetas) {
+        observar(tarjetas, abrirTarjetas);
+        registrados.push(tarjetas);
+      }
     }
     return () => {
       for (const el of registrados) soltar(el);
