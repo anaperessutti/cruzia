@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 
-import { REPOSO_SCROLL_RAPIDO, TIEMPOS, UMBRAL_SCROLL_RAPIDO, sigueRapido, suavizarVelocidad } from "./motion";
+import {
+  REPOSO_SCROLL_RAPIDO,
+  TIEMPOS,
+  UMBRAL_SCROLL_RAPIDO,
+  sigueRapido,
+  suavizarVelocidad,
+} from "./motion";
 
 /**
  * Filas de Inicio: misma entrada que las tarjetas de Gift Box.
@@ -68,7 +74,8 @@ function iniciarScroll() {
   velocidad = 0;
   ultimoRapido = -Infinity;
   mostrarFps = (new URLSearchParams(window.location.search).get("x") ?? "")
-    .split(",").some((valor) => valor.trim() === "fps");
+    .split(",")
+    .some((valor) => valor.trim() === "fps");
   window.addEventListener("scroll", alScroll, { passive: true });
   escuchando = true;
 }
@@ -113,7 +120,10 @@ function getIo() {
 
 function observar(el: Element, abrir: Abrir) {
   const observer = getIo();
-  if (!observer) { abrir(true); return; }
+  if (!observer) {
+    abrir(true);
+    return;
+  }
   pendientes.set(el, abrir);
   iniciarScroll();
   observer.observe(el);
@@ -134,7 +144,7 @@ function marcarListas(fila: HTMLElement) {
   for (const card of tarjetasDe(fila)) {
     if (card.classList.contains("hr-listo")) continue;
     const fotos = Array.from(card.querySelectorAll<HTMLImageElement>("img[data-m-card-image]"));
-    if (fotos.every((foto) => foto.dataset.ready === "true")) card.classList.add("hr-listo");
+    if (fotos.every((foto) => foto.dataset["ready"] === "true")) card.classList.add("hr-listo");
   }
 }
 
@@ -149,11 +159,19 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
     let alCambiarFotos: (() => void) | null = null;
 
     marcarListas(fila);
-    const vigia = typeof MutationObserver === "undefined" ? null : new MutationObserver(() => {
-      marcarListas(fila);
-      alCambiarFotos?.();
+    const vigia =
+      typeof MutationObserver === "undefined"
+        ? null
+        : new MutationObserver(() => {
+            marcarListas(fila);
+            alCambiarFotos?.();
+          });
+    vigia?.observe(fila, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-ready"],
     });
-    vigia?.observe(fila, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-ready"] });
 
     const lanzar = () => {
       if (lanzado) return;
@@ -164,7 +182,9 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
       window.clearTimeout(timer);
       timer = window.setTimeout(
         () => fila.classList.remove("hr-run"),
-        (fila.classList.contains("hr-in-fast") ? DUR_RAPIDO : TIEMPOS.dur + 5 * TIEMPOS.stagger) + 300 + (primera ? 300 : 0),
+        (fila.classList.contains("hr-in-fast") ? DUR_RAPIDO : TIEMPOS.dur + 5 * TIEMPOS.stagger) +
+          300 +
+          (primera ? 300 : 0),
       );
     };
     /** Espera las fotos de las tarjetas visibles (juntas) hasta el tope, o arranca ya si no hace falta. */
@@ -179,14 +199,23 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
       const visibles = window.matchMedia?.("(min-width: 640px)").matches ? 4 : 2;
       const grupo = tarjetasDe(fila).slice(0, visibles);
       const lista = () => grupo.every((card) => card.classList.contains("hr-listo"));
-      if (lista()) { lanzar(); return; }
-      alCambiarFotos = () => { if (lista()) lanzar(); };
+      if (lista()) {
+        lanzar();
+        return;
+      }
+      alCambiarFotos = () => {
+        if (lista()) lanzar();
+      };
       timerEspera = window.setTimeout(lanzar, primera ? ESPERA_FOTOS_PRIMERA : ESPERA_FOTOS);
     };
 
     if (primera) {
       esperarFotosYLanzar(false);
-      return () => { vigia?.disconnect(); window.clearTimeout(timer); window.clearTimeout(timerEspera); };
+      return () => {
+        vigia?.disconnect();
+        window.clearTimeout(timer);
+        window.clearTimeout(timerEspera);
+      };
     }
 
     const abrirCabecera: Abrir = (rapido) => {
@@ -206,12 +235,21 @@ export function useFilaReveal<T extends HTMLElement>(primera = false) {
     if (cabecera === tarjetas) {
       // Sin los marcadores esperados, la fila entera dispara ambas partes a la vez.
       if (pideCabecera || pideTarjetas) {
-        observar(fila, (rapido) => { abrirCabecera(rapido); abrirTarjetas(rapido); });
+        observar(fila, (rapido) => {
+          abrirCabecera(rapido);
+          abrirTarjetas(rapido);
+        });
         registrados.push(fila);
       }
     } else {
-      if (pideCabecera) { observar(cabecera, abrirCabecera); registrados.push(cabecera); }
-      if (pideTarjetas) { observar(tarjetas, abrirTarjetas); registrados.push(tarjetas); }
+      if (pideCabecera) {
+        observar(cabecera, abrirCabecera);
+        registrados.push(cabecera);
+      }
+      if (pideTarjetas) {
+        observar(tarjetas, abrirTarjetas);
+        registrados.push(tarjetas);
+      }
     }
     return () => {
       for (const el of registrados) soltar(el);

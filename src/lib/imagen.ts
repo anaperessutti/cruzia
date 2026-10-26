@@ -5,7 +5,8 @@
  */
 export function optimizarImagen<T extends string | null | undefined>(url: T): T {
   if (!url || !url.includes("/storage/v1/object/sign/")) return url;
-  return url.replace("/storage/v1/object/sign/", "/storage/v1/render/image/sign/") + "&quality=78" as T;
+  return (url.replace("/storage/v1/object/sign/", "/storage/v1/render/image/sign/") +
+    "&quality=78") as T;
 }
 
 /**
@@ -16,7 +17,9 @@ export function optimizarImagen<T extends string | null | undefined>(url: T): T 
 function medidasTarjeta() {
   const dpr = typeof window === "undefined" ? 3 : window.devicePixelRatio || 1;
   const ancha = typeof window !== "undefined" && window.innerWidth >= 1024;
-  return dpr < 2.5 && !ancha ? { ancho: 600, alto: 750, calidad: 72 } : { ancho: 800, alto: 1000, calidad: 75 };
+  return dpr < 2.5 && !ancha
+    ? { ancho: 600, alto: 750, calidad: 72 }
+    : { ancho: 800, alto: 1000, calidad: 75 };
 }
 
 /**
