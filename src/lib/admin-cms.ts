@@ -355,3 +355,59 @@ export function eventoVigente(e: { fecha_inicio: string; fecha_fin: string }): b
   const hoy = hoyISO();
   return e.fecha_inicio <= hoy && e.fecha_fin >= hoy;
 }
+
+export type GiftboxItemAdmin = Database["public"]["Tables"]["giftbox_items"]["Row"];
+export type GiftboxCategoriaAdmin = Database["public"]["Enums"]["giftbox_categoria"];
+
+export type GiftboxItemForm = {
+  categoria: GiftboxCategoriaAdmin;
+  nombre: string;
+  precio: number;
+  comercio_id: string | null;
+  lugar: string | null;
+  descripcion: string | null;
+  imagen_url: string | null;
+  galeria: string[];
+  vigencia_inicio: string | null;
+  vigencia_fin: string | null;
+  direccion: string | null;
+  localidad_id: string | null;
+  horarios: string | null;
+  lat: number | null;
+  lng: number | null;
+  whatsapp: string | null;
+  redes_sociales: Record<string, string>;
+  orden: number;
+  activo: boolean;
+};
+
+export async function getGiftboxItemsAdmin(): Promise<GiftboxItemAdmin[]> {
+  const { data, error } = await supabase
+    .from("giftbox_items")
+    .select("*")
+    .order("orden")
+    .order("nombre");
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function guardarGiftboxItem(id: string | null, form: GiftboxItemForm): Promise<string> {
+  if (id) {
+    const { error } = await supabase.from("giftbox_items").update(form).eq("id", id);
+    if (error) throw error;
+    return id;
+  }
+  const { data, error } = await supabase.from("giftbox_items").insert(form).select("id").single();
+  if (error) throw error;
+  return data.id;
+}
+
+export async function cambiarActivoGiftboxItem(id: string, activo: boolean) {
+  const { error } = await supabase.from("giftbox_items").update({ activo }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function eliminarGiftboxItem(id: string) {
+  const { error } = await supabase.from("giftbox_items").delete().eq("id", id);
+  if (error) throw error;
+}
