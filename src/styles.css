@@ -741,9 +741,18 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] {
    Mismas animaciones y efectos que las demás; solo cambian las medidas y qué texto se muestra.
    El desenfoque del degradé se escala a la tarjeta chica (la cantidad de capas no cambia). */
 @media (max-width: 639px) {
+  .filas-inicio {
+    --inicio-espacio-fila: calc((40px + 27px) * 2 / 3);
+    padding-bottom: calc(var(--inicio-espacio-fila) - 27px);
+  }
   .filas-inicio > [data-compacta]:has(+ [data-compacta]) {
-    --compacta-separacion: calc((40px + 27px) * 2 / 3 - 27px);
-    margin-block-end: var(--compacta-separacion);
+    margin-block-end: calc(var(--inicio-espacio-fila) - 27px);
+  }
+  .filas-inicio > :not([data-compacta]):has(+ [data-compacta]) {
+    margin-block-end: calc(var(--inicio-espacio-fila) - 40px);
+  }
+  .site-safe-page:has(.filas-inicio) + .site-safe-footer {
+    margin-top: 0;
   }
   .immersive-card-link[data-compacta],
   .immersive-card[data-compacta] {
@@ -780,7 +789,8 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] {
   }
   .immersive-card[data-compacta] .tarjeta-body p {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--primary-foreground);
     line-height: 1.2;
     -webkit-line-clamp: 2;
     line-clamp: 2;
