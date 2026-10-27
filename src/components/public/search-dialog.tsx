@@ -38,7 +38,9 @@ export function SearchDialog() {
     return data.comercios.map((item) => {
       const rubro = item.rubro_id ? (rubros.get(item.rubro_id) ?? "") : "";
       const clasificacion = [rubro, ...(coleccionesPorComercio.get(item.id) ?? [])].join(" ");
-      const detalle = [item.descripcion, ...(cuponesPorComercio.get(item.id) ?? [])].filter(Boolean).join(" ");
+      const detalle = [item.descripcion, ...(cuponesPorComercio.get(item.id) ?? [])]
+        .filter(Boolean)
+        .join(" ");
       return { item, rubro, clasificacion, detalle };
     });
   }, [data]);
@@ -49,10 +51,16 @@ export function SearchDialog() {
       ...comerciosBuscables
         .map((registro) => ({
           ...registro,
-          prioridad: coincide(normalized, registro.item.nombre) ? 0
-            : coincide(normalized, registro.clasificacion) ? 1
-            : coincide(normalized, [registro.item.nombre, registro.clasificacion, registro.detalle].join(" ")) ? 2
-            : 3,
+          prioridad: coincide(normalized, registro.item.nombre)
+            ? 0
+            : coincide(normalized, registro.clasificacion)
+              ? 1
+              : coincide(
+                    normalized,
+                    [registro.item.nombre, registro.clasificacion, registro.detalle].join(" "),
+                  )
+                ? 2
+                : 3,
         }))
         .filter((registro) => registro.prioridad < 3)
         .sort((a, b) => a.prioridad - b.prioridad)

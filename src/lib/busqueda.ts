@@ -59,12 +59,14 @@ export function coincide(consulta: string, texto: string): boolean {
   if (!palabras.length || !destino.length) return false;
   return palabras.every((palabra) => {
     if (destino.some((otra) => palabrasCoinciden(palabra, otra))) return true;
-    return Object.entries(SINONIMOS).some(([clave, sinonimos]) =>
-      palabrasCoinciden(palabra, normalizar(clave)) && sinonimos.some((sinonimo) =>
-        normalizar(sinonimo).split(" ").every((parte) =>
-          destino.some((otra) => palabrasCoinciden(parte, otra)),
+    return Object.entries(SINONIMOS).some(
+      ([clave, sinonimos]) =>
+        palabrasCoinciden(palabra, normalizar(clave)) &&
+        sinonimos.some((sinonimo) =>
+          normalizar(sinonimo)
+            .split(" ")
+            .every((parte) => destino.some((otra) => palabrasCoinciden(parte, otra))),
         ),
-      ),
     );
   });
 }

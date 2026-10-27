@@ -7,7 +7,15 @@ describe("búsqueda flexible", () => {
     strictEqual(normalizar("  CAFÉ,   Mar de Ajó! "), "cafe mar de ajo");
   });
   test("quita terminaciones y descarta raíces demasiado cortas", () => {
-    for (const palabra of ["churrería", "churrero", "churrera", "churres", "churrs", "churrito", "churrita"]) {
+    for (const palabra of [
+      "churrería",
+      "churrero",
+      "churrera",
+      "churres",
+      "churrs",
+      "churrito",
+      "churrita",
+    ]) {
       strictEqual(raiz(palabra), "churr");
     }
     strictEqual(raiz("casas"), "casas");
