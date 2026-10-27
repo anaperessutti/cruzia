@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
+import { SelectorEnfoque } from "@/components/admin/selector-enfoque";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,6 +59,7 @@ const VACIO: EventoForm = {
   es_top_slider: false,
   hero_alcance_local: false,
   es_favorita_home: false,
+  posicion_tarjeta: null,
 };
 
 function formDesde(e: Evento): EventoForm {
@@ -74,6 +76,7 @@ function formDesde(e: Evento): EventoForm {
     es_top_slider: e.es_top_slider,
     hero_alcance_local: e.hero_alcance_local,
     es_favorita_home: e.es_favorita_home,
+    posicion_tarjeta: e.posicion_tarjeta,
   };
 }
 
@@ -312,6 +315,13 @@ function EventosAdmin() {
                   <img src={form.imagen_url} alt="Imagen del evento" className="h-24 w-32 rounded object-cover" />
                   <Button size="sm" variant="ghost" onClick={() => set("imagen_url", null)}>Quitar imagen</Button>
                 </div>
+              )}
+              {form.imagen_url && (
+                <SelectorEnfoque
+                  imagen={form.imagen_url}
+                  valor={form.posicion_tarjeta}
+                  onChange={(v) => set("posicion_tarjeta", v)}
+                />
               )}
             </div>
 
