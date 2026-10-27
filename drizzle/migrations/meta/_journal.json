@@ -64,6 +64,13 @@
       "when": 1793089174070,
       "tag": "0008_posicion_tarjeta_y_oferta_corta",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793100600810,
+      "tag": "0009_giftbox_items_detalles",
+      "breakpoints": true
     }
   ]
 }
