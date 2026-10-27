@@ -60,6 +60,7 @@ function Page() {
   if (!regalo.data || pres.isLoading) return <main className="theme-gift bg-gift min-h-[80vh]" />;
 
   const info = regalo.data;
+  if (info.estado !== "ok") return null;
   return (
     <main className="theme-gift bg-gift min-h-[80vh]">
       <RegaloVista info={info} presentacion={pres.data ?? null} acciones={<BotonPdf info={info} presentacion={pres.data ?? null} />} />
