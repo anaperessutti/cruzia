@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { useEffect, useRef, useState } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
+import { SelectorEnfoque } from "@/components/admin/selector-enfoque";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -63,6 +64,7 @@ const VACIO: ComercioForm = {
   activo: true,
   es_indoor: false,
   hero_alcance_local: false,
+  posicion_tarjeta: null,
 };
 
 function EditorComercio() {
@@ -119,6 +121,7 @@ function EditorComercio() {
               activo: c.activo,
               es_indoor: c.es_indoor,
               hero_alcance_local: c.hero_alcance_local,
+              posicion_tarjeta: c.posicion_tarjeta,
             });
           }
         }
@@ -647,6 +650,14 @@ function EditorComercio() {
                   </div>
                 ))}
               </div>
+              {form.galeria[0] && (
+                <SelectorEnfoque
+                  imagen={form.galeria[0]}
+                  valor={form.posicion_tarjeta}
+                  onChange={(v) => setForm((f) => ({ ...f, posicion_tarjeta: v }))}
+                  ayuda="El enfoque aplica a la primera foto de la galería (la portada de la tarjeta)."
+                />
+              )}
             </CardContent>
           </Card>
 
