@@ -31,6 +31,7 @@ import { Route as EventosEventoIdRouteImport } from './routes/eventos.$eventoId'
 import { Route as GiftBoxItemIdRouteImport } from './routes/gift-box_.$itemId'
 import { Route as AdminComerciosIndexRouteImport } from './routes/admin/comercios.index'
 import { Route as AdminComerciosComercioIdRouteImport } from './routes/admin/comercios.$comercioId'
+import { Route as GiftBoxDatosTokenRouteImport } from './routes/gift-box_.datos.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -143,6 +144,11 @@ const AdminComerciosComercioIdRoute =
     path: '/admin/comercios/$comercioId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const GiftBoxDatosTokenRoute = GiftBoxDatosTokenRouteImport.update({
+  id: '/gift-box_/datos/$token',
+  path: '/gift-box/datos/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/gift-box/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
+  '/gift-box/datos/$token': typeof GiftBoxDatosTokenRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
 export interface FileRoutesByTo {
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/gift-box/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
+  '/gift-box/datos/$token': typeof GiftBoxDatosTokenRoute
   '/admin/comercios': typeof AdminComerciosIndexRoute
 }
 export interface FileRoutesById {
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/eventos/$eventoId': typeof EventosEventoIdRoute
   '/gift-box_/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
+  '/gift-box_/datos/$token': typeof GiftBoxDatosTokenRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
 export interface FileRouteTypes {
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/eventos/$eventoId'
     | '/gift-box/$itemId'
     | '/admin/comercios/$comercioId'
+    | '/gift-box/datos/$token'
     | '/admin/comercios/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/eventos/$eventoId'
     | '/gift-box/$itemId'
     | '/admin/comercios/$comercioId'
+    | '/gift-box/datos/$token'
     | '/admin/comercios'
   id:
     | '__root__'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/eventos/$eventoId'
     | '/gift-box_/$itemId'
     | '/admin/comercios/$comercioId'
+    | '/gift-box_/datos/$token'
     | '/admin/comercios/'
   fileRoutesById: FileRoutesById
 }
@@ -314,6 +326,7 @@ export interface RootRouteChildren {
   EventosEventoIdRoute: typeof EventosEventoIdRoute
   GiftBoxItemIdRoute: typeof GiftBoxItemIdRoute
   AdminComerciosComercioIdRoute: typeof AdminComerciosComercioIdRoute
+  GiftBoxDatosTokenRoute: typeof GiftBoxDatosTokenRoute
   AdminComerciosIndexRoute: typeof AdminComerciosIndexRoute
 }
 
@@ -473,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminComerciosComercioIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gift-box_/datos/$token': {
+      id: '/gift-box_/datos/$token'
+      path: '/gift-box/datos/$token'
+      fullPath: '/gift-box/datos/$token'
+      preLoaderRoute: typeof GiftBoxDatosTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -498,6 +518,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventosEventoIdRoute: EventosEventoIdRoute,
   GiftBoxItemIdRoute: GiftBoxItemIdRoute,
   AdminComerciosComercioIdRoute: AdminComerciosComercioIdRoute,
+  GiftBoxDatosTokenRoute: GiftBoxDatosTokenRoute,
   AdminComerciosIndexRoute: AdminComerciosIndexRoute,
 }
 export const routeTree = rootRouteImport
