@@ -26,9 +26,15 @@ import {
   type Localidad,
 } from "@/lib/admin-cms";
 import { formatearPrecio } from "@/lib/giftbox";
+import { MensajesGiftbox, PedidosGiftbox, useContadorPedidosNuevos } from "@/components/admin/giftbox-pedidos";
+
+type Vista = "experiencias" | "pedidos" | "mensajes";
 
 export const Route = createFileRoute("/admin/gift-box")({
   ssr: false,
+  validateSearch: (search: { vista?: Vista } & Record<string, unknown>): { vista?: Vista } => ({
+    vista: search["vista"] === "pedidos" || search["vista"] === "mensajes" ? search["vista"] : "experiencias",
+  }),
   head: () => ({
     meta: [
       { title: "Gift Box | Panel Cruzia" },
@@ -104,7 +110,16 @@ function Campo({ label, htmlFor, full, children }: { label: string; htmlFor?: st
   );
 }
 
+const VISTAS: { valor: Vista; etiqueta: string }[] = [
+  { valor: "experiencias", etiqueta: "Experiencias" },
+  { valor: "pedidos", etiqueta: "Pedidos" },
+  { valor: "mensajes", etiqueta: "Mensajes" },
+];
+
 function GiftBoxAdmin() {
+  const vista: Vista = Route.useSearch().vista ?? "experiencias";
+  const navigate = Route.useNavigate();
+  const { nuevos, refrescar } = useContadorPedidosNuevos();
   const [items, setItems] = useState<GiftboxItemAdmin[] | null>(null);
   const [comercios, setComercios] = useState<Comercio[]>([]);
   const [localidades, setLocalidades] = useState<Localidad[]>([]);
@@ -266,6 +281,28 @@ function GiftBoxAdmin() {
 
   return (
     <AdminShell titulo="Gift Box">
+      <div role="tablist" className="flex flex-wrap gap-2">
+        {VISTAS.map((v) => (
+          <Button
+            key={v.valor}
+            role="tab"
+            aria-selected={vista === v.valor}
+            variant={vista === v.valor ? "default" : "outline"}
+            onClick={() => void navigate({ search: { vista: v.valor }, replace: true })}
+          >
+            {v.etiqueta}
+            {v.valor === "pedidos" && nuevos > 0 && (
+              <Badge variant="secondary" className="ml-2">
+                {nuevos}
+              </Badge>
+            )}
+          </Button>
+        ))}
+      </div>
+      {vista === "pedidos" && <PedidosGiftbox onCambio={() => void refrescar()} />}
+      {vista === "mensajes" && <MensajesGiftbox />}
+      {vista === "experiencias" && (
+      <>
       <Card>
         <CardHeader>
           <CardTitle>Visibilidad de Gift Box</CardTitle>
@@ -494,6 +531,8 @@ function GiftBoxAdmin() {
             </div>
           </CardContent>
         </Card>
+      )}
+      </>
       )}
     </AdminShell>
   );
