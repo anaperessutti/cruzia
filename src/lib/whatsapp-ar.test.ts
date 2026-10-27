@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
+import { strictEqual } from "node:assert";
+const expect = (a: unknown) => ({ toBe: (b: unknown) => strictEqual(a, b) });
 import { armarMensaje, normalizarWhatsappAR, NOTA_FISICO } from "./whatsapp-ar";
 
 describe("normalizarWhatsappAR", () => {
