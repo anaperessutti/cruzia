@@ -95,6 +95,15 @@ function formDesde(i: GiftboxItemAdmin): GiftboxItemForm {
 const vacioANull = (v: string) => (v.trim() === "" ? null : v);
 const numONull = (v: string) => (v.trim() === "" || Number.isNaN(Number(v)) ? null : Number(v));
 
+function Campo({ label, htmlFor, full, children }: { label: string; htmlFor?: string; full?: boolean; children: ReactNode }) {
+  return (
+    <div className={full ? "space-y-2 sm:col-span-2" : "space-y-2"}>
+      <Label htmlFor={htmlFor}>{label}</Label>
+      {children}
+    </div>
+  );
+}
+
 function GiftBoxAdmin() {
   const [items, setItems] = useState<GiftboxItemAdmin[] | null>(null);
   const [comercios, setComercios] = useState<Comercio[]>([]);
@@ -251,17 +260,9 @@ function GiftBoxAdmin() {
   const comercioDe = (id: string | null) => comercios.find((c) => c.id === id);
   const lugarDe = (i: GiftboxItemAdmin) => i.lugar || comercioDe(i.comercio_id)?.nombre || "—";
   const conComercio = Boolean(form?.comercio_id);
-  const Ayuda = () =>
-    conComercio ? <p className="text-xs text-muted-foreground">Se usa el dato del comercio si lo dejás vacío.</p> : null;
-
-  function Campo({ label, htmlFor, full, children }: { label: string; htmlFor?: string; full?: boolean; children: ReactNode }) {
-    return (
-      <div className={full ? "space-y-2 sm:col-span-2" : "space-y-2"}>
-        <Label htmlFor={htmlFor}>{label}</Label>
-        {children}
-      </div>
-    );
-  }
+  const ayuda = conComercio ? (
+    <p className="text-xs text-muted-foreground">Se usa el dato del comercio si lo dejás vacío.</p>
+  ) : null;
 
   return (
     <AdminShell titulo="Gift Box">
@@ -371,12 +372,12 @@ function GiftBoxAdmin() {
 
             <Campo label="Lugar" htmlFor="gb-lugar">
               <Input id="gb-lugar" value={form.lugar ?? ""} onChange={(e) => set("lugar", vacioANull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Descripción" htmlFor="gb-desc" full>
               <Textarea id="gb-desc" rows={3} value={form.descripcion ?? ""} onChange={(e) => set("descripcion", vacioANull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Vigencia desde" htmlFor="gb-desde">
@@ -396,7 +397,7 @@ function GiftBoxAdmin() {
               )}
               <Input id="gb-portada" type="file" accept="image/*" disabled={subiendo} onChange={(e) => void onSubirPortada(e.target.files?.[0])} />
               <p className="text-xs text-muted-foreground">1200 × 800 px (3:2), hasta 300 KB.</p>
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Galería" htmlFor="gb-galeria" full>
@@ -421,12 +422,12 @@ function GiftBoxAdmin() {
               <p className="text-xs text-muted-foreground">
                 {subiendo ? "Subiendo…" : "1200 × 800 px (3:2), hasta 300 KB cada una."}
               </p>
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Dirección" htmlFor="gb-dir">
               <Input id="gb-dir" value={form.direccion ?? ""} onChange={(e) => set("direccion", vacioANull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Localidad">
@@ -439,27 +440,27 @@ function GiftBoxAdmin() {
                   ))}
                 </SelectContent>
               </Select>
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Horarios" htmlFor="gb-horarios" full>
               <Input id="gb-horarios" value={form.horarios ?? ""} onChange={(e) => set("horarios", vacioANull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Mapa: latitud" htmlFor="gb-lat">
               <Input id="gb-lat" type="number" step="any" value={form.lat ?? ""} onChange={(e) => set("lat", numONull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Mapa: longitud" htmlFor="gb-lng">
               <Input id="gb-lng" type="number" step="any" value={form.lng ?? ""} onChange={(e) => set("lng", numONull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="WhatsApp" htmlFor="gb-wa">
               <Input id="gb-wa" value={form.whatsapp ?? ""} onChange={(e) => set("whatsapp", vacioANull(e.target.value))} />
-              <Ayuda />
+              {ayuda}
             </Campo>
 
             <Campo label="Orden" htmlFor="gb-orden">
@@ -474,7 +475,7 @@ function GiftBoxAdmin() {
                   value={form.redes_sociales[r] ?? ""}
                   onChange={(e) => set("redes_sociales", { ...form.redes_sociales, [r]: e.target.value })}
                 />
-                <Ayuda />
+                {ayuda}
               </Campo>
             ))}
 

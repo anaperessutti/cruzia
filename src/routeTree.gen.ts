@@ -22,6 +22,7 @@ import { Route as TerminosPromocionesRouteImport } from './routes/terminos-promo
 import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminCuponesRouteImport } from './routes/admin/cupones'
 import { Route as AdminEventosRouteImport } from './routes/admin/eventos'
+import { Route as AdminGiftBoxRouteImport } from './routes/admin/gift-box'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
@@ -95,6 +96,11 @@ const AdminEventosRoute = AdminEventosRouteImport.update({
   path: '/admin/eventos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminGiftBoxRoute = AdminGiftBoxRouteImport.update({
+  id: '/admin/gift-box',
+  path: '/admin/gift-box',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/gift-box': typeof AdminGiftBoxRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/gift-box': typeof AdminGiftBoxRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/admin/confirmado': typeof AdminConfirmadoRoute
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
+  '/admin/gift-box': typeof AdminGiftBoxRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/admin/confirmado'
     | '/admin/cupones'
     | '/admin/eventos'
+    | '/admin/gift-box'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/admin/confirmado'
     | '/admin/cupones'
     | '/admin/eventos'
+    | '/admin/gift-box'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/admin/confirmado'
     | '/admin/cupones'
     | '/admin/eventos'
+    | '/admin/gift-box'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   AdminConfirmadoRoute: typeof AdminConfirmadoRoute
   AdminCuponesRoute: typeof AdminCuponesRoute
   AdminEventosRoute: typeof AdminEventosRoute
+  AdminGiftBoxRoute: typeof AdminGiftBoxRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/gift-box': {
+      id: '/admin/gift-box'
+      path: '/admin/gift-box'
+      fullPath: '/admin/gift-box'
+      preLoaderRoute: typeof AdminGiftBoxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminConfirmadoRoute: AdminConfirmadoRoute,
   AdminCuponesRoute: AdminCuponesRoute,
   AdminEventosRoute: AdminEventosRoute,
+  AdminGiftBoxRoute: AdminGiftBoxRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
