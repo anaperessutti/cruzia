@@ -35,6 +35,8 @@ interface CarruselSeccionProps {
   destacada?: boolean;
   /** Primera fila visible al cargar: entra solo con CSS, sin observers. */
   primera?: boolean;
+  /** Fichas compactas en celular: 2 y un tercio; no se usa en la fila destacada. */
+  compacta?: boolean;
   className?: string;
 }
 
@@ -112,6 +114,7 @@ export function CarruselSeccion({
   anchas = [],
   destacada = false,
   primera = false,
+  compacta = false,
   className,
 }: CarruselSeccionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -183,7 +186,11 @@ export function CarruselSeccion({
     el.scrollBy({ left: direccion * el.clientWidth * 0.8, behavior: "smooth" });
   };
 
-  const ancho = destacada ? "w-[78%] sm:w-[48%] lg:w-[28%]" : "w-[72%] sm:w-[44%] lg:w-[23%]";
+  const ancho = destacada
+    ? "w-[78%] sm:w-[48%] lg:w-[28%]"
+    : compacta
+      ? "w-[calc((100%_-_8px)_/_2.3)] sm:w-[44%] lg:w-[23%]"
+      : "w-[72%] sm:w-[44%] lg:w-[23%]";
   const anchoPremium = destacada
     ? "w-[82.7%] sm:w-[50.9%] lg:w-[29.7%]"
     : "w-[76.3%] sm:w-[46.6%] lg:w-[24.4%]";
@@ -235,7 +242,10 @@ export function CarruselSeccion({
                     style: { "--i": index } as CSSProperties,
                   }
                 : {})}
-              className={cn("shrink-0 snap-start", anchas[index] ? anchoPremium : ancho)}
+              className={cn(
+                "shrink-0 snap-start",
+                anchas[index] && !compacta ? anchoPremium : ancho,
+              )}
             >
               {tarjeta}
             </div>
@@ -252,12 +262,25 @@ export function CarruselSeccion({
             <a
               href={destinoUrl}
               aria-label={`Ver todo en ${titulo}`}
-              className="ver-todo-card frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1"
+              className={cn(
+                "ver-todo-card frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1",
+                compacta && "max-sm:rounded-[20px] max-sm:p-3",
+              )}
             >
-              <span className="relative text-xl font-semibold leading-tight">
+              <span
+                className={cn(
+                  "relative text-xl font-semibold leading-tight",
+                  compacta && "max-sm:text-sm",
+                )}
+              >
                 Ver todo en <span className="block">{titulo}</span>
               </span>
-              <BurbujaFlecha className="relative mt-4 size-10 bg-primary text-primary-foreground" />
+              <BurbujaFlecha
+                className={cn(
+                  "relative mt-4 size-10 bg-primary text-primary-foreground",
+                  compacta && "max-sm:mt-2 max-sm:size-8",
+                )}
+              />
             </a>
           </div>
         </div>

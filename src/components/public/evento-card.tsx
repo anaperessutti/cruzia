@@ -9,7 +9,17 @@ function rango(inicio: string, fin: string) {
   return inicio === fin ? fmt(inicio) : `${fmt(inicio)} al ${fmt(fin)}`;
 }
 
-export const EventoCard = memo(function EventoCard({ evento, localidad, className }: { evento: Evento; localidad?: Localidad | undefined; className?: string }) {
+export const EventoCard = memo(function EventoCard({
+  evento,
+  localidad,
+  className,
+  compacta,
+}: {
+  evento: Evento;
+  localidad?: Localidad | undefined;
+  className?: string;
+  compacta?: boolean;
+}) {
   return (
     <TarjetaInmersiva
       link={{ to: "/eventos/$eventoId", params: { eventoId: evento.id } }}
@@ -21,6 +31,7 @@ export const EventoCard = memo(function EventoCard({ evento, localidad, classNam
       ubicacion={localidad?.nombre}
       insignia={<InsigniaTarjeta premium>Evento</InsigniaTarjeta>}
       className={className}
+      compacta={compacta}
     />
   );
 });
