@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useCallback, useEffect, useState } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
+import { SelectorEnfoque } from "@/components/admin/selector-enfoque";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -79,6 +80,8 @@ function formDesde(c: Cupon): CuponForm {
     es_favorita_home: c.es_favorita_home,
     es_top_slider: c.es_top_slider,
     hero_alcance_local: c.hero_alcance_local,
+    posicion_tarjeta: c.posicion_tarjeta,
+    oferta_corta: c.oferta_corta,
   };
 }
 
@@ -176,6 +179,8 @@ function CuponesAdmin() {
       es_favorita_home: false,
       es_top_slider: false,
       hero_alcance_local: false,
+      posicion_tarjeta: null,
+      oferta_corta: null,
     });
   }
 
@@ -408,6 +413,21 @@ function CuponesAdmin() {
               <Input id="titulo" value={form.titulo} onChange={(e) => set("titulo", e.target.value)} />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="oferta-corta">Oferta corta (para fichas chicas del inicio)</Label>
+              <Input
+                id="oferta-corta"
+                value={form.oferta_corta ?? ""}
+                maxLength={28}
+                placeholder="Ej: 2 churros gratis"
+                onChange={(e) => set("oferta_corta", e.target.value.slice(0, 28) || null)}
+              />
+              <p className="text-xs text-muted-foreground">
+                {(form.oferta_corta ?? "").length}/28 · Se muestra en las fichas chicas del Inicio.
+                Si lo dejás vacío se usa el título del cupón.
+              </p>
+            </div>
+
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="desc-cupon">Descripción</Label>
               <Textarea
@@ -482,6 +502,13 @@ function CuponesAdmin() {
                     Quitar flyer
                   </Button>
                 </div>
+              )}
+              {form.flyer_url && (
+                <SelectorEnfoque
+                  imagen={form.flyer_url}
+                  valor={form.posicion_tarjeta}
+                  onChange={(v) => set("posicion_tarjeta", v)}
+                />
               )}
             </div>
 
