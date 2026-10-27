@@ -1,0 +1,15 @@
+ALTER TABLE public.giftbox_items
+  ADD COLUMN IF NOT EXISTS lugar text,
+  ADD COLUMN IF NOT EXISTS descripcion text,
+  ADD COLUMN IF NOT EXISTS imagen_url text,
+  ADD COLUMN IF NOT EXISTS galeria text[] NOT NULL DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS vigencia_inicio date,
+  ADD COLUMN IF NOT EXISTS vigencia_fin date,
+  ADD COLUMN IF NOT EXISTS direccion text,
+  ADD COLUMN IF NOT EXISTS localidad_id uuid REFERENCES public.localidades(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS horarios text,
+  ADD COLUMN IF NOT EXISTS lat numeric,
+  ADD COLUMN IF NOT EXISTS lng numeric,
+  ADD COLUMN IF NOT EXISTS whatsapp text,
+  ADD COLUMN IF NOT EXISTS redes_sociales jsonb NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS orden integer NOT NULL DEFAULT 0;

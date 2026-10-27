@@ -578,30 +578,72 @@ export type Database = {
           categoria: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id: string | null
           created_at: string
+          descripcion: string | null
+          direccion: string | null
+          galeria: string[]
+          horarios: string | null
           id: string
+          imagen_url: string | null
+          lat: number | null
+          lng: number | null
+          localidad_id: string | null
+          lugar: string | null
           nombre: string
+          orden: number
           precio: number
+          redes_sociales: Json
           updated_at: string
+          vigencia_fin: string | null
+          vigencia_inicio: string | null
+          whatsapp: string | null
         }
         Insert: {
           activo?: boolean
           categoria: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id?: string | null
           created_at?: string
+          descripcion?: string | null
+          direccion?: string | null
+          galeria?: string[]
+          horarios?: string | null
           id?: string
+          imagen_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          lugar?: string | null
           nombre: string
+          orden?: number
           precio?: number
+          redes_sociales?: Json
           updated_at?: string
+          vigencia_fin?: string | null
+          vigencia_inicio?: string | null
+          whatsapp?: string | null
         }
         Update: {
           activo?: boolean
           categoria?: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id?: string | null
           created_at?: string
+          descripcion?: string | null
+          direccion?: string | null
+          galeria?: string[]
+          horarios?: string | null
           id?: string
+          imagen_url?: string | null
+          lat?: number | null
+          lng?: number | null
+          localidad_id?: string | null
+          lugar?: string | null
           nombre?: string
+          orden?: number
           precio?: number
+          redes_sociales?: Json
           updated_at?: string
+          vigencia_fin?: string | null
+          vigencia_inicio?: string | null
+          whatsapp?: string | null
         }
         Relationships: [
           {
@@ -609,6 +651,13 @@ export type Database = {
             columns: ["comercio_id"]
             isOneToOne: false
             referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "giftbox_items_localidad_id_fkey"
+            columns: ["localidad_id"]
+            isOneToOne: false
+            referencedRelation: "localidades"
             referencedColumns: ["id"]
           },
         ]

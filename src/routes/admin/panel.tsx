@@ -201,6 +201,9 @@ function AdminPanel() {
               <Link to="/admin/cupones">Promociones</Link>
             </Button>
             <Button variant="secondary" size="sm" asChild>
+              <Link to="/admin/gift-box">Gift Box</Link>
+            </Button>
+            <Button variant="secondary" size="sm" asChild>
               <Link to="/">Ver la app</Link>
             </Button>
             <Button variant="secondary" size="sm" onClick={cerrarSesion}>
