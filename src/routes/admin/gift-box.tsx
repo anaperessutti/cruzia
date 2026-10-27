@@ -32,7 +32,7 @@ type Vista = "experiencias" | "pedidos" | "mensajes";
 
 export const Route = createFileRoute("/admin/gift-box")({
   ssr: false,
-  validateSearch: (search: Record<string, unknown>): { vista: Vista } => ({
+  validateSearch: (search: { vista?: Vista } & Record<string, unknown>): { vista?: Vista } => ({
     vista: search["vista"] === "pedidos" || search["vista"] === "mensajes" ? search["vista"] : "experiencias",
   }),
   head: () => ({
@@ -117,7 +117,7 @@ const VISTAS: { valor: Vista; etiqueta: string }[] = [
 ];
 
 function GiftBoxAdmin() {
-  const { vista } = Route.useSearch();
+  const vista: Vista = Route.useSearch().vista ?? "experiencias";
   const navigate = Route.useNavigate();
   const { nuevos, refrescar } = useContadorPedidosNuevos();
   const [items, setItems] = useState<GiftboxItemAdmin[] | null>(null);
