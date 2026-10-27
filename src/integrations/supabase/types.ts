@@ -670,56 +670,80 @@ export type Database = {
       }
       giftbox_pedidos: {
         Row: {
+          agasajado_nombre: string | null
+          agasajado_whatsapp: string | null
           contacto_nombre: string | null
           contacto_whatsapp: string | null
+          datos_completados_at: string | null
+          dedicatoria: string | null
           device_id: string | null
+          direccion_entrega: string | null
           estado: Database["public"]["Enums"]["giftbox_estado"]
           fecha: string
+          fecha_regalo: string | null
           formato: Database["public"]["Enums"]["giftbox_formato"]
           id: string
           items_seleccionados: Json
           link_pago: string | null
           mensaje_pago_enviado_at: string | null
           notas_internas: string | null
+          ocasion: string | null
           pagado_at: string | null
           precio_total: number
           regalo_enviado_at: string | null
+          remitente_firma: string | null
           token_formulario: string
           token_regalo: string
         }
         Insert: {
+          agasajado_nombre?: string | null
+          agasajado_whatsapp?: string | null
           contacto_nombre?: string | null
           contacto_whatsapp?: string | null
+          datos_completados_at?: string | null
+          dedicatoria?: string | null
           device_id?: string | null
+          direccion_entrega?: string | null
           estado?: Database["public"]["Enums"]["giftbox_estado"]
           fecha?: string
+          fecha_regalo?: string | null
           formato?: Database["public"]["Enums"]["giftbox_formato"]
           id?: string
           items_seleccionados?: Json
           link_pago?: string | null
           mensaje_pago_enviado_at?: string | null
           notas_internas?: string | null
+          ocasion?: string | null
           pagado_at?: string | null
           precio_total?: number
           regalo_enviado_at?: string | null
+          remitente_firma?: string | null
           token_formulario?: string
           token_regalo?: string
         }
         Update: {
+          agasajado_nombre?: string | null
+          agasajado_whatsapp?: string | null
           contacto_nombre?: string | null
           contacto_whatsapp?: string | null
+          datos_completados_at?: string | null
+          dedicatoria?: string | null
           device_id?: string | null
+          direccion_entrega?: string | null
           estado?: Database["public"]["Enums"]["giftbox_estado"]
           fecha?: string
+          fecha_regalo?: string | null
           formato?: Database["public"]["Enums"]["giftbox_formato"]
           id?: string
           items_seleccionados?: Json
           link_pago?: string | null
           mensaje_pago_enviado_at?: string | null
           notas_internas?: string | null
+          ocasion?: string | null
           pagado_at?: string | null
           precio_total?: number
           regalo_enviado_at?: string | null
+          remitente_firma?: string | null
           token_formulario?: string
           token_regalo?: string
         }
@@ -1035,6 +1059,20 @@ export type Database = {
         Returns: Json
       }
       existe_admin: { Args: never; Returns: boolean }
+      giftbox_formulario_info: { Args: { p_token: string }; Returns: Json }
+      giftbox_guardar_datos: {
+        Args: {
+          p_agasajado_nombre: string
+          p_agasajado_whatsapp: string
+          p_dedicatoria: string
+          p_direccion_entrega: string
+          p_fecha_regalo: string
+          p_ocasion: string
+          p_remitente_firma: string
+          p_token: string
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
