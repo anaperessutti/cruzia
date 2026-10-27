@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Limpieza 1: reducir dibujo de tarjetas, retirar utilidades y exports sin uso, verificar capturas a 390px y conservar movimiento/fotos.
+- [x] Limpieza 1: dos capas de blur, etiquetas y Ver todo sin backdrop, 15 utilidades y exports sin uso retirados; capturas 390px, siete pruebas y lint sin errores nuevos verificados; movimiento/fotos intactos.
 
 - [x] Adaptar entradas al scroll rápido y restaurar precarga por fila en Inicio; máximo seis tarjetas reales, pruebas de umbral/reposo/límite aprobadas y scroll rápido verificado a 390px sin errores; referencias intactas. Captura real pendiente de Ana.
 
