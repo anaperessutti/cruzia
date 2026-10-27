@@ -174,7 +174,7 @@ export function HomeCarousels() {
   }
 
   return (
-    <div className="space-y-10 py-10 sm:space-y-14 sm:py-14">
+    <div className="filas-inicio space-y-10 py-10 sm:space-y-14 sm:py-14">
       {favoritos.length > 0 ? (
         <CarruselSeccion
           titulo="Favoritos de la Costa"

@@ -62,6 +62,7 @@ export function TarjetaInmersiva({
     >
       <article
         data-compacta={compacta ? "" : undefined}
+        data-promo={descripcion || descripcionCorta ? "" : undefined}
         className="immersive-card relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] text-primary-foreground"
       >
         <div aria-hidden="true" className="frost-neutral absolute inset-0" />

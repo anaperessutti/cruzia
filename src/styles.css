@@ -737,10 +737,14 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] {
   box-shadow: 0 22px 40px -24px rgb(31 30 30 / 0.3);
 }
 
-/* Ficha compacta (solo celular, filas de Inicio después de Favoritos): 2 fichas y un tercio.
+/* Ficha compacta (solo celular, filas de Inicio después de Favoritos): 2,2 fichas.
    Mismas animaciones y efectos que las demás; solo cambian las medidas y qué texto se muestra.
    El desenfoque del degradé se escala a la tarjeta chica (la cantidad de capas no cambia). */
 @media (max-width: 639px) {
+  .filas-inicio > [data-compacta]:has(+ [data-compacta]) {
+    --compacta-separacion: calc((40px + 27px) * 2 / 3 - 27px);
+    margin-block-end: var(--compacta-separacion);
+  }
   .immersive-card-link[data-compacta],
   .immersive-card[data-compacta] {
     border-radius: 20px;
@@ -749,6 +753,10 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] {
     --pb-a: 3px;
     --pb-b: 12px;
     aspect-ratio: 3/4;
+    --compacta-promo-shade: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.75));
+  }
+  .immersive-card[data-compacta][data-promo] .pblur-shade {
+    background: var(--compacta-promo-shade);
   }
   .ver-todo-card[data-compacta] {
     aspect-ratio: 3/4;
@@ -758,28 +766,31 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] {
     top: 8px;
     gap: 4px;
   }
-  .immersive-card[data-compacta] .tarjeta-top > span {
-    font-size: 9px;
-    padding: 2px 8px;
-  }
   .immersive-card[data-compacta] .tarjeta-body {
     padding: 10px;
   }
   .immersive-card[data-compacta] .tarjeta-body h3 {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.15;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
   }
   .immersive-card[data-compacta] .tarjeta-body p {
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 600;
     line-height: 1.2;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
   .immersive-card[data-compacta] .tarjeta-body p.oferta-corta {
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
   .immersive-card[data-compacta] .tarjeta-body span {
-    font-size: 8px;
+    font-size: 9px;
     padding: 3px 7px;
   }
   .immersive-card[data-compacta] .tarjeta-body svg {

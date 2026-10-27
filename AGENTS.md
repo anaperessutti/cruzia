@@ -26,5 +26,5 @@
 - Mount idle public-route preloading inside the public provider, not the document shell; save-data connections skip preloading and mounting does not navigate or apply route filters.
 - Card progressive blur uses exactly two elements; keep neutral card backgrounds grain-free and final carousel cards on their dedicated non-backdrop-filter surface to reduce drawing cost independently of motion.
 - Diagnóstico: ?x=noblur|nofx|noanim|cv|hrseguro|hrsinblur|fps.
-- Fichas compactas (prop `compacta`): solo celular (<640 px) y solo en las filas de colección de Inicio posteriores a Favoritos; 2,3 fichas visibles, foto 480×600 y sin botón, píldora de rubro ni 'Vence en'. Favoritos y los demás anchos no cambian.
-- Fichas compactas: proporción 3/4 en celular; pb de la fila compensa la altura; `posicion_tarjeta` y `oferta_corta` se editan desde el admin.
+- Fichas compactas (prop `compacta`): solo celular (<640 px) y solo en las filas de colección de Inicio posteriores a Favoritos; ancho 2.2 por pantalla, insignia a tamaño completo, textos 14/12/9 px y espacio entre filas compactas a 2/3. Foto 480×600 y sin botón, píldora de rubro ni 'Vence en'; Favoritos y los demás anchos no cambian.
+- Keep compact-card presentation scoped to mobile data-compacta selectors, with data-promo controlling only the existing shade; preserve the 3/4 ratio and scroller padding for shadows, adjusting spacing only between adjacent compact rows. Focus and short-offer fields remain admin-editable so content and presentation stay independent.

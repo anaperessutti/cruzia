@@ -189,7 +189,7 @@ export function CarruselSeccion({
   const ancho = destacada
     ? "w-[78%] sm:w-[48%] lg:w-[28%]"
     : compacta
-      ? "w-[calc((100%_-_8px)_/_2.3)] sm:w-[44%] lg:w-[23%]"
+      ? "w-[calc((100%_-_8px)_/_2.2)] sm:w-[44%] lg:w-[23%]"
       : "w-[72%] sm:w-[44%] lg:w-[23%]";
   const anchoPremium = destacada
     ? "w-[82.7%] sm:w-[50.9%] lg:w-[29.7%]"
@@ -198,6 +198,7 @@ export function CarruselSeccion({
   return (
     <section
       ref={seccionRef}
+      data-compacta={compacta ? "" : undefined}
       aria-label={titulo}
       className={cn("hr-fila", primera && "hr-primera", "relative", className)}
     >
@@ -229,7 +230,7 @@ export function CarruselSeccion({
           data-m-row=""
           className={cn(
             "flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden",
-            // La ficha compacta crece 13 px de alto: se descuentan del pie de la fila.
+            // Mantener el pie que protege la sombra; la separación se ajusta entre filas.
             compacta && "max-sm:pb-[27px]",
           )}
         >
