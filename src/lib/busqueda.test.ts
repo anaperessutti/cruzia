@@ -18,7 +18,8 @@ describe("búsqueda flexible", () => {
     ]) {
       strictEqual(raiz(palabra), "churr");
     }
-    strictEqual(raiz("casas"), "casas");
+    strictEqual(raiz("casas"), "casa");
+    strictEqual(raiz("gatos"), "gatos");
     strictEqual(coincide("pan", "pantalla"), false);
   });
   test("churro encuentra churrería en ambos sentidos", () => {
