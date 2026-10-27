@@ -40,7 +40,10 @@ export const Route = createFileRoute("/admin/comercios/$comercioId")({
       { title: "Editar comercio | Panel Cruzia" },
       { name: "description", content: "Formulario de carga y edición de comercios de Cruzia." },
       { property: "og:title", content: "Editar comercio | Panel Cruzia" },
-      { property: "og:description", content: "Formulario de carga y edición de comercios de Cruzia." },
+      {
+        property: "og:description",
+        content: "Formulario de carga y edición de comercios de Cruzia.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
@@ -312,7 +315,11 @@ function EditorComercio() {
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="nombre">Nombre del comercio *</Label>
-                <Input id="nombre" value={form.nombre} onChange={(e) => set("nombre", e.target.value)} />
+                <Input
+                  id="nombre"
+                  value={form.nombre}
+                  onChange={(e) => set("nombre", e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
@@ -386,7 +393,9 @@ function EditorComercio() {
                   inputMode="decimal"
                   placeholder="-36.5412"
                   value={form.lat ?? ""}
-                  onChange={(e) => set("lat", e.target.value === "" ? null : Number(e.target.value))}
+                  onChange={(e) =>
+                    set("lat", e.target.value === "" ? null : Number(e.target.value))
+                  }
                 />
               </div>
 
@@ -397,7 +406,9 @@ function EditorComercio() {
                   inputMode="decimal"
                   placeholder="-56.6987"
                   value={form.lng ?? ""}
-                  onChange={(e) => set("lng", e.target.value === "" ? null : Number(e.target.value))}
+                  onChange={(e) =>
+                    set("lng", e.target.value === "" ? null : Number(e.target.value))
+                  }
                 />
               </div>
 
@@ -490,9 +501,6 @@ function EditorComercio() {
                   </p>
                 </div>
               ) : null}
-
-
-
             </CardContent>
           </Card>
 
@@ -553,7 +561,11 @@ function EditorComercio() {
                             inputMode="decimal"
                             value={sede.lat ?? ""}
                             onChange={(e) =>
-                              setSede(sede.id, "lat", e.target.value === "" ? null : Number(e.target.value))
+                              setSede(
+                                sede.id,
+                                "lat",
+                                e.target.value === "" ? null : Number(e.target.value),
+                              )
                             }
                           />
                         </div>
@@ -564,7 +576,11 @@ function EditorComercio() {
                             inputMode="decimal"
                             value={sede.lng ?? ""}
                             onChange={(e) =>
-                              setSede(sede.id, "lng", e.target.value === "" ? null : Number(e.target.value))
+                              setSede(
+                                sede.id,
+                                "lng",
+                                e.target.value === "" ? null : Number(e.target.value),
+                              )
                             }
                           />
                         </div>
@@ -586,7 +602,11 @@ function EditorComercio() {
                         >
                           {guardandoSede === sede.id ? "Guardando…" : "Guardar sede"}
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => void onEliminarSede(sede.id)}>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => void onEliminarSede(sede.id)}
+                        >
                           Eliminar sede
                         </Button>
                       </div>
@@ -604,8 +624,8 @@ function EditorComercio() {
             <CardHeader>
               <CardTitle>Fotos</CardTitle>
               <CardDescription>
-                La primera foto es la portada de la tarjeta en la grilla. Medidas recomendadas:
-                1200 × 800 px (portada y galería) y 1600 × 900 px para el Hero Banner de Premium.
+                La primera foto es la portada de la tarjeta en la grilla. Medidas recomendadas: 1200
+                × 800 px (portada y galería) y 1600 × 900 px para el Hero Banner de Premium.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

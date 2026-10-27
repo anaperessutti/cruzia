@@ -24,7 +24,8 @@ export async function subirImagen(file: File, carpeta: string): Promise<string> 
   const { data, error: errFirma } = await supabase.storage
     .from(BUCKET)
     .createSignedUrl(ruta, VALIDEZ_LINK_SEG);
-  if (errFirma || !data?.signedUrl) throw errFirma ?? new Error("No pudimos generar el link de la imagen.");
+  if (errFirma || !data?.signedUrl)
+    throw errFirma ?? new Error("No pudimos generar el link de la imagen.");
   return data.signedUrl;
 }
 
@@ -177,8 +178,10 @@ export async function cuponActivadoEsteMes(cuponId: string): Promise<boolean> {
 }
 
 export function esErrorLimiteMensual(e: unknown): boolean {
-  return typeof (e as { message?: string })?.message === "string" &&
-    (e as { message: string }).message.includes("LIMITE_MENSUAL_PROMOS");
+  return (
+    typeof (e as { message?: string })?.message === "string" &&
+    (e as { message: string }).message.includes("LIMITE_MENSUAL_PROMOS")
+  );
 }
 
 export async function eliminarCupon(id: string) {
@@ -238,7 +241,10 @@ export type EventoForm = {
 };
 
 export async function getEventosAdmin(): Promise<Evento[]> {
-  const { data, error } = await supabase.from("eventos").select("*").order("fecha_inicio", { ascending: false });
+  const { data, error } = await supabase
+    .from("eventos")
+    .select("*")
+    .order("fecha_inicio", { ascending: false });
   if (error) throw error;
   return data ?? [];
 }
@@ -336,9 +342,11 @@ export async function guardarSedesDeCupon(cuponId: string, ids: string[]) {
   const { error: errBorrar } = await supabase.from("cupon_sedes").delete().eq("cupon_id", cuponId);
   if (errBorrar) throw errBorrar;
   if (ids.length === 0) return;
-  const { error } = await supabase.from("cupon_sedes").insert(
-    ids.map((sede) => ({ cupon_id: cuponId, sede_id: sede === SEDE_PRINCIPAL ? null : sede })),
-  );
+  const { error } = await supabase
+    .from("cupon_sedes")
+    .insert(
+      ids.map((sede) => ({ cupon_id: cuponId, sede_id: sede === SEDE_PRINCIPAL ? null : sede })),
+    );
   if (error) throw error;
 }
 
