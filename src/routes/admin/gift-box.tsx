@@ -26,14 +26,15 @@ import {
   type Localidad,
 } from "@/lib/admin-cms";
 import { formatearPrecio } from "@/lib/giftbox";
+import { PresentacionGiftbox } from "@/components/admin/giftbox-presentacion";
 import { MensajesGiftbox, PedidosGiftbox, useContadorPedidosNuevos } from "@/components/admin/giftbox-pedidos";
 
-type Vista = "experiencias" | "pedidos" | "mensajes";
+type Vista = "experiencias" | "pedidos" | "mensajes" | "presentacion";
 
 export const Route = createFileRoute("/admin/gift-box")({
   ssr: false,
   validateSearch: (search: { vista?: Vista } & Record<string, unknown>): { vista?: Vista } => ({
-    vista: search["vista"] === "pedidos" || search["vista"] === "mensajes" ? search["vista"] : "experiencias",
+    vista: search["vista"] === "pedidos" || search["vista"] === "mensajes" || search["vista"] === "presentacion" ? search["vista"] : "experiencias",
   }),
   head: () => ({
     meta: [
@@ -72,6 +73,8 @@ const VACIO: GiftboxItemForm = {
   redes_sociales: {},
   orden: 0,
   activo: true,
+  como_canjear: null,
+  condiciones: null,
 };
 
 function formDesde(i: GiftboxItemAdmin): GiftboxItemForm {
@@ -95,6 +98,8 @@ function formDesde(i: GiftboxItemAdmin): GiftboxItemForm {
     redes_sociales: (i.redes_sociales ?? {}) as Record<string, string>,
     orden: i.orden,
     activo: i.activo,
+    como_canjear: i.como_canjear,
+    condiciones: i.condiciones,
   };
 }
 
@@ -114,6 +119,7 @@ const VISTAS: { valor: Vista; etiqueta: string }[] = [
   { valor: "experiencias", etiqueta: "Experiencias" },
   { valor: "pedidos", etiqueta: "Pedidos" },
   { valor: "mensajes", etiqueta: "Mensajes" },
+  { valor: "presentacion", etiqueta: "Presentación" },
 ];
 
 function GiftBoxAdmin() {
@@ -301,6 +307,7 @@ function GiftBoxAdmin() {
       </div>
       {vista === "pedidos" && <PedidosGiftbox onCambio={() => void refrescar()} />}
       {vista === "mensajes" && <MensajesGiftbox />}
+      {vista === "presentacion" && <PresentacionGiftbox />}
       {vista === "experiencias" && (
       <>
       <Card>
@@ -415,6 +422,14 @@ function GiftBoxAdmin() {
             <Campo label="Descripción" htmlFor="gb-desc" full>
               <Textarea id="gb-desc" rows={3} value={form.descripcion ?? ""} onChange={(e) => set("descripcion", vacioANull(e.target.value))} />
               {ayuda}
+            </Campo>
+
+            <Campo label="Cómo canjear" htmlFor="gb-canje" full>
+              <Textarea id="gb-canje" rows={2} placeholder="Ej.: reservá por WhatsApp y mostrá tu código al llegar." value={form.como_canjear ?? ""} onChange={(e) => set("como_canjear", vacioANull(e.target.value))} />
+            </Campo>
+
+            <Campo label="Condiciones" htmlFor="gb-cond" full>
+              <Textarea id="gb-cond" rows={2} placeholder="Ej.: no incluye bebidas adicionales." value={form.condiciones ?? ""} onChange={(e) => set("condiciones", vacioANull(e.target.value))} />
             </Campo>
 
             <Campo label="Vigencia desde" htmlFor="gb-desde">

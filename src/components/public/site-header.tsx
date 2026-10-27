@@ -43,7 +43,7 @@ function useEstadoCabecera(bloqueada: boolean) {
 export function SiteHeader() {
   const { data } = usePublicDirectory();
   const path = usePathnameRenderizado();
-  const gift = path.startsWith("/gift-box");
+  const gift = path.startsWith("/gift-box") || path.startsWith("/regalo/");
   const conHero = path === "/" || path.startsWith("/comercio/");
   const conFiltros = path === "/cupones" || path === "/categorias";
   const [abierto, setAbierto] = useState(false);

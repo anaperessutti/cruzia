@@ -16,7 +16,7 @@ export async function getGiftboxItems(): Promise<GiftboxItem[]> {
   const { data, error } = await supabase
     .from("giftbox_items")
     .select(
-      "id, categoria, nombre, precio, orden, activo, lugar, descripcion, imagen_url, galeria, comercio_id, direccion, localidad_id, horarios, lat, lng, whatsapp, redes_sociales, vigencia_inicio, vigencia_fin, created_at, updated_at",
+      "id, categoria, nombre, precio, orden, activo, lugar, descripcion, imagen_url, galeria, comercio_id, direccion, localidad_id, horarios, lat, lng, whatsapp, redes_sociales, vigencia_inicio, vigencia_fin, como_canjear, condiciones, created_at, updated_at",
     )
     .eq("activo", true)
     .order("categoria")

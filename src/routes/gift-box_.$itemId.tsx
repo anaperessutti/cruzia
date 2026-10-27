@@ -127,6 +127,18 @@ function Ficha() {
           {horarios ? (
             <p className="mt-5 flex items-start gap-2 text-sm text-primary-foreground/75"><Clock className="mt-0.5 size-4 shrink-0" /> {horarios}</p>
           ) : null}
+          {item.como_canjear ? (
+            <div className="mt-5">
+              <h2 className="text-sm font-medium text-primary-foreground">Cómo canjear</h2>
+              <p className="mt-1 whitespace-pre-line text-sm text-primary-foreground/75">{item.como_canjear}</p>
+            </div>
+          ) : null}
+          {item.condiciones ? (
+            <div className="mt-4">
+              <h2 className="text-sm font-medium text-primary-foreground">Condiciones</h2>
+              <p className="mt-1 whitespace-pre-line text-sm text-primary-foreground/75">{item.condiciones}</p>
+            </div>
+          ) : null}
           <div className="mt-6 flex flex-wrap gap-3">
             {whatsapp ? (
               <Button asChild variant="outline"><a href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><MessageCircle className="mr-1.5 size-4" /> WhatsApp</a></Button>

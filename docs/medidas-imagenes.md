@@ -14,6 +14,9 @@ pantallas de alta densidad (se suben al doble del tamaño visible).
 | **Fotos de Huella Solidaria** | 1200 × 800 px | 3:2 | 300 KB | JPG |
 | **Portada de experiencia Gift Box** | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Galería de experiencia Gift Box** | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
+| **Portada de la presentación del regalo** (también vista previa en WhatsApp) | 1200 × 630 px | 1.91:1 | 300 KB | JPG |
+| **Logo de la presentación del regalo** (versión clara, fondo oscuro) | 600 × 200 px | 3:1 | 150 KB | PNG transparente |
+| **Fondo de la presentación del regalo** | 1600 × 2000 px | 4:5 | 400 KB | JPG |
 
 ## Recomendaciones
 

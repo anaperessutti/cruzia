@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 /** Pie sin fondo propio: solo un filete fino arriba, con el mismo margen que el contenido. */
 export function SiteFooter() {
-  const oscuro = useRouterState({ select: (s) => s.location.pathname.startsWith("/gift-box") });
+  const oscuro = useRouterState({ select: (s) => s.location.pathname.startsWith("/gift-box") || s.location.pathname.startsWith("/regalo/") });
   return (
     <Reveal as="footer" className="site-safe-footer mt-20 in-[.theme-gift]:mt-0">
       <div className={"mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"}>

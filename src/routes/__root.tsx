@@ -145,7 +145,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = usePathnameRenderizado();
   const isAdmin = pathname.startsWith("/admin");
-  const isGift = pathname.startsWith("/gift-box");
+  const isGift = (pathname.startsWith("/gift-box") || pathname.startsWith("/regalo/"));
   const conFiltros = pathname === "/cupones" || pathname === "/categorias";
   const isHome = pathname === "/" || pathname.startsWith("/comercio/");
   useEffect(() => {
