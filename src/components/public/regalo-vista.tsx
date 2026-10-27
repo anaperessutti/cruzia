@@ -1,5 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { CalendarDays, CheckCircle2, Clock, MapPin } from "lucide-react";
+import { CalendarDays, CheckCircle2, Clock, Download, MapPin } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { Reveal, RevealGroup } from "@/components/public/motion";
 import { optimizarImagen } from "@/lib/imagen";
@@ -146,3 +148,42 @@ export function RegaloVista({
     </div>
   );
 }
+
+/** Genera el PDF primero y luego descarga con un clic (mantiene la activación del usuario en iOS). */
+export function BotonPdf({ info, presentacion, children }: { info: RegaloOk; presentacion: Presentacion | null; children?: ReactNode }) {
+  const [generando, setGenerando] = useState(false);
+  const [blob, setBlob] = useState<Blob | null>(null);
+  async function generar() {
+    setGenerando(true);
+    try {
+      const { generarRegaloPdf } = await import("@/lib/regalo-pdf");
+      setBlob(await generarRegaloPdf(info, presentacion));
+    } finally {
+      setGenerando(false);
+    }
+  }
+  if (blob)
+    return (
+      <Button
+        onClick={async () => {
+          const { nombrePdfRegalo } = await import("@/lib/regalo-pdf");
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = nombrePdfRegalo(info);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 30_000);
+        }}
+      >
+        <Download className="size-4" /> {children ?? "Descargar PDF"}
+      </Button>
+    );
+  return (
+    <Button variant="outline" disabled={generando} onClick={() => void generar()}>
+      {generando ? "Preparando PDF…" : "Preparar PDF"}
+    </Button>
+  );
+}
+

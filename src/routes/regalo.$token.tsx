@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
-import { Download } from "lucide-react";
 
-import { RegaloVista } from "@/components/public/regalo-vista";
+import { BotonPdf, RegaloVista } from "@/components/public/regalo-vista";
 import { Button } from "@/components/ui/button";
-import { getPresentacion, getRegalo, UUID, type RegaloOk, type Presentacion } from "@/lib/regalo";
+import { getPresentacion, getRegalo, UUID, } from "@/lib/regalo";
 import { getPortadaRegalo } from "@/lib/regalo.functions";
 
 const TITULO = "Tenés un regalo | Gift Box Cruzia";
@@ -46,43 +44,6 @@ function Aviso({ titulo, texto }: { titulo: string; texto: string }) {
         </Button>
       </div>
     </main>
-  );
-}
-
-export function BotonPdf({ info, presentacion, children }: { info: RegaloOk; presentacion: Presentacion | null; children?: ReactNode }) {
-  const [generando, setGenerando] = useState(false);
-  const [blob, setBlob] = useState<Blob | null>(null);
-  async function generar() {
-    setGenerando(true);
-    try {
-      const { generarRegaloPdf } = await import("@/lib/regalo-pdf");
-      setBlob(await generarRegaloPdf(info, presentacion));
-    } finally {
-      setGenerando(false);
-    }
-  }
-  if (blob)
-    return (
-      <Button
-        onClick={async () => {
-          const { nombrePdfRegalo } = await import("@/lib/regalo-pdf");
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = nombrePdfRegalo(info);
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 30_000);
-        }}
-      >
-        <Download className="size-4" /> {children ?? "Descargar PDF"}
-      </Button>
-    );
-  return (
-    <Button variant="outline" disabled={generando} onClick={() => void generar()}>
-      {generando ? "Preparando PDF…" : "Preparar PDF"}
-    </Button>
   );
 }
 
