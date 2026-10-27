@@ -4,6 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { BotonPdf } from "@/components/public/regalo-vista";
+import { getPresentacion, getRegalo, type Presentacion, type RegaloOk } from "@/lib/regalo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,6 +81,7 @@ export function PedidosGiftbox({ onCambio }: { onCambio: () => void }) {
   const [filtro, setFiltro] = useState<EstadoPedido | "todos">("todos");
   const [abierto, setAbierto] = useState<Pedido | null>(null);
   const [plantilla, setPlantilla] = useState("");
+  const [plantillaRegalo, setPlantillaRegalo] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const cargar = useCallback(async () => {
@@ -88,7 +92,10 @@ export function PedidosGiftbox({ onCambio }: { onCambio: () => void }) {
 
   useEffect(() => {
     void cargar();
-    void getPlantillas().then((p) => setPlantilla(p?.pago ?? ""));
+    void getPlantillas().then((p) => {
+      setPlantilla(p?.pago ?? "");
+      setPlantillaRegalo(p?.regalo ?? "");
+    });
   }, [cargar]);
 
   const visibles = useMemo(
@@ -154,7 +161,7 @@ export function PedidosGiftbox({ onCambio }: { onCambio: () => void }) {
       <Sheet open={!!abierto} onOpenChange={(o) => !o && setAbierto(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
           {abierto && (
-            <DetallePedido key={abierto.id} pedido={abierto} plantilla={plantilla} onGuardado={actualizado} />
+            <DetallePedido key={abierto.id} pedido={abierto} plantilla={plantilla} plantillaRegalo={plantillaRegalo} onGuardado={actualizado} />
           )}
         </SheetContent>
       </Sheet>
@@ -165,10 +172,12 @@ export function PedidosGiftbox({ onCambio }: { onCambio: () => void }) {
 function DetallePedido({
   pedido,
   plantilla,
+  plantillaRegalo,
   onGuardado,
 }: {
   pedido: Pedido;
   plantilla: string;
+  plantillaRegalo: string;
   onGuardado: () => Promise<void>;
 }) {
   const [p, setP] = useState(pedido);
@@ -291,6 +300,39 @@ function DetallePedido({
         )}
       </section>
 
+      <section className="space-y-2">
+        <h3 className="text-sm font-medium">Canjes</h3>
+        <ul className="divide-y divide-border rounded-md border border-border text-sm">
+          {itemsDe(p).map((i, n) => {
+            const canjes = (p.canjes ?? {}) as Record<string, string>;
+            const fecha = i.id ? canjes[i.id] : undefined;
+            return (
+              <li key={i.id ?? n} className="flex items-center gap-3 px-3 py-2">
+                <Checkbox
+                  id={`canje-${i.id ?? n}`}
+                  checked={!!fecha}
+                  disabled={!i.id || guardando}
+                  onCheckedChange={(v) => {
+                    if (!i.id) return;
+                    const nuevo = { ...canjes };
+                    if (v) nuevo[i.id] = new Date().toISOString();
+                    else delete nuevo[i.id];
+                    void guardar({ canjes: nuevo }, v ? "Experiencia marcada como canjeada." : "Canje desmarcado.");
+                  }}
+                />
+                <Label htmlFor={`canje-${i.id ?? n}`} className="flex-1 font-normal">
+                  {i.nombre ?? "Experiencia"}
+                </Label>
+                <span className="text-xs text-muted-foreground">{fecha ? `Canjeada ${fechaCorta(fecha)}` : "Canjeada"}</span>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="text-xs text-muted-foreground">Código de canje: <span className="font-mono">{p.codigo_canje}</span></p>
+      </section>
+
+      <PresentacionDigital p={p} plantilla={plantillaRegalo} origen={origen} guardando={guardando} onEnviado={() => void guardar({ regalo_enviado_at: new Date().toISOString() }, "Regalo abierto en WhatsApp.")} />
+
       <div className="space-y-2">
         <Label>Estado</Label>
         <Select
@@ -377,6 +419,77 @@ function DetallePedido({
       {aviso && <p className="text-sm text-primary">{aviso}</p>}
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
+  );
+}
+
+function PresentacionDigital({
+  p,
+  plantilla,
+  origen,
+  guardando,
+  onEnviado,
+}: {
+  p: Pedido;
+  plantilla: string;
+  origen: string;
+  guardando: boolean;
+  onEnviado: () => void;
+}) {
+  const tieneAgasajado = !!normalizarWhatsappAR(p.agasajado_whatsapp) && (p.agasajado_whatsapp ?? "").replace(/\D/g, "").length >= 8;
+  const [dest, setDest] = useState<"agasajado" | "comprador">(tieneAgasajado ? "agasajado" : "comprador");
+  const [datos, setDatos] = useState<{ info: RegaloOk; pres: Presentacion | null } | null>(null);
+  const link = `${origen}/regalo/${p.token_regalo}`;
+  const numero = normalizarWhatsappAR(dest === "agasajado" ? p.agasajado_whatsapp : p.contacto_whatsapp);
+  const mensaje = armarMensaje(plantilla, {
+    agasajado: p.agasajado_nombre ?? "",
+    remitente: p.remitente_firma || p.contacto_nombre || "",
+    nombre: p.contacto_nombre ?? "",
+    link_regalo: link,
+  });
+
+  useEffect(() => {
+    void Promise.all([getRegalo(p.token_regalo), getPresentacion()]).then(([info, pres]) => {
+      if (info.estado === "ok") setDatos({ info, pres });
+    });
+  }, [p.token_regalo, p.canjes]);
+
+  return (
+    <section className="space-y-3 rounded-md border border-border p-3">
+      <h3 className="text-sm font-medium">Presentación digital</h3>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" asChild>
+          <a href={link} target="_blank" rel="noreferrer">Ver presentación</a>
+        </Button>
+        {datos && <BotonPdf info={datos.info} presentacion={datos.pres} />}
+      </div>
+      <div className="space-y-2">
+        <Label>Enviar a</Label>
+        <Select value={dest} onValueChange={(v) => setDest(v as "agasajado" | "comprador")}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {tieneAgasajado && <SelectItem value="agasajado">Quien recibe ({p.agasajado_nombre}) · {p.agasajado_whatsapp}</SelectItem>}
+            <SelectItem value="comprador">Quien compró ({p.contacto_nombre}) · {p.contacto_whatsapp}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-1">
+        <Label>Vista previa del mensaje</Label>
+        <pre className="whitespace-pre-wrap rounded-md bg-muted p-3 font-sans text-sm">{mensaje}</pre>
+      </div>
+      <Button
+        disabled={guardando || numero.length < 12}
+        onClick={() => {
+          window.open(linkWhatsapp(numero, mensaje), "_blank", "noopener");
+          onEnviado();
+        }}
+      >
+        Enviar regalo por WhatsApp
+      </Button>
+      {p.regalo_enviado_at && <p className="text-xs text-muted-foreground">Regalo enviado: {fechaCorta(p.regalo_enviado_at)}</p>}
+      {!p.datos_completados_at && <p className="text-xs text-muted-foreground">Ojo: todavía falta completar el formulario del regalo.</p>}
+    </section>
   );
 }
 
