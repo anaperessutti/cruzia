@@ -379,6 +379,8 @@ export type GiftboxItemForm = {
   redes_sociales: Record<string, string>;
   orden: number;
   activo: boolean;
+  como_canjear: string | null;
+  condiciones: string | null;
 };
 
 export async function getGiftboxItemsAdmin(): Promise<GiftboxItemAdmin[]> {
