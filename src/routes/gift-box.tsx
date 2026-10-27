@@ -359,10 +359,7 @@ function GiftBoxPage() {
                 </div>
                 <div className="relative mt-2 min-h-4 text-xs leading-4 text-primary-foreground/70 sm:text-right sm:whitespace-nowrap">
                   <p
-                    className={cn(
-                      "absolute inset-x-0 top-0",
-                      formato !== "digital" && "invisible",
-                    )}
+                    className={cn("absolute inset-x-0 top-0", formato !== "digital" && "invisible")}
                   >
                     Presentación digital en pocas horas por WhatsApp
                   </p>
@@ -376,38 +373,38 @@ function GiftBoxPage() {
             {elegidos.length > 0 && (
               <>
                 <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
-                <div className="space-y-1">
-                  <Label htmlFor="gb-nombre" className="text-xs text-primary-foreground/70">
-                    Tu nombre
-                  </Label>
-                  <Input
-                    id="gb-nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/40"
-                    placeholder="Ana"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="gb-wsp" className="text-xs text-primary-foreground/70">
-                    Tu WhatsApp
-                  </Label>
-                  <Input
-                    id="gb-wsp"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/40"
-                    placeholder="2257 400000"
-                  />
-                </div>
-                <Button
-                  size="lg"
-                  className="w-full self-end bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover sm:w-auto"
-                  onClick={confirmar}
-                  disabled={enviando}
-                >
-                  {enviando ? "Enviando…" : "Confirmar Gift Box"}
-                </Button>
+                  <div className="space-y-1">
+                    <Label htmlFor="gb-nombre" className="text-xs text-primary-foreground/70">
+                      Tu nombre
+                    </Label>
+                    <Input
+                      id="gb-nombre"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
+                      className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/40"
+                      placeholder="Ana"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="gb-wsp" className="text-xs text-primary-foreground/70">
+                      Tu WhatsApp
+                    </Label>
+                    <Input
+                      id="gb-wsp"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/40"
+                      placeholder="2257 400000"
+                    />
+                  </div>
+                  <Button
+                    size="lg"
+                    className="w-full self-end bg-primary text-primary-foreground shadow-glow hover:bg-primary-hover sm:w-auto"
+                    onClick={confirmar}
+                    disabled={enviando}
+                  >
+                    {enviando ? "Enviando…" : "Confirmar Gift Box"}
+                  </Button>
                 </div>
                 <p className="-mt-2 text-xs leading-4 text-primary-foreground/70">
                   💡Recordá ingresar tus datos! En el siguiente paso recibirás el link de pago y el
