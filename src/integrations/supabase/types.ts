@@ -198,6 +198,7 @@ export type Database = {
           localidad_id: string | null
           nombre: string
           plan_id: string
+          posicion_tarjeta: string | null
           redes_sociales: Json
           rubro_id: string | null
           updated_at: string
@@ -218,6 +219,7 @@ export type Database = {
           localidad_id?: string | null
           nombre: string
           plan_id: string
+          posicion_tarjeta?: string | null
           redes_sociales?: Json
           rubro_id?: string | null
           updated_at?: string
@@ -238,6 +240,7 @@ export type Database = {
           localidad_id?: string | null
           nombre?: string
           plan_id?: string
+          posicion_tarjeta?: string | null
           redes_sociales?: Json
           rubro_id?: string | null
           updated_at?: string
@@ -403,6 +406,8 @@ export type Database = {
           hero_alcance_local: boolean
           id: string
           modalidad: Database["public"]["Enums"]["modalidad_cupon"]
+          oferta_corta: string | null
+          posicion_tarjeta: string | null
           primera_activacion: string | null
           qr_codigo: string
           titulo: string
@@ -422,6 +427,8 @@ export type Database = {
           hero_alcance_local?: boolean
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
+          oferta_corta?: string | null
+          posicion_tarjeta?: string | null
           primera_activacion?: string | null
           qr_codigo?: string
           titulo: string
@@ -441,6 +448,8 @@ export type Database = {
           hero_alcance_local?: boolean
           id?: string
           modalidad?: Database["public"]["Enums"]["modalidad_cupon"]
+          oferta_corta?: string | null
+          posicion_tarjeta?: string | null
           primera_activacion?: string | null
           qr_codigo?: string
           titulo?: string
@@ -506,6 +515,7 @@ export type Database = {
           lat: number | null
           lng: number | null
           localidad_id: string | null
+          posicion_tarjeta: string | null
           titulo: string
           updated_at: string
         }
@@ -523,6 +533,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           localidad_id?: string | null
+          posicion_tarjeta?: string | null
           titulo: string
           updated_at?: string
         }
@@ -540,6 +551,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           localidad_id?: string | null
+          posicion_tarjeta?: string | null
           titulo?: string
           updated_at?: string
         }
