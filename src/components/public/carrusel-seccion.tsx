@@ -227,7 +227,11 @@ export function CarruselSeccion({
         <div
           ref={scrollerRef}
           data-m-row=""
-          className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden"
+          className={cn(
+            "flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overscroll-x-contain px-4 pb-10 pt-1 [scrollbar-width:none] sm:scroll-px-6 sm:px-6 lg:scroll-px-8 lg:px-8 [&::-webkit-scrollbar]:hidden",
+            // La ficha compacta crece 13 px de alto: se descuentan del pie de la fila.
+            compacta && "max-sm:pb-[27px]",
+          )}
         >
           {tarjetasVisibles.map((tarjeta, index) => (
             // Cascada solo en las primeras 4; las demás, estáticas. data-hr-blur marca cuáles se ven al entrar
@@ -262,6 +266,7 @@ export function CarruselSeccion({
             <a
               href={destinoUrl}
               aria-label={`Ver todo en ${titulo}`}
+              data-compacta={compacta ? "" : undefined}
               className={cn(
                 "ver-todo-card frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1",
                 compacta && "max-sm:rounded-[20px] max-sm:p-3",

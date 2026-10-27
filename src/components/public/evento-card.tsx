@@ -28,6 +28,7 @@ export const EventoCard = memo(function EventoCard({
       nivel="basica"
       titulo={evento.titulo}
       descripcion={rango(evento.fecha_inicio, evento.fecha_fin)}
+      posicionImagen={evento.posicion_tarjeta}
       ubicacion={localidad?.nombre}
       insignia={<InsigniaTarjeta premium>Evento</InsigniaTarjeta>}
       className={className}

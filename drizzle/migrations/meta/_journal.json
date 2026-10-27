@@ -57,6 +57,13 @@
       "when": 1790188795728,
       "tag": "0007_giftbox_pedido_precio_servidor",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793089174070,
+      "tag": "0008_posicion_tarjeta_y_oferta_corta",
+      "breakpoints": true
     }
   ]
 }

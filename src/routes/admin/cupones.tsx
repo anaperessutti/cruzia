@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useCallback, useEffect, useState } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
+import { SelectorEnfoque } from "@/components/admin/selector-enfoque";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,7 +50,7 @@ type Busqueda = { comercio?: string | undefined };
 export const Route = createFileRoute("/admin/cupones")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>): Busqueda => ({
-    comercio: typeof search['comercio'] === "string" ? (search['comercio'] as string) : undefined,
+    comercio: typeof search["comercio"] === "string" ? (search["comercio"] as string) : undefined,
   }),
   head: () => ({
     meta: [
@@ -79,6 +80,8 @@ function formDesde(c: Cupon): CuponForm {
     es_favorita_home: c.es_favorita_home,
     es_top_slider: c.es_top_slider,
     hero_alcance_local: c.hero_alcance_local,
+    posicion_tarjeta: c.posicion_tarjeta,
+    oferta_corta: c.oferta_corta,
   };
 }
 
@@ -158,7 +161,6 @@ function CuponesAdmin() {
   const admiteTopSlider = (comercioId: string) =>
     Boolean(planDeComercio(comercioId)?.aparece_en_hero_banner);
 
-
   function nuevo() {
     setEditando("nuevo");
     setColeccionesSel([]);
@@ -176,6 +178,8 @@ function CuponesAdmin() {
       es_favorita_home: false,
       es_top_slider: false,
       hero_alcance_local: false,
+      posicion_tarjeta: null,
+      oferta_corta: null,
     });
   }
 
@@ -309,7 +313,7 @@ function CuponesAdmin() {
                 })
               }
             >
-               <SelectTrigger className="w-full sm:w-[260px]">
+              <SelectTrigger className="w-full sm:w-[260px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -335,7 +339,11 @@ function CuponesAdmin() {
             {(cupones ?? []).map((c) => (
               <div key={c.id} className="flex flex-wrap items-center gap-3 rounded-lg border p-3">
                 {c.flyer_url && (
-                  <img src={c.flyer_url} alt={c.titulo} className="h-16 w-14 rounded object-cover" />
+                  <img
+                    src={c.flyer_url}
+                    alt={c.titulo}
+                    className="h-16 w-14 rounded object-cover"
+                  />
                 )}
                 <div className="min-w-[180px] flex-1">
                   <p className="font-medium">{c.titulo}</p>
@@ -361,7 +369,7 @@ function CuponesAdmin() {
                   onClick={() => {
                     setEditando(c.id);
                     setForm(formDesde(c));
-                   void getColeccionesDeCupon(c.id).then(setColeccionesSel);
+                    void getColeccionesDeCupon(c.id).then(setColeccionesSel);
                     void getSedesDeCupon(c.id).then(setSedesSel);
                   }}
                 >
@@ -381,9 +389,9 @@ function CuponesAdmin() {
           <CardHeader>
             <CardTitle>{editando === "nuevo" ? "Nueva promoción" : "Editar promoción"}</CardTitle>
             <CardDescription>
-              Flyer recomendado: 1080 × 1350 px (4:5, vertical), hasta 300 KB. Zona segura: poné
-              el texto importante en el 65% superior; el 35% inferior queda tapado por el panel de
-              la tarjeta (nombre, botón).
+              Flyer recomendado: 1080 × 1350 px (4:5, vertical), hasta 300 KB. Zona segura: poné el
+              texto importante en el 65% superior; el 35% inferior queda tapado por el panel de la
+              tarjeta (nombre, botón).
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -405,7 +413,26 @@ function CuponesAdmin() {
 
             <div className="space-y-2">
               <Label htmlFor="titulo">Título *</Label>
-              <Input id="titulo" value={form.titulo} onChange={(e) => set("titulo", e.target.value)} />
+              <Input
+                id="titulo"
+                value={form.titulo}
+                onChange={(e) => set("titulo", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="oferta-corta">Oferta corta (para fichas chicas del inicio)</Label>
+              <Input
+                id="oferta-corta"
+                value={form.oferta_corta ?? ""}
+                maxLength={28}
+                placeholder="Ej: 2 churros gratis"
+                onChange={(e) => set("oferta_corta", e.target.value.slice(0, 28) || null)}
+              />
+              <p className="text-xs text-muted-foreground">
+                {(form.oferta_corta ?? "").length}/28 · Se muestra en las fichas chicas del Inicio.
+                Si lo dejás vacío se usa el título del cupón.
+              </p>
             </div>
 
             <div className="space-y-2 sm:col-span-2">
@@ -477,11 +504,22 @@ function CuponesAdmin() {
               {subiendo && <p className="text-sm text-muted-foreground">Subiendo flyer…</p>}
               {form.flyer_url && (
                 <div className="flex items-center gap-3">
-                  <img src={form.flyer_url} alt="Flyer" className="h-28 w-24 rounded object-cover" />
+                  <img
+                    src={form.flyer_url}
+                    alt="Flyer"
+                    className="h-28 w-24 rounded object-cover"
+                  />
                   <Button size="sm" variant="ghost" onClick={() => set("flyer_url", null)}>
                     Quitar flyer
                   </Button>
                 </div>
+              )}
+              {form.flyer_url && (
+                <SelectorEnfoque
+                  imagen={form.flyer_url}
+                  valor={form.posicion_tarjeta}
+                  onChange={(v) => set("posicion_tarjeta", v)}
+                />
               )}
             </div>
 
@@ -498,7 +536,9 @@ function CuponesAdmin() {
                     <Checkbox
                       checked={coleccionesSel.includes(col.id)}
                       onCheckedChange={(v) =>
-                        setColeccionesSel((prev) => (v ? [...prev, col.id] : prev.filter((id) => id !== col.id)))
+                        setColeccionesSel((prev) =>
+                          v ? [...prev, col.id] : prev.filter((id) => id !== col.id),
+                        )
                       }
                     />
                     {col.nombre}
@@ -519,7 +559,9 @@ function CuponesAdmin() {
                       checked={sedesSel.includes(SEDE_PRINCIPAL)}
                       onCheckedChange={(v) =>
                         setSedesSel((prev) =>
-                          v ? [...prev, SEDE_PRINCIPAL] : prev.filter((id) => id !== SEDE_PRINCIPAL),
+                          v
+                            ? [...prev, SEDE_PRINCIPAL]
+                            : prev.filter((id) => id !== SEDE_PRINCIPAL),
                         )
                       }
                     />
@@ -533,7 +575,9 @@ function CuponesAdmin() {
                       <Checkbox
                         checked={sedesSel.includes(s.id)}
                         onCheckedChange={(v) =>
-                          setSedesSel((prev) => (v ? [...prev, s.id] : prev.filter((id) => id !== s.id)))
+                          setSedesSel((prev) =>
+                            v ? [...prev, s.id] : prev.filter((id) => id !== s.id),
+                          )
                         }
                       />
                       {s.direccion?.trim() ? s.direccion : `Sede ${i + 2}`}
@@ -573,7 +617,8 @@ function CuponesAdmin() {
                   <Label htmlFor="top-slider">Postular al Top Slider</Label>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  El comercio puede postular una sola promoción: al marcar esta, se desmarca automáticamente la anterior.
+                  El comercio puede postular una sola promoción: al marcar esta, se desmarca
+                  automáticamente la anterior.
                 </p>
 
                 {form.es_top_slider && (
