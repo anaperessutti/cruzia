@@ -10,6 +10,7 @@ interface CommerceCardProps {
   localidad?: Localidad | undefined;
   rubro?: Rubro | undefined;
   className?: string;
+  compacta?: boolean;
 }
 
 /** Nivel visual: Pro/Premium solo si tienen un cupón activo (si no, se ven como Básica). */
@@ -25,7 +26,7 @@ function venceEn(fin: string) {
   return dias <= 30 ? `Vence en ${dias} días` : null;
 }
 
-export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, localidad, rubro, className }: CommerceCardProps) {
+export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, localidad, rubro, className, compacta }: CommerceCardProps) {
   const nivel = nivelDeTarjeta(plan, cupon);
   const destacado = nivel !== "basica";
   return (
@@ -42,6 +43,7 @@ export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, 
       insignia={nivel === "premium" ? <InsigniaTarjeta premium>Premium</InsigniaTarjeta> : nivel === "pro" ? <InsigniaTarjeta>⭐ Cupón</InsigniaTarjeta> : undefined}
       boton={destacado ? "Obtener Cupón" : null}
       className={className}
+      compacta={compacta}
     />
   );
 });
