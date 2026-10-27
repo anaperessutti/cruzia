@@ -198,7 +198,6 @@
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 }
 
-@utility bg-hero-overlay { background: var(--hero-overlay); }
 @utility shadow-premium { box-shadow: var(--shadow-premium); }
 @utility bg-wave-pattern {
   background-color: var(--surface-sand);
@@ -230,45 +229,10 @@
   color: hsl(38 35% 94%);
 }
 /* Anillo especular real (pseudo-elemento). Requiere un padre posicionado. */
-@utility glass-ring {
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, rgb(255 255 255 / 0.7), transparent 45%, transparent 60%, rgb(255 255 255 / 0.25));
-    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-}
 /* Desenfoque progresivo teñido: se aplica a una copia de la imagen dentro de la tarjeta. */
-@utility glass-progressive {
-  transform: scale(1.15);
-  filter: blur(28px) saturate(1.4) brightness(0.85);
-  mask-image: linear-gradient(to top, black 0%, black 35%, transparent 100%);
-}
-@utility mask-fade-bottom { mask-image: linear-gradient(to bottom, black 70%, transparent 100%); }
 @utility shadow-warm { box-shadow: 0 24px 40px -24px rgb(28 26 25 / 0.35); }
 /* Lienzo continuo: halos radiales (sin filter) a distintas alturas del scroll. */
-@utility bg-canvas {
-  background-color: var(--background);
-  background-image:
-    radial-gradient(closest-side, rgb(169 168 171 / 0.55), transparent) -20% 8% / 70rem 70rem no-repeat,
-    radial-gradient(closest-side, rgb(233 182 118 / 0.45), transparent) 120% 22% / 64rem 64rem no-repeat,
-    radial-gradient(closest-side, rgb(169 168 171 / 0.5), transparent) 10% 45% / 60rem 60rem no-repeat,
-    radial-gradient(closest-side, rgb(233 182 118 / 0.35), transparent) 110% 68% / 70rem 70rem no-repeat,
-    radial-gradient(closest-side, rgb(169 168 171 / 0.45), transparent) -10% 92% / 60rem 60rem no-repeat;
-}
-@utility bg-grain {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-@utility text-display { font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4rem); line-height: 1.05; letter-spacing: -0.03em; font-weight: 700; }
-@utility text-section { font-size: 1.75rem; line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; }
-@utility text-row { font-size: 1.3125rem; line-height: 1.2; letter-spacing: -0.01em; font-weight: 700; }
 @utility text-pill { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
-@utility text-big-number { font-weight: 300; font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); line-height: 1; letter-spacing: -0.03em; font-feature-settings: "tnum"; }
 @utility tnum { font-feature-settings: "tnum"; }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -286,19 +250,12 @@
 
 /* Tarjetas inmersivas */
 @utility shadow-glow-pro { box-shadow: 0 22px 40px -22px rgb(223 59 37 / 0.45); }
-@utility shadow-glow-premium { box-shadow: 0 30px 60px -20px rgb(223 59 37 / 0.55), 0 10px 30px -18px rgb(242 156 90 / 0.6); }
 @utility text-shadow-soft { text-shadow: 0 1px 12px rgb(0 0 0 / 0.25); }
-@utility bg-premium-ring {
-  background: linear-gradient(120deg, var(--primary), var(--glow-amber), var(--primary), var(--glow-amber));
-  background-size: 300% 300%;
-  animation: ring-drift 9s linear infinite;
-}
 @keyframes ring-drift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
 @utility halo-accent { background: radial-gradient(closest-side, rgb(233 182 118 / 0.3), transparent); }
 @utility halo-gray { background: radial-gradient(closest-side, rgb(169 168 171 / 0.4), transparent); }
 
 @utility font-serif-editorial { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
-@utility transition-chrome { transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease; }
 
 /* ───────── Movimiento (tiempos de linear.app) ─────────
    Único lugar para ajustar tiempos. Los estados ocultos solo aplican con html.m-js. */
@@ -429,18 +386,6 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
 .site-public :is(h1, h2, h3) { font-weight: 600; }
 
 /* Grano reutilizable sobre paneles de vidrio. */
-@utility grain-overlay {
-  &::after {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-}
-@utility glass-menu {
-  background-color: rgb(255 255 255 / 0.35);
-  backdrop-filter: blur(28px) saturate(1.4);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 30px 60px -30px rgb(31 30 30 / 0.35);
-}
-.theme-gift .glass-menu, .glass-menu.theme-gift { background-color: rgb(20 22 23 / 0.4); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14), 0 30px 60px -30px rgb(0 0 0 / 0.6); background-image: none; }
 @utility mask-hero { mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); }
 @utility shadow-card { box-shadow: 0 22px 40px -24px rgb(90 60 30 / 0.35); }
 
@@ -448,12 +393,12 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
    Sin prefijo -webkit- escrito a mano: el build lo agrega y, si se duplica, descarta el estándar en Chrome. */
 .pblur { position: absolute; inset: auto 0 0 0; height: 42%; pointer-events: none; z-index: 1; border-radius: 0 0 inherit inherit; }
 .pblur > i { position: absolute; inset: 0; }
-.pblur > i:nth-child(1), .pblur > i:nth-child(3), .pblur > i:nth-child(4), .pblur > i:nth-child(6) { display: none; }
-.pblur > i:nth-child(2) { backdrop-filter: blur(var(--pb-a)); mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); }
-.pblur > i:nth-child(5) { backdrop-filter: blur(var(--pb-b)); mask-image: linear-gradient(to bottom, transparent 40%, #000 90%); }
+.pblur > i:nth-child(1) { backdrop-filter: blur(var(--pb-a)); mask-image: linear-gradient(to bottom, transparent 0%, #000 55%); }
+.pblur > i:nth-child(2) { backdrop-filter: blur(var(--pb-b)); mask-image: linear-gradient(to bottom, transparent 40%, #000 90%); }
 .pblur-shade { position: absolute; inset: auto 0 0 0; height: 42%; pointer-events: none; z-index: 2; background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.45)); }
 /* Vidrio esmerilado neutro con grano (tarjeta "Ver todo" y estados de carga). */
 .frost { background-color: rgb(255 255 255 / 0.30); backdrop-filter: blur(28px) saturate(1.3); border: 1px solid rgb(255 255 255 / 0.55); box-shadow: 0 22px 40px -24px rgb(31 30 30 / 0.3); }
+.ver-todo-card { background-color: rgb(255 255 255 / 0.42); border: 1px solid rgb(255 255 255 / 0.55); box-shadow: 0 22px 40px -24px rgb(31 30 30 / 0.3); }
 .frost-grain::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: .08;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .frost-neutral { background-color: rgb(255 255 255 / 0.20); }
@@ -622,13 +567,6 @@ html.x-hrseguro.m-js .hr-primera [data-hr="card"]:not(:has(img[data-m-card-image
 @media (prefers-reduced-motion: reduce) { html.m-js .hr-fila [data-hr="card"] img[data-m-card-image] { animation: none !important; } }
 
 /* ===== DIAGNÓSTICO (solo con ?x=) ===== */
-html.x-blur6 .pblur > i { display: block; }
-html.x-blur6 .pblur > i:nth-child(1) { backdrop-filter: blur(1px); mask-image: linear-gradient(to bottom, transparent 0%, #000 20%); }
-html.x-blur6 .pblur > i:nth-child(2) { backdrop-filter: blur(2px); mask-image: linear-gradient(to bottom, transparent 10%, #000 35%); }
-html.x-blur6 .pblur > i:nth-child(3) { backdrop-filter: blur(4px); mask-image: linear-gradient(to bottom, transparent 25%, #000 50%); }
-html.x-blur6 .pblur > i:nth-child(4) { backdrop-filter: blur(8px); mask-image: linear-gradient(to bottom, transparent 40%, #000 65%); }
-html.x-blur6 .pblur > i:nth-child(5) { backdrop-filter: blur(16px); mask-image: linear-gradient(to bottom, transparent 55%, #000 80%); }
-html.x-blur6 .pblur > i:nth-child(6) { backdrop-filter: blur(28px); mask-image: linear-gradient(to bottom, transparent 70%, #000 100%); }
 html.x-noblur .pblur, html.x-noblur .pblur-shade { display: none !important; }
 html.x-nofx * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 html.x-noanim *, html.x-noanim *::before, html.x-noanim *::after { animation: none !important; transition: none !important; }

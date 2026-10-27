@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Limpieza 1: reducir dibujo de tarjetas, retirar utilidades y exports sin uso, verificar capturas a 390px y conservar movimiento/fotos.
+
 - [x] Adaptar entradas al scroll rápido y restaurar precarga por fila en Inicio; máximo seis tarjetas reales, pruebas de umbral/reposo/límite aprobadas y scroll rápido verificado a 390px sin errores; referencias intactas. Captura real pendiente de Ana.
 
 - [x] Ajustar ruta renderizada, precarga pública, cierre del menú, filtros al montar y respaldo de hidratación; navegación arriba desde el primer frame, Atrás restaura 1200px, Cupones limpia el switch al salir, cierre 200ms y respaldo 4000ms verificados.

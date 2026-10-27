@@ -35,8 +35,6 @@ interface CarruselSeccionProps {
   destacada?: boolean;
   /** Primera fila visible al cargar: entra solo con CSS, sin observers. */
   primera?: boolean;
-  /** Se mantiene por compatibilidad. */
-  imagenes?: (string | null)[];
   className?: string;
 }
 
@@ -254,7 +252,7 @@ export function CarruselSeccion({
             <a
               href={destinoUrl}
               aria-label={`Ver todo en ${titulo}`}
-              className="frost frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1"
+              className="ver-todo-card frost-grain group relative flex aspect-[4/5] h-full flex-col justify-end overflow-hidden rounded-[28px] p-5 text-[#1F1E1E] transition-transform duration-500 hover:-translate-y-1"
             >
               <span className="relative text-xl font-semibold leading-tight">
                 Ver todo en <span className="block">{titulo}</span>
