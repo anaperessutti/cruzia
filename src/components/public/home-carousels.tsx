@@ -53,9 +53,9 @@ export function HomeCarousels() {
       .map<TarjetaGrilla>((evento) => ({ tipo: "evento", key: `evento-${evento.id}`, evento })),
   ];
 
-  const renderTarjeta = (tarjeta: TarjetaGrilla) =>
+  const renderTarjeta = (tarjeta: TarjetaGrilla, compacta = false) =>
     tarjeta.tipo === "evento" ? (
-      <EventoCard key={tarjeta.key} evento={tarjeta.evento} localidad={localidadById.get(tarjeta.evento.localidad_id ?? "")} />
+      <EventoCard key={tarjeta.key} evento={tarjeta.evento} localidad={localidadById.get(tarjeta.evento.localidad_id ?? "")} compacta={compacta} />
     ) : (
       <CommerceCard
         key={tarjeta.key}
@@ -64,6 +64,7 @@ export function HomeCarousels() {
         plan={planById.get(tarjeta.comercio.plan_id)}
         localidad={localidadById.get(tarjeta.comercio.localidad_id ?? "")}
         rubro={rubroById.get(tarjeta.comercio.rubro_id ?? "")}
+        compacta={compacta}
       />
     );
   /** Premium con cupón activo: va ~6% más ancha. */
@@ -135,7 +136,7 @@ export function HomeCarousels() {
           primera
           anchas={anchasDe(favoritos)}
           destinoUrl={`/cupones?soloCupon=true&favoritos=true${localidadesQuery}`}
-          tarjetas={favoritos.map(renderTarjeta)}
+          tarjetas={favoritos.map((tarjeta) => renderTarjeta(tarjeta))}
         />
       ) : null}
       {filasOrdenadas.map(({ coleccion, tarjetas }, index) => (
@@ -144,8 +145,9 @@ export function HomeCarousels() {
           titulo={coleccion.nombre}
           rotulo="Colección"
           primera={favoritos.length === 0 && index === 0}
+          compacta
           destinoUrl={`/categorias?coleccion=${encodeURIComponent(coleccion.id)}${localidadesQuery}`}
-          tarjetas={tarjetas.map(renderTarjeta)}
+          tarjetas={tarjetas.map((tarjeta) => renderTarjeta(tarjeta, true))}
         />
       ))}
     </div>
