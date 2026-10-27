@@ -47,5 +47,9 @@ export async function crearPedidoGiftbox(pedido: NuevoPedido): Promise<number> {
 }
 
 export function formatearPrecio(valor: number) {
-  return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(valor);
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 0,
+  }).format(valor);
 }
