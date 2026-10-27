@@ -262,6 +262,35 @@ function DetallePedido({
         </ul>
       </section>
 
+      <section className="space-y-2">
+        <h3 className="text-sm font-medium">Datos del regalo</h3>
+        {p.datos_completados_at ? (
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-md border border-border p-3 text-sm">
+            {(
+              [
+                ["Para", p.agasajado_nombre],
+                ["WhatsApp", p.agasajado_whatsapp],
+                ["Ocasión", p.ocasion],
+                ["Dedicatoria", p.dedicatoria],
+                ["De parte de", p.remitente_firma],
+                ["Fecha", p.fecha_regalo ? new Date(`${p.fecha_regalo}T00:00:00`).toLocaleDateString("es-AR") : null],
+                ["Dirección", p.formato === "fisico" ? p.direccion_entrega : null],
+                ["Completado", fechaCorta(p.datos_completados_at)],
+              ] as [string, string | null][]
+            )
+              .filter(([, v]) => v)
+              .map(([k, v]) => (
+                <div key={k} className="contents">
+                  <dt className="text-muted-foreground">{k}</dt>
+                  <dd className="whitespace-pre-wrap">{v}</dd>
+                </div>
+              ))}
+          </dl>
+        ) : (
+          <p className="rounded-md bg-muted p-3 text-sm text-muted-foreground">Falta completar el formulario.</p>
+        )}
+      </section>
+
       <div className="space-y-2">
         <Label>Estado</Label>
         <Select

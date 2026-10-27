@@ -78,6 +78,13 @@
       "when": 1793101987453,
       "tag": "0010_giftbox_pedidos_gestion",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793102339463,
+      "tag": "0011_giftbox_formulario_regalo",
+      "breakpoints": true
     }
   ]
 }
