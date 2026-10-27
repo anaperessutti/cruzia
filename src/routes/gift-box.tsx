@@ -357,13 +357,17 @@ function GiftBoxPage() {
                     </button>
                   ))}
                 </div>
-                <div className="relative mt-2 min-h-4 text-xs leading-4 text-primary-foreground/70 sm:text-right sm:whitespace-nowrap">
+                <div className="mt-2 grid text-xs leading-4 text-primary-foreground/70 sm:text-right sm:whitespace-nowrap">
                   <p
-                    className={cn("absolute inset-x-0 top-0", formato !== "digital" && "invisible")}
+                    className={cn("col-start-1 row-start-1", formato !== "digital" && "opacity-0")}
+                    aria-hidden={formato !== "digital"}
                   >
                     Presentación digital en pocas horas por WhatsApp
                   </p>
-                  <p className={cn(formato !== "fisico" && "invisible")}>
+                  <p
+                    className={cn("col-start-1 row-start-1", formato !== "fisico" && "opacity-0")}
+                    aria-hidden={formato !== "fisico"}
+                  >
                     Presentación física lista para regalar - entrega en 48hs
                   </p>
                 </div>
