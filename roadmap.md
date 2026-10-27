@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Ampliar búsqueda local con raíces, sinónimos y tolerancia de una letra; ordenar por nombre, rubro/colección y detalles, conservar destinos y límites, verificar pruebas y diálogo.
+- [x] Ampliar búsqueda local con raíces, sinónimos y tolerancia de una letra; ordenar por nombre, rubro/colección y detalles, conservar destinos y límites. Quince pruebas aprobadas; búsqueda real de churro, rubro/categoría/localidad, navegación y limpieza verificadas; compilación OK. Heladria→heladería validado con prueba, sin resultados en el catálogo actual.
 
 - [x] Paso 4 actualizado: ofertas medium 500 y blanco pleno; espacio compacto conservado 44,7px (original 67px), Favoritos 80→44,7px y última fila/pie 147→44,7px. Fichas 159×212px, tercera visible 29/32/35px, insignias iguales 11px/25,6px, muestra de 28 caracteres y nombre de dos líneas caben a 360px. Contacto mantiene pie 80px; 700px conserva textos y padding; dos capas, sombras y movimiento intactos. Siete pruebas aprobadas, lint sin errores nuevos y compilación OK; tipos independientes no ejecutados.
 
