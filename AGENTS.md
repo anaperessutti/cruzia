@@ -26,3 +26,4 @@
 - Mount idle public-route preloading inside the public provider, not the document shell; save-data connections skip preloading and mounting does not navigate or apply route filters.
 - Card progressive blur uses exactly two elements; keep neutral card backgrounds grain-free and final carousel cards on their dedicated non-backdrop-filter surface to reduce drawing cost independently of motion.
 - Diagnóstico: ?x=noblur|nofx|noanim|cv|hrseguro|hrsinblur|fps.
+- Fichas compactas (prop `compacta`): solo celular (<640 px) y solo en las filas de colección de Inicio posteriores a Favoritos; 2,3 fichas visibles, foto 480×600 y sin botón, píldora de rubro ni 'Vence en'. Favoritos y los demás anchos no cambian.
