@@ -397,7 +397,7 @@ export function MensajesGiftbox() {
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           {VARIABLES_PLANTILLA.map((v) => (
-            <Badge key={v} variant="secondary" className="font-mono">
+            <Badge key={v} variant="secondary" className="font-mono normal-case tracking-normal">
               {v}
             </Badge>
           ))}
