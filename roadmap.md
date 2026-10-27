@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Ampliar búsqueda local con raíces, sinónimos y tolerancia de una letra; ordenar por nombre, rubro/colección y detalles, conservar destinos y límites, verificar pruebas y diálogo.
+
 - [x] Paso 4 actualizado: ofertas medium 500 y blanco pleno; espacio compacto conservado 44,7px (original 67px), Favoritos 80→44,7px y última fila/pie 147→44,7px. Fichas 159×212px, tercera visible 29/32/35px, insignias iguales 11px/25,6px, muestra de 28 caracteres y nombre de dos líneas caben a 360px. Contacto mantiene pie 80px; 700px conserva textos y padding; dos capas, sombras y movimiento intactos. Siete pruebas aprobadas, lint sin errores nuevos y compilación OK; tipos independientes no ejecutados.
 
 - [x] Paso 4: fichas 159×212px a 390px, tercera visible 29/32/35px a 360/390/430px, insignias 11px y 25,6px de alto, textos 14/12/9px y oferta de 28 caracteres completa; separación 67→44,7px, pb 27px y dos capas intactos. Siete pruebas y lint sin errores; verificación de tipos independiente no ejecutada.
