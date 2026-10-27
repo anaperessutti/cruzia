@@ -35,18 +35,18 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
       )}
     >
       <article className="immersive-card relative isolate flex aspect-[4/5] h-full w-full flex-col justify-end overflow-clip rounded-[28px] text-primary-foreground">
-        <div aria-hidden="true" className="frost-neutral frost-grain absolute inset-0" />
+        <div aria-hidden="true" className="frost-neutral absolute inset-0" />
         {imagen ? (
           <>
             <CardImage src={imagenTarjeta(imagen)} fallbackSrc={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
-            <div aria-hidden="true" className="pblur"><i /><i /><i /><i /><i /><i /></div>
+            <div aria-hidden="true" className="pblur"><i /><i /></div>
           </>
         ) : null}
         <div aria-hidden="true" className="pblur-shade" />
 
         <div data-m-card-content="" className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
           {insignia ?? <span />}
-          {etiquetaSuperior ? <span className="rounded-full bg-ink/20 px-2.5 py-1 text-[11px] font-medium backdrop-blur-md">{etiquetaSuperior}</span> : null}
+          {etiquetaSuperior ? <span className="rounded-full bg-ink/40 px-2.5 py-1 text-[11px] font-medium">{etiquetaSuperior}</span> : null}
         </div>
 
         <div data-m-card-content="" className="text-shadow-soft relative z-10 p-4">
@@ -54,8 +54,8 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
           {descripcion ? <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-primary-foreground/90">{descripcion}</p> : null}
           {pildoras.length > 0 || ubicacion ? (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
-              {pildoras.map((p) => <span key={p} className="rounded-full bg-ink/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide backdrop-blur-md">{p}</span>)}
-              {ubicacion ? <span className="inline-flex items-center gap-1 rounded-full bg-ink/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide backdrop-blur-md"><MapPin className="size-3" />{ubicacion}</span> : null}
+              {pildoras.map((p) => <span key={p} className="rounded-full bg-ink/40 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide">{p}</span>)}
+              {ubicacion ? <span className="inline-flex items-center gap-1 rounded-full bg-ink/40 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide"><MapPin className="size-3" />{ubicacion}</span> : null}
             </div>
           ) : null}
           {boton ? (

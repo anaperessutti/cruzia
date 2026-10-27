@@ -15,7 +15,3 @@ export function PageIntro({ rotulo, titulo, negrita, intro, children, className 
   );
 }
 
-/** Panel de vidrio que sube superpuesto al título. */
-export function PanelVidrio({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("glass rounded-[32px] p-6 sm:p-8", className)}>{children}</div>;
-}
