@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Paso 4: mejorar legibilidad de fichas compactas y reducir a 2/3 la separación entre ellas; verificar medidas, texto, insignias y capas sin alterar Favoritos ni movimiento.
+- [x] Paso 4: fichas 159×212px a 390px, tercera visible 29/32/35px a 360/390/430px, insignias 11px y 25,6px de alto, textos 14/12/9px y oferta de 28 caracteres completa; separación 67→44,7px, pb 27px y dos capas intactos. Siete pruebas y lint sin errores; verificación de tipos independiente no ejecutada.
 
 - [x] Limpieza 1: dos capas de blur, etiquetas y Ver todo sin backdrop, 15 utilidades y exports sin uso retirados; capturas 390px, siete pruebas y lint sin errores nuevos verificados; movimiento/fotos intactos.
 
