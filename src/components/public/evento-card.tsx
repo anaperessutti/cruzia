@@ -9,7 +9,17 @@ function rango(inicio: string, fin: string) {
   return inicio === fin ? fmt(inicio) : `${fmt(inicio)} al ${fmt(fin)}`;
 }
 
-export const EventoCard = memo(function EventoCard({ evento, localidad, className, compacta }: { evento: Evento; localidad?: Localidad | undefined; className?: string; compacta?: boolean }) {
+export const EventoCard = memo(function EventoCard({
+  evento,
+  localidad,
+  className,
+  compacta,
+}: {
+  evento: Evento;
+  localidad?: Localidad | undefined;
+  className?: string;
+  compacta?: boolean;
+}) {
   return (
     <TarjetaInmersiva
       link={{ to: "/eventos/$eventoId", params: { eventoId: evento.id } }}

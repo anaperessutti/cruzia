@@ -21,7 +21,7 @@ interface TarjetaInmersivaProps {
   insignia?: ReactNode | undefined;
   boton?: string | null;
   className?: string | undefined;
-  compacta?: boolean;
+  compacta?: boolean | undefined;
 }
 
 /** Pieza inmersiva 4:5: foto a sangre + panel inferior teñido con la propia imagen. */

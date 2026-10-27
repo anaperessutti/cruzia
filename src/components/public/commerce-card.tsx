@@ -26,7 +26,15 @@ function venceEn(fin: string) {
   return dias <= 30 ? `Vence en ${dias} días` : null;
 }
 
-export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, localidad, rubro, className, compacta }: CommerceCardProps) {
+export const CommerceCard = memo(function CommerceCard({
+  comercio,
+  cupon,
+  plan,
+  localidad,
+  rubro,
+  className,
+  compacta,
+}: CommerceCardProps) {
   const nivel = nivelDeTarjeta(plan, cupon);
   const destacado = nivel !== "basica";
   return (
@@ -40,7 +48,13 @@ export const CommerceCard = memo(function CommerceCard({ comercio, cupon, plan, 
       pildoras={rubro ? [rubro.nombre] : []}
       ubicacion={localidad?.nombre}
       etiquetaSuperior={destacado && cupon ? venceEn(cupon.vigencia_fin) : null}
-      insignia={nivel === "premium" ? <InsigniaTarjeta premium>Premium</InsigniaTarjeta> : nivel === "pro" ? <InsigniaTarjeta>⭐ Cupón</InsigniaTarjeta> : undefined}
+      insignia={
+        nivel === "premium" ? (
+          <InsigniaTarjeta premium>Premium</InsigniaTarjeta>
+        ) : nivel === "pro" ? (
+          <InsigniaTarjeta>⭐ Cupón</InsigniaTarjeta>
+        ) : undefined
+      }
       boton={destacado ? "Obtener Cupón" : null}
       className={className}
       compacta={compacta}

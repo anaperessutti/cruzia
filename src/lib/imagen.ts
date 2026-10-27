@@ -5,7 +5,8 @@
  */
 export function optimizarImagen<T extends string | null | undefined>(url: T): T {
   if (!url || !url.includes("/storage/v1/object/sign/")) return url;
-  return url.replace("/storage/v1/object/sign/", "/storage/v1/render/image/sign/") + "&quality=78" as T;
+  return (url.replace("/storage/v1/object/sign/", "/storage/v1/render/image/sign/") +
+    "&quality=78") as T;
 }
 
 /**

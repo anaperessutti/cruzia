@@ -242,7 +242,10 @@ export function CarruselSeccion({
                     style: { "--i": index } as CSSProperties,
                   }
                 : {})}
-              className={cn("shrink-0 snap-start", anchas[index] && !compacta ? anchoPremium : ancho)}
+              className={cn(
+                "shrink-0 snap-start",
+                anchas[index] && !compacta ? anchoPremium : ancho,
+              )}
             >
               {tarjeta}
             </div>
@@ -264,11 +267,19 @@ export function CarruselSeccion({
                 compacta && "max-sm:rounded-[20px] max-sm:p-3",
               )}
             >
-              <span className={cn("relative text-xl font-semibold leading-tight", compacta && "max-sm:text-sm")}>
+              <span
+                className={cn(
+                  "relative text-xl font-semibold leading-tight",
+                  compacta && "max-sm:text-sm",
+                )}
+              >
                 Ver todo en <span className="block">{titulo}</span>
               </span>
               <BurbujaFlecha
-                className={cn("relative mt-4 size-10 bg-primary text-primary-foreground", compacta && "max-sm:mt-2 max-sm:size-8")}
+                className={cn(
+                  "relative mt-4 size-10 bg-primary text-primary-foreground",
+                  compacta && "max-sm:mt-2 max-sm:size-8",
+                )}
               />
             </a>
           </div>
