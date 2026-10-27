@@ -28,6 +28,7 @@ import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
 import { Route as ComercioComercioIdRouteImport } from './routes/comercio.$comercioId'
 import { Route as EventosEventoIdRouteImport } from './routes/eventos.$eventoId'
+import { Route as GiftBoxItemIdRouteImport } from './routes/gift-box_.$itemId'
 import { Route as AdminComerciosIndexRouteImport } from './routes/admin/comercios.index'
 import { Route as AdminComerciosComercioIdRouteImport } from './routes/admin/comercios.$comercioId'
 
@@ -126,6 +127,11 @@ const EventosEventoIdRoute = EventosEventoIdRouteImport.update({
   path: '/eventos/$eventoId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GiftBoxItemIdRoute = GiftBoxItemIdRouteImport.update({
+  id: '/gift-box_/$itemId',
+  path: '/gift-box/$itemId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminComerciosIndexRoute = AdminComerciosIndexRouteImport.update({
   id: '/admin/comercios/',
   path: '/admin/comercios/',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
   '/eventos/$eventoId': typeof EventosEventoIdRoute
+  '/gift-box/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
   '/eventos/$eventoId': typeof EventosEventoIdRoute
+  '/gift-box/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios': typeof AdminComerciosIndexRoute
 }
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/admin/setup': typeof AdminSetupRoute
   '/comercio/$comercioId': typeof ComercioComercioIdRoute
   '/eventos/$eventoId': typeof EventosEventoIdRoute
+  '/gift-box_/$itemId': typeof GiftBoxItemIdRoute
   '/admin/comercios/$comercioId': typeof AdminComerciosComercioIdRoute
   '/admin/comercios/': typeof AdminComerciosIndexRoute
 }
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/admin/setup'
     | '/comercio/$comercioId'
     | '/eventos/$eventoId'
+    | '/gift-box/$itemId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesByTo: FileRoutesByTo
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/admin/setup'
     | '/comercio/$comercioId'
     | '/eventos/$eventoId'
+    | '/gift-box/$itemId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios'
   id:
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/admin/setup'
     | '/comercio/$comercioId'
     | '/eventos/$eventoId'
+    | '/gift-box_/$itemId'
     | '/admin/comercios/$comercioId'
     | '/admin/comercios/'
   fileRoutesById: FileRoutesById
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   AdminSetupRoute: typeof AdminSetupRoute
   ComercioComercioIdRoute: typeof ComercioComercioIdRoute
   EventosEventoIdRoute: typeof EventosEventoIdRoute
+  GiftBoxItemIdRoute: typeof GiftBoxItemIdRoute
   AdminComerciosComercioIdRoute: typeof AdminComerciosComercioIdRoute
   AdminComerciosIndexRoute: typeof AdminComerciosIndexRoute
 }
@@ -439,6 +452,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventosEventoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gift-box_/$itemId': {
+      id: '/gift-box_/$itemId'
+      path: '/gift-box/$itemId'
+      fullPath: '/gift-box/$itemId'
+      preLoaderRoute: typeof GiftBoxItemIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/comercios/': {
       id: '/admin/comercios/'
       path: '/admin/comercios'
@@ -476,6 +496,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSetupRoute: AdminSetupRoute,
   ComercioComercioIdRoute: ComercioComercioIdRoute,
   EventosEventoIdRoute: EventosEventoIdRoute,
+  GiftBoxItemIdRoute: GiftBoxItemIdRoute,
   AdminComerciosComercioIdRoute: AdminComerciosComercioIdRoute,
   AdminComerciosIndexRoute: AdminComerciosIndexRoute,
 }
