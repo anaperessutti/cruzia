@@ -149,8 +149,11 @@ function GiftBoxPage() {
             Tu Gift Box está en camino
           </h1>
           <p className="mt-3 text-primary-foreground/70">
-            Te escribimos por WhatsApp para coordinar la entrega
-            {confirmado.formato === "fisico" ? " física (48 hs de anticipación)." : " digital."}
+            Te escribimos por WhatsApp con el link de pago y el formulario para personalizar el
+            regalo (destinatario, dedicatoria y fecha).
+            {confirmado.formato === "fisico"
+              ? " Si es física, recordá que la preparación requiere 48 hs de anticipación."
+              : ""}
           </p>
           <ul className="mx-auto mt-8 space-y-2 text-left">
             {confirmado.items.map((item) => (
@@ -336,27 +339,43 @@ function GiftBoxPage() {
                   {formatearPrecio(total)}
                 </p>
               </div>
-              <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
-                {(["digital", "fisico"] as GiftboxFormato[]).map((opcion) => (
-                  <button
-                    key={opcion}
-                    type="button"
-                    onClick={() => setFormato(opcion)}
+              <div className="w-full sm:w-auto">
+                <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+                  {(["digital", "fisico"] as GiftboxFormato[]).map((opcion) => (
+                    <button
+                      key={opcion}
+                      type="button"
+                      onClick={() => setFormato(opcion)}
+                      className={cn(
+                        "min-w-0 rounded-full border px-3 py-2 text-sm font-semibold transition-colors sm:px-4",
+                        formato === opcion
+                          ? "border-gift-accent bg-gift-accent text-gift"
+                          : "border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10",
+                      )}
+                    >
+                      {opcion === "digital" ? "Digital · WhatsApp" : "Física · 48 hs"}
+                    </button>
+                  ))}
+                </div>
+                <div className="relative mt-2 min-h-4 text-xs leading-4 text-primary-foreground/70 sm:text-right sm:whitespace-nowrap">
+                  <p
                     className={cn(
-                      "min-w-0 rounded-full border px-3 py-2 text-sm font-semibold transition-colors sm:px-4",
-                      formato === opcion
-                        ? "border-gift-accent bg-gift-accent text-gift"
-                        : "border-primary-foreground/25 text-primary-foreground/80 hover:bg-primary-foreground/10",
+                      "absolute inset-x-0 top-0",
+                      formato !== "digital" && "invisible",
                     )}
                   >
-                    {opcion === "digital" ? "Digital · WhatsApp" : "Física · 48 hs"}
-                  </button>
-                ))}
+                    Presentación digital en pocas horas por WhatsApp
+                  </p>
+                  <p className={cn(formato !== "fisico" && "invisible")}>
+                    Presentación física lista para regalar - entrega en 48hs
+                  </p>
+                </div>
               </div>
             </div>
 
             {elegidos.length > 0 && (
-              <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+              <>
+                <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
                 <div className="space-y-1">
                   <Label htmlFor="gb-nombre" className="text-xs text-primary-foreground/70">
                     Tu nombre
@@ -389,7 +408,12 @@ function GiftBoxPage() {
                 >
                   {enviando ? "Enviando…" : "Confirmar Gift Box"}
                 </Button>
-              </div>
+                </div>
+                <p className="-mt-2 text-xs leading-4 text-primary-foreground/70">
+                  💡Recordá ingresar tus datos! En el siguiente paso recibirás el link de pago y el
+                  formulario para personalizar el regalo (destinatario, dedicatoria y fecha).
+                </p>
+              </>
             )}
             {error && <p className="text-sm text-accent">{error}</p>}
           </div>
