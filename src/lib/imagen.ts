@@ -28,3 +28,10 @@ export function imagenTarjeta<T extends string | null | undefined>(url: T, compa
   u.searchParams.set("quality", "75");
   return u.toString() as T;
 }
+
+/** Valida un punto de enfoque guardado como "X% Y%" (0–100). */
+export function posicionValida(valor: string | null | undefined): valor is string {
+  if (!valor) return false;
+  const m = /^(\d{1,3})% (\d{1,3})%$/.exec(valor);
+  return m !== null && Number(m[1]) <= 100 && Number(m[2]) <= 100;
+}

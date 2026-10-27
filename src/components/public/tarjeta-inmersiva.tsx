@@ -2,7 +2,7 @@ import { Link, type LinkProps } from "@tanstack/react-router";
 import { ArrowRight, MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { imagenTarjeta, optimizarImagen } from "@/lib/imagen";
+import { imagenTarjeta, optimizarImagen, posicionValida } from "@/lib/imagen";
 import { cn } from "@/lib/utils";
 import { CardImage } from "./motion";
 
@@ -15,6 +15,10 @@ interface TarjetaInmersivaProps {
   nivel: NivelTarjeta;
   titulo: string;
   descripcion?: string | null | undefined;
+  /** Texto breve que reemplaza a la descripción solo en la ficha compacta. */
+  descripcionCorta?: string | null | undefined;
+  /** Punto de enfoque de la foto ("X% Y%"); null = centrada. */
+  posicionImagen?: string | null | undefined;
   pildoras?: string[];
   ubicacion?: string | null | undefined;
   etiquetaSuperior?: string | null | undefined;
@@ -25,8 +29,12 @@ interface TarjetaInmersivaProps {
 }
 
 /** Pieza inmersiva 4:5: foto a sangre + panel inferior teñido con la propia imagen. */
-export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion, pildoras = [], ubicacion, etiquetaSuperior, insignia, boton, className, compacta = false }: TarjetaInmersivaProps) {
+export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion, descripcionCorta, posicionImagen, pildoras = [], ubicacion, etiquetaSuperior, insignia, boton, className, compacta = false }: TarjetaInmersivaProps) {
   void nivel;
+  const enfoque = posicionValida(posicionImagen) ? posicionImagen : undefined;
+  // En la ficha compacta se muestra una sola descripción: la corta si existe, si no la de siempre.
+  const usaCorta = compacta && Boolean(descripcionCorta);
+  const texto = usaCorta ? descripcionCorta : descripcion;
   return (
     <Link
       {...link}
@@ -40,7 +48,7 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
         <div aria-hidden="true" className="frost-neutral absolute inset-0" />
         {imagen ? (
           <>
-            <CardImage src={imagenTarjeta(imagen, compacta)} fallbackSrc={optimizarImagen(imagen)} alt={alt} width={800} height={1000} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
+            <CardImage src={imagenTarjeta(imagen, compacta)} fallbackSrc={optimizarImagen(imagen)} alt={alt} width={800} height={1000} style={enfoque ? { objectPosition: enfoque } : undefined} className="absolute inset-0 z-0 size-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.04]" />
             <div aria-hidden="true" className="pblur"><i /><i /></div>
           </>
         ) : null}
@@ -53,7 +61,7 @@ export function TarjetaInmersiva({ link, imagen, alt, nivel, titulo, descripcion
 
         <div data-m-card-content="" className="tarjeta-body text-shadow-soft relative z-10 p-4">
           <h3 className="text-[17px] font-semibold leading-tight">{titulo}</h3>
-          {descripcion ? <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-primary-foreground/90">{descripcion}</p> : null}
+          {texto ? <p className={cn("mt-0.5 line-clamp-2 text-[13px] leading-snug text-primary-foreground/90", usaCorta && "oferta-corta")}>{texto}</p> : null}
           {pildoras.length > 0 || ubicacion ? (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {pildoras.map((p) => <span key={p} data-compacta-hide="" className="rounded-full bg-ink/40 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide">{p}</span>)}
