@@ -583,6 +583,8 @@ export type Database = {
           activo: boolean
           categoria: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id: string | null
+          como_canjear: string | null
+          condiciones: string | null
           created_at: string
           descripcion: string | null
           direccion: string | null
@@ -607,6 +609,8 @@ export type Database = {
           activo?: boolean
           categoria: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id?: string | null
+          como_canjear?: string | null
+          condiciones?: string | null
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
@@ -631,6 +635,8 @@ export type Database = {
           activo?: boolean
           categoria?: Database["public"]["Enums"]["giftbox_categoria"]
           comercio_id?: string | null
+          como_canjear?: string | null
+          condiciones?: string | null
           created_at?: string
           descripcion?: string | null
           direccion?: string | null
@@ -672,6 +678,8 @@ export type Database = {
         Row: {
           agasajado_nombre: string | null
           agasajado_whatsapp: string | null
+          canjes: Json
+          codigo_canje: string
           contacto_nombre: string | null
           contacto_whatsapp: string | null
           datos_completados_at: string | null
@@ -698,6 +706,8 @@ export type Database = {
         Insert: {
           agasajado_nombre?: string | null
           agasajado_whatsapp?: string | null
+          canjes?: Json
+          codigo_canje?: string
           contacto_nombre?: string | null
           contacto_whatsapp?: string | null
           datos_completados_at?: string | null
@@ -724,6 +734,8 @@ export type Database = {
         Update: {
           agasajado_nombre?: string | null
           agasajado_whatsapp?: string | null
+          canjes?: Json
+          codigo_canje?: string
           contacto_nombre?: string | null
           contacto_whatsapp?: string | null
           datos_completados_at?: string | null
@@ -746,6 +758,45 @@ export type Database = {
           remitente_firma?: string | null
           token_formulario?: string
           token_regalo?: string
+        }
+        Relationships: []
+      }
+      giftbox_presentacion: {
+        Row: {
+          condiciones_generales: string | null
+          contacto_soporte: string | null
+          id: string
+          imagen_fondo: string | null
+          imagen_portada: string | null
+          logo: string | null
+          texto_como_canjear: string | null
+          titulo_bienvenida: string
+          unico: boolean
+          updated_at: string
+        }
+        Insert: {
+          condiciones_generales?: string | null
+          contacto_soporte?: string | null
+          id?: string
+          imagen_fondo?: string | null
+          imagen_portada?: string | null
+          logo?: string | null
+          texto_como_canjear?: string | null
+          titulo_bienvenida?: string
+          unico?: boolean
+          updated_at?: string
+        }
+        Update: {
+          condiciones_generales?: string | null
+          contacto_soporte?: string | null
+          id?: string
+          imagen_fondo?: string | null
+          imagen_portada?: string | null
+          logo?: string | null
+          texto_como_canjear?: string | null
+          titulo_bienvenida?: string
+          unico?: boolean
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1059,6 +1110,7 @@ export type Database = {
         Returns: Json
       }
       existe_admin: { Args: never; Returns: boolean }
+      generar_codigo_canje: { Args: never; Returns: string }
       giftbox_formulario_info: { Args: { p_token: string }; Returns: Json }
       giftbox_guardar_datos: {
         Args: {
@@ -1073,6 +1125,7 @@ export type Database = {
         }
         Returns: Json
       }
+      giftbox_regalo_info: { Args: { p_token: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
