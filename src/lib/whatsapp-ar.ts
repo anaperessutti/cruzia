@@ -38,7 +38,7 @@ export const VARIABLES_PLANTILLA = [
 /** Reemplaza {variable} por su valor; las desconocidas quedan tal cual. */
 export function armarMensaje(plantilla: string, vars: Record<string, string>): string {
   return plantilla
-    .replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? vars[k] : m))
+    .replace(/\{(\w+)\}/g, (m, k: string) => (vars[k] ?? m))
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
