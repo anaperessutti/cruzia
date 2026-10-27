@@ -3,7 +3,14 @@ import { MapPin, Search, Store } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { usePublicDirectory } from "./public-directory-provider";
 
@@ -54,15 +61,47 @@ export function SearchDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button variant="ghost" size="icon" aria-label="Buscar"><Search /></Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" aria-label="Buscar">
+          <Search />
+        </Button>
+      </DialogTrigger>
       <DialogContent className="top-[12%] translate-y-0 border-border/70 sm:max-w-xl">
-        <DialogHeader><DialogTitle className="font-display text-2xl">¿Qué estás buscando?</DialogTitle><DialogDescription>Encontrá comercios, categorías o localidades.</DialogDescription></DialogHeader>
-        <div className="relative"><Search className="absolute left-3 top-3 size-4 text-muted-foreground" /><Input autoFocus value={term} onChange={(event) => setTerm(event.target.value)} placeholder="Probá con cenas y tragos, Mar de Ajó..." className="h-11 pl-10" /></div>
+        <DialogHeader>
+          <DialogTitle className="font-display text-2xl">¿Qué estás buscando?</DialogTitle>
+          <DialogDescription>Encontrá comercios, categorías o localidades.</DialogDescription>
+        </DialogHeader>
+        <div className="relative">
+          <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
+          <Input
+            autoFocus
+            value={term}
+            onChange={(event) => setTerm(event.target.value)}
+            placeholder="Probá con cenas y tragos, Mar de Ajó..."
+            className="h-11 pl-10"
+          />
+        </div>
         <div className="max-h-[45vh] space-y-1 overflow-y-auto">
-          {normalized.length >= 2 && results.length === 0 ? <p className="py-8 text-center text-sm text-muted-foreground">No encontramos coincidencias.</p> : null}
+          {normalized.length >= 2 && results.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No encontramos coincidencias.
+            </p>
+          ) : null}
           {results.map((result) => (
-            <Button key={`${result.kind}-${result.id}`} asChild variant="ghost" className="h-auto w-full justify-start px-3 py-3">
-              <Link {...result.link} onClick={() => { result.action(); setOpen(false); setTerm(""); }}>
+            <Button
+              key={`${result.kind}-${result.id}`}
+              asChild
+              variant="ghost"
+              className="h-auto w-full justify-start px-3 py-3"
+            >
+              <Link
+                {...result.link}
+                onClick={() => {
+                  result.action();
+                  setOpen(false);
+                  setTerm("");
+                }}
+              >
                 <result.icon className="size-5 shrink-0 text-foreground" />
                 <span className="min-w-0 text-left">
                   <span className="block truncate font-semibold">{result.label}</span>
