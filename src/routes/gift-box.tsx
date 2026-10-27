@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, Gift, QrCode, Sparkles, Truck } from "lucide-react";
+import { Check, Gift, MapPin, QrCode, Sparkles, Truck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import {
   crearPedidoGiftbox,
   formatearPrecio,
   getGiftboxItems,
+  lugarDelItem,
   type GiftboxFormato,
   type GiftboxItem,
 } from "@/lib/giftbox";
@@ -64,6 +65,7 @@ function Page() {
 }
 
 function GiftBoxPage() {
+  const { data } = usePublicDirectory();
   const items = useQuery({
     queryKey: ["giftbox-items"],
     queryFn: getGiftboxItems,
@@ -259,36 +261,60 @@ function GiftBoxPage() {
                     <RevealGroup className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {deCategoria.map((item) => {
                         const activo = Boolean(seleccion[item.id]);
+                        const lugar = lugarDelItem(item, data.comercios);
                         return (
-                          <button
+                          <div
                             key={item.id}
-                            type="button"
-                            onClick={() => toggle(item)}
-                            aria-pressed={activo}
                             className={cn(
-                              "group flex h-full flex-col justify-between rounded-[28px] border p-5 text-left transition-all active:scale-[0.99]",
+                              "relative flex h-full flex-col rounded-[28px] border p-5 transition-all active:scale-[0.99]",
                               activo
                                 ? "border-gift-accent bg-gift-accent/15 shadow-premium"
                                 : "border-gift-foreground/15 bg-gift-foreground/5 hover:border-gift-accent/50 hover:bg-gift-foreground/10",
                             )}
                           >
-                            <span className="text-cuerpo !font-light">{item.nombre}</span>
-                            <span className="mt-auto flex items-center justify-between pt-6">
-                              <span className="text-cuerpo !font-semibold tnum text-primary-foreground">
-                                {formatearPrecio(Number(item.precio))}
+                            <button
+                              type="button"
+                              onClick={() => toggle(item)}
+                              aria-pressed={activo}
+                              className="absolute inset-0 rounded-[28px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gift-accent/70"
+                            >
+                              <span className="sr-only">
+                                {activo ? "Quitar" : "Elegir"} {item.nombre} de la Gift Box
                               </span>
-                              <span
-                                className={cn(
-                                  "flex size-7 items-center justify-center rounded-full border",
-                                  activo
-                                    ? "border-gift-accent bg-gift-accent text-gift"
-                                    : "border-gift-foreground/30",
-                                )}
+                            </button>
+                            <div className="pointer-events-none relative flex h-full flex-col">
+                              <span className="text-cuerpo !font-light">{item.nombre}</span>
+                              {lugar ? (
+                                <span className="mt-1.5 flex items-center gap-1.5 text-sm text-primary-foreground/60">
+                                  <MapPin className="size-3.5 shrink-0" />
+                                  <span className="min-w-0 truncate">{lugar}</span>
+                                </span>
+                              ) : null}
+                              <Link
+                                to="/gift-box/$itemId"
+                                params={{ itemId: item.id }}
+                                aria-label={`Ver más de ${item.nombre}`}
+                                className="pointer-events-auto -mt-1 inline-flex min-h-11 items-center self-start text-sm text-primary-foreground/80 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gift-accent/70"
                               >
-                                {activo ? <Check className="size-4" /> : null}
+                                Ver más →
+                              </Link>
+                              <span className="mt-auto flex items-center justify-between pt-3">
+                                <span className="text-cuerpo !font-semibold tnum text-primary-foreground">
+                                  {formatearPrecio(Number(item.precio))}
+                                </span>
+                                <span
+                                  className={cn(
+                                    "flex size-7 items-center justify-center rounded-full border",
+                                    activo
+                                      ? "border-gift-accent bg-gift-accent text-gift"
+                                      : "border-gift-foreground/30",
+                                  )}
+                                >
+                                  {activo ? <Check className="size-4" /> : null}
+                                </span>
                               </span>
-                            </span>
-                          </button>
+                            </div>
+                          </div>
                         );
                       })}
                     </RevealGroup>
