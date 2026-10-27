@@ -15,11 +15,25 @@ export const CATEGORIAS: { id: GiftboxCategoria; titulo: string; detalle: string
 export async function getGiftboxItems(): Promise<GiftboxItem[]> {
   const { data, error } = await supabase
     .from("giftbox_items")
-    .select("*")
+    .select(
+      "id, categoria, nombre, precio, orden, activo, lugar, descripcion, imagen_url, galeria, comercio_id, direccion, localidad_id, horarios, lat, lng, whatsapp, redes_sociales, vigencia_inicio, vigencia_fin, created_at, updated_at",
+    )
     .eq("activo", true)
+    .order("categoria")
+    .order("orden")
     .order("precio");
   if (error) throw error;
   return data ?? [];
+}
+
+/** Dónde aplica la experiencia: el campo `lugar` o, si está vacío, el comercio vinculado. */
+export function lugarDelItem(
+  item: Pick<GiftboxItem, "lugar" | "comercio_id">,
+  comercios: readonly { id: string; nombre: string }[],
+): string | null {
+  const propio = item.lugar?.trim();
+  if (propio) return propio;
+  return comercios.find((comercio) => comercio.id === item.comercio_id)?.nombre ?? null;
 }
 
 export type NuevoPedido = {
@@ -47,5 +61,9 @@ export async function crearPedidoGiftbox(pedido: NuevoPedido): Promise<number> {
 }
 
 export function formatearPrecio(valor: number) {
-  return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(valor);
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 0,
+  }).format(valor);
 }
