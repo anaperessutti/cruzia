@@ -104,7 +104,8 @@ export function CuponCard({
   const bloqueado = estado != null && !estado.permitido && estado.motivo === "COOLDOWN_ACTIVO";
 
   return (
-    <article className="rounded-md border-2 border-secondary bg-card p-6 shadow-premium">
+    <article className="glass relative rounded-[32px] p-6 sm:p-7 !border-[1.5px] !border-primary-foreground/80 shadow-plan-pro">
+
       <h2 className="font-display text-2xl font-bold text-foreground">{cupon.titulo}</h2>
       {cupon.descripcion ? <p className="mt-2 text-sm text-muted-foreground">{cupon.descripcion}</p> : null}
       <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">

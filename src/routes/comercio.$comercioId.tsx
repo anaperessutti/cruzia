@@ -110,18 +110,19 @@ function FichaComercio() {
 
       {conPromocion && cupones.length > 0 ? (
         <section className="relative z-10 mx-auto -mt-16 max-w-5xl px-4 sm:px-6">
-          <Reveal><div className="glass rounded-[32px] p-4 sm:p-6">
-          <p className="text-pill text-primary">Módulo de promoción</p>
-          <div className="mt-3 grid gap-4">
-            {cupones.map((cupon) => (
-              <CuponCard
-                key={cupon.id}
-                comercio={comercio}
-                cupon={cupon}
-                puedeWhatsapp={plan?.puede_reservar_whatsapp ?? false}
-              />
+          <Reveal><div className="grid gap-4">
+            {cupones.map((cupon, index) => (
+              <div key={cupon.id}>
+                {index === 0 ? (
+                  <p className="mb-4 flex h-4 items-center justify-end px-6 sm:px-7 text-sobretitulo font-medium text-primary">PROMOCIÓN</p>
+                ) : null}
+                <CuponCard
+                  comercio={comercio}
+                  cupon={cupon}
+                  puedeWhatsapp={plan?.puede_reservar_whatsapp ?? false}
+                />
+              </div>
             ))}
-          </div>
           </div></Reveal>
         </section>
       ) : null}
