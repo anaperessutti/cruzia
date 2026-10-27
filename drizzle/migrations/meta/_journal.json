@@ -71,6 +71,13 @@
       "when": 1793100600810,
       "tag": "0009_giftbox_items_detalles",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793101987453,
+      "tag": "0010_giftbox_pedidos_gestion",
+      "breakpoints": true
     }
   ]
 }

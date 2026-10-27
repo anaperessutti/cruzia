@@ -273,16 +273,22 @@ export type Database = {
       configuracion_global: {
         Row: {
           gift_box_visible: boolean
+          giftbox_plantilla_pago: string
+          giftbox_plantilla_regalo: string
           id: string
           updated_at: string
         }
         Insert: {
           gift_box_visible?: boolean
+          giftbox_plantilla_pago?: string
+          giftbox_plantilla_regalo?: string
           id?: string
           updated_at?: string
         }
         Update: {
           gift_box_visible?: boolean
+          giftbox_plantilla_pago?: string
+          giftbox_plantilla_regalo?: string
           id?: string
           updated_at?: string
         }
@@ -672,7 +678,14 @@ export type Database = {
           formato: Database["public"]["Enums"]["giftbox_formato"]
           id: string
           items_seleccionados: Json
+          link_pago: string | null
+          mensaje_pago_enviado_at: string | null
+          notas_internas: string | null
+          pagado_at: string | null
           precio_total: number
+          regalo_enviado_at: string | null
+          token_formulario: string
+          token_regalo: string
         }
         Insert: {
           contacto_nombre?: string | null
@@ -683,7 +696,14 @@ export type Database = {
           formato?: Database["public"]["Enums"]["giftbox_formato"]
           id?: string
           items_seleccionados?: Json
+          link_pago?: string | null
+          mensaje_pago_enviado_at?: string | null
+          notas_internas?: string | null
+          pagado_at?: string | null
           precio_total?: number
+          regalo_enviado_at?: string | null
+          token_formulario?: string
+          token_regalo?: string
         }
         Update: {
           contacto_nombre?: string | null
@@ -694,7 +714,14 @@ export type Database = {
           formato?: Database["public"]["Enums"]["giftbox_formato"]
           id?: string
           items_seleccionados?: Json
+          link_pago?: string | null
+          mensaje_pago_enviado_at?: string | null
+          notas_internas?: string | null
+          pagado_at?: string | null
           precio_total?: number
+          regalo_enviado_at?: string | null
+          token_formulario?: string
+          token_regalo?: string
         }
         Relationships: []
       }
@@ -1034,7 +1061,12 @@ export type Database = {
       app_role: "super_admin" | "admin"
       fase_tipo: "actual" | "historial"
       giftbox_categoria: "Noche" | "Sabor" | "Relax" | "Diversión"
-      giftbox_estado: "pendiente" | "confirmado" | "entregado" | "cancelado"
+      giftbox_estado:
+        | "pendiente"
+        | "contactado"
+        | "confirmado"
+        | "entregado"
+        | "cancelado"
       giftbox_formato: "digital" | "fisico"
       modalidad_cupon: "presencial" | "whatsapp"
     }
@@ -1167,7 +1199,13 @@ export const Constants = {
       app_role: ["super_admin", "admin"],
       fase_tipo: ["actual", "historial"],
       giftbox_categoria: ["Noche", "Sabor", "Relax", "Diversión"],
-      giftbox_estado: ["pendiente", "confirmado", "entregado", "cancelado"],
+      giftbox_estado: [
+        "pendiente",
+        "contactado",
+        "confirmado",
+        "entregado",
+        "cancelado",
+      ],
       giftbox_formato: ["digital", "fisico"],
       modalidad_cupon: ["presencial", "whatsapp"],
     },
