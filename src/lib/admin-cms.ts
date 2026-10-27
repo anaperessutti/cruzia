@@ -105,6 +105,7 @@ export type ComercioForm = {
   activo: boolean;
   es_indoor: boolean;
   hero_alcance_local: boolean;
+  posicion_tarjeta: string | null;
 };
 
 export async function guardarComercio(id: string | null, form: ComercioForm): Promise<string> {
@@ -144,6 +145,8 @@ export type CuponForm = {
   es_favorita_home: boolean;
   es_top_slider: boolean;
   hero_alcance_local: boolean;
+  posicion_tarjeta: string | null;
+  oferta_corta: string | null;
 };
 
 export async function guardarCupon(id: string | null, form: CuponForm): Promise<string> {
@@ -231,6 +234,7 @@ export type EventoForm = {
   es_top_slider: boolean;
   hero_alcance_local: boolean;
   es_favorita_home: boolean;
+  posicion_tarjeta: string | null;
 };
 
 export async function getEventosAdmin(): Promise<Evento[]> {

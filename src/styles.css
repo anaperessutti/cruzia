@@ -405,12 +405,14 @@ html.m-js [data-m-seq-root]:not(.m-in) [data-m-seq="media"] { opacity: 1; transf
    El desenfoque del degradé se escala a la tarjeta chica (la cantidad de capas no cambia). */
 @media (max-width: 639px) {
   .immersive-card-link[data-compacta], .immersive-card[data-compacta] { border-radius: 20px; }
-  .immersive-card[data-compacta] { --pb-a: 3px; --pb-b: 12px; }
+  .immersive-card[data-compacta] { --pb-a: 3px; --pb-b: 12px; aspect-ratio: 3/4; }
+  .ver-todo-card[data-compacta] { aspect-ratio: 3/4; }
   .immersive-card[data-compacta] .tarjeta-top { inset-inline: 8px; top: 8px; gap: 4px; }
   .immersive-card[data-compacta] .tarjeta-top > span { font-size: 9px; padding: 2px 8px; }
   .immersive-card[data-compacta] .tarjeta-body { padding: 10px; }
   .immersive-card[data-compacta] .tarjeta-body h3 { font-size: 13px; line-height: 1.15; }
   .immersive-card[data-compacta] .tarjeta-body p { font-size: 11px; line-height: 1.2; -webkit-line-clamp: 1; }
+  .immersive-card[data-compacta] .tarjeta-body p.oferta-corta { -webkit-line-clamp: 2; line-clamp: 2; }
   .immersive-card[data-compacta] .tarjeta-body span { font-size: 8px; padding: 3px 7px; }
   .immersive-card[data-compacta] .tarjeta-body svg { width: 9px; height: 9px; }
   .immersive-card[data-compacta] [data-compacta-hide] { display: none; }
