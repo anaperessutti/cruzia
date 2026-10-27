@@ -387,7 +387,7 @@ const EJEMPLO = {
   nota_fisico: NOTA_FISICO,
   agasajado: "Martín",
   remitente: "Lucía",
-  link_regalo: "https://cruzia.ar/gift-box/regalo/ejemplo",
+  link_regalo: "https://cruzia.ar/regalo/ejemplo",
 };
 
 export function MensajesGiftbox() {
