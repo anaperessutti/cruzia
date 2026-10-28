@@ -12,7 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   getMetricasMes,
   getReporteComercio,
@@ -143,8 +150,8 @@ function AdminPanel() {
           <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>
             <CardDescription>
-              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de Cruzia,
-              listo para reenviar por WhatsApp.
+              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de
+              Cruzia, listo para reenviar por WhatsApp.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -161,7 +168,12 @@ function AdminPanel() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="w-full sm:w-auto" variant="outline" onClick={onRecalcular} disabled={cargando}>
+              <Button
+                className="w-full sm:w-auto"
+                variant="outline"
+                onClick={onRecalcular}
+                disabled={cargando}
+              >
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
@@ -197,9 +209,13 @@ function AdminPanel() {
                   <TableBody>
                     {metricas.map((m) => (
                       <TableRow key={m.comercioId}>
-                        <TableCell className="sticky left-0 z-10 bg-card font-medium">{m.comercio}</TableCell>
+                        <TableCell className="sticky left-0 z-10 bg-card font-medium">
+                          {m.comercio}
+                        </TableCell>
                         <TableCell>
-                          <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>{m.plan}</Badge>
+                          <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>
+                            {m.plan}
+                          </Badge>
                         </TableCell>
                         <TableCell>{m.localidad ?? "—"}</TableCell>
                         <TableCell className="text-right">{m.totalRedenciones}</TableCell>
