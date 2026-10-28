@@ -85,6 +85,7 @@ export function GiftboxFormulario({
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
+    const vistaPrevia = modo.vistaPrevia === true;
     if (modo.vistaPrevia) return;
     if (
       !f.nombre.trim() ||
@@ -98,7 +99,7 @@ export function GiftboxFormulario({
     }
     setEnviando(true);
     setError(null);
-    const resultado = await guardarFormulario(modo.vistaPrevia === true, () =>
+    const resultado = await guardarFormulario(vistaPrevia, () =>
       supabase.rpc("giftbox_guardar_datos", {
         p_token: modo.token,
         p_agasajado_nombre: f.nombre.trim(),
@@ -119,7 +120,7 @@ export function GiftboxFormulario({
 
   if (listo)
     return (
-      <Marco vistaPrevia={modo.vistaPrevia}>
+      <Marco vistaPrevia={modo.vistaPrevia === true}>
         <h1 className="text-2xl font-semibold">¡Listo, recibimos los datos! 🎁</h1>
         <p className="mt-3 text-primary-foreground/70">
           Ya tenemos todo para preparar el regalo de {f.nombre.trim()}. Si necesitás cambiar algo,
@@ -129,7 +130,7 @@ export function GiftboxFormulario({
     );
 
   return (
-    <Marco vistaPrevia={modo.vistaPrevia}>
+    <Marco vistaPrevia={modo.vistaPrevia === true}>
       <p className="text-sobretitulo text-primary font-medium">Gift Box</p>
       <h1 className="mt-2 text-2xl font-semibold">
         {info.nombre ? `${info.nombre}, ` : ""}contanos sobre tu regalo

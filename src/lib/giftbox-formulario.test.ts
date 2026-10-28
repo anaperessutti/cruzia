@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
+import { strictEqual } from "node:assert";
 import { guardarFormulario } from "./giftbox-formulario";
 
 describe("guardado del formulario compartido", () => {
@@ -8,8 +9,8 @@ describe("guardado del formulario compartido", () => {
       llamadas++;
       return { error: null };
     });
-    expect(llamadas).toBe(0);
-    expect(resultado).toBeNull();
+    strictEqual(llamadas, 0);
+    strictEqual(resultado, null);
   });
 
   it("conserva el guardado y su resultado en el formulario real", async () => {
@@ -19,7 +20,7 @@ describe("guardado del formulario compartido", () => {
       llamadas++;
       return respuesta;
     });
-    expect(llamadas).toBe(1);
-    expect(resultado).toBe(respuesta);
+    strictEqual(llamadas, 1);
+    strictEqual(resultado, respuesta);
   });
 });
