@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS huella_solidaria_una_actual ON public.huella_solidaria_fases (tipo) WHERE tipo = 'actual';
