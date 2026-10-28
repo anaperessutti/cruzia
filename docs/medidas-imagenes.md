@@ -11,7 +11,7 @@ pantallas de alta densidad (se suben al doble del tamaño visible).
 | **Fotos de galería** (ficha del comercio) | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Flyer de cupón / promoción** (es la portada de la tarjeta en la grilla) | 1200 × 800 px | 3:2 | 300 KB | JPG (o PNG si tiene texto fino) |
 | **Logo del comercio** | 512 × 512 px | 1:1 | 150 KB | PNG con fondo transparente |
-| **Fotos de Huella Solidaria** | 1200 × 800 px | 3:2 | 300 KB | JPG |
+| **Fotos de Huella Solidaria** (causa actual e historial, `/admin/huella-solidaria`) | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Portada de experiencia Gift Box** | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Galería de experiencia Gift Box** | 1200 × 800 px | 3:2 | 300 KB | JPG (o WebP) |
 | **Portada de la presentación del regalo** (también vista previa en WhatsApp) | 1200 × 630 px | 1.91:1 | 300 KB | JPG |

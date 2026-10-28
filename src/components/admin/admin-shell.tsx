@@ -15,6 +15,7 @@ const SECCIONES = [
   { to: "/admin/cupones", etiqueta: "Promociones" },
   { to: "/admin/eventos", etiqueta: "Eventos" },
   { to: "/admin/gift-box", etiqueta: "Gift Box" },
+  { to: "/admin/huella-solidaria", etiqueta: "Huella Solidaria" },
 ] as const;
 
 export function AdminShell({ titulo, children }: { titulo: string; children: ReactNode }) {
