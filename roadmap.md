@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Gestionar Huella Solidaria: causa única, historial, postulaciones, fotos y publicación; verificar panel a 360/390 px y escritorio y lectura pública.
+- [x] Gestionar Huella Solidaria: causa única con índice, historial, postulaciones y fotos ordenadas; tres pruebas aprobadas y recorridos reales de guardar/publicar/archivar/editar/ocultar/eliminar y postulación pública verificados; panel a 360/390/1280 px sin desbordes ni errores. Publicación muestra fecha, texto y fotos optimizadas. Registros temporales eliminados; no había fases de ejemplo en la base conectada. Web pública sin cambios.
 
 - [x] Unificar la navegación del panel: Métricas usa el encabezado compartido, aparece el botón Cerrar sesión en todas las secciones y la sección activa se resalta en naranja con aria-current. Verificado con sesión admin en 1280px y 390px: prefijos (comercios/nuevo), filtros y pestañas de la url conservan el resaltado, sin cambio de tamaño, sin doble encabezado ni tarjeta duplicada de Gift Box; cerrar sesión lleva al acceso. Carga sin pedidos fallidos.
 
