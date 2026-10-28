@@ -42,7 +42,7 @@ export function StickyFilters() {
           </PopoverContent>
         </Popover>
         <Popover>
-          <PopoverTrigger asChild><Button variant="ghost" aria-label={coleccionLabel} className="h-9 shrink-0 gap-1 rounded-full px-1.5 font-normal hover:bg-card/60 sm:gap-1.5 sm:px-3"><Tag className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{coleccionLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
+          <PopoverTrigger asChild><Button variant="ghost" aria-label={coleccionLabel} className="h-9 shrink-0 gap-1 rounded-full px-1 font-normal hover:bg-card/60 sm:gap-1.5 sm:px-3"><Tag className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{coleccionLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="max-h-80 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto p-2">
             <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Categorías</p>{filters.coleccionIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setColeccionIds([])}>Ver todas</Button> : null}</div>
             <div className="max-h-72 space-y-1 overflow-y-auto">
