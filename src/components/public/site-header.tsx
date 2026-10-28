@@ -81,7 +81,7 @@ export function SiteHeader() {
           <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
 
-        {conFiltros ? <div className="flex min-w-0 flex-1 justify-start"><StickyFilters /></div> : null}
+        {conFiltros ? <div className="flex min-w-0 flex-1 justify-center"><StickyFilters /></div> : null}
         <div className="flex shrink-0 items-center gap-1">
           <SearchDialog />
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
