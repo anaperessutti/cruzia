@@ -18,7 +18,8 @@ const SECCIONES = [
   { to: "/admin/huella-solidaria", etiqueta: "Huella Solidaria" },
 ] as const;
 
-export function AdminShell({ titulo, children }: { titulo: string; children: ReactNode }) {
+// `titulo` se conserva por compatibilidad; el encabezado es fijo.
+export function AdminShell({ children }: { titulo: string; children: ReactNode }) {
   const navigate = useNavigate();
   const matchRoute = useMatchRoute();
   const [estado, setEstado] = useState<"verificando" | "ok" | "sin-permiso">("verificando");
@@ -67,12 +68,12 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
   return (
     <main className="min-h-screen bg-background">
       <header className="border-b bg-ink text-ink-foreground">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 lg:flex-nowrap">
           <div>
-            <p className="font-display text-2xl font-bold">Cruzia · {titulo}</p>
+            <p className="font-display text-2xl font-bold">Cruzia · Panel</p>
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
-          <nav className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
+          <nav className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap lg:flex-nowrap lg:gap-1.5">
             {SECCIONES.map((seccion) => {
               const activa = !!matchRoute({
                 to: seccion.to,
@@ -94,9 +95,6 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
                 </Button>
               );
             })}
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/">Ver la app</Link>
-            </Button>
             <Button variant="secondary" size="sm" onClick={cerrarSesion}>
               Cerrar sesión
             </Button>

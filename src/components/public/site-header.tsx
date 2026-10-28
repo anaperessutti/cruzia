@@ -59,7 +59,7 @@ export function SiteHeader() {
   const enlaces = [
     { to: "/" as const, label: "Inicio" },
     { to: "/cupones" as const, label: "Cupones" },
-    { to: "rubros" as const, label: "Categorías de Rubros" },
+    { to: "rubros" as const, label: "Categorías" },
     ...(data.giftBoxVisible ? [{ to: "/gift-box" as const, label: "Gift Box" }] : []),
     { to: "/huella-solidaria" as const, label: "Huella Solidaria" },
     { to: "/sumate-a-cruzia" as const, label: "Sumate a Cruzia" },
@@ -81,9 +81,9 @@ export function SiteHeader() {
           <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
 
-        <div className="flex min-w-0 items-center gap-1">
+        {conFiltros ? <div className="flex min-w-0 flex-1 justify-start"><StickyFilters /></div> : null}
+        <div className="flex shrink-0 items-center gap-1">
           <SearchDialog />
-          {conFiltros ? <div className="hidden min-w-0 min-[480px]:block"><StickyFilters /></div> : null}
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
@@ -127,7 +127,6 @@ export function SiteHeader() {
           </Sheet>
         </div>
       </div>
-      {conFiltros ? <div className="mx-auto max-w-7xl px-4 pb-2 min-[480px]:hidden"><StickyFilters /></div> : null}
     </header>
   );
 }

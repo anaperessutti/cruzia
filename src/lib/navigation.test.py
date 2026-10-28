@@ -29,7 +29,7 @@ async def check_navigation():
         await page.wait_for_url("**/cupones")
         await page.wait_for_timeout(400)
         await page.get_by_role("button", name="Abrir menú").click()
-        await page.get_by_role("button", name="Categorías de Rubros").click()
+        await page.get_by_role("button", name="Categorías").click()
         await page.get_by_role("link", name="Ver todas", exact=True).click()
         await page.wait_for_url("**/categorias")
         await page.wait_for_timeout(400)
