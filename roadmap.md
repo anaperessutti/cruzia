@@ -1,5 +1,9 @@
 # Roadmap
 
+- [x] Unificar la navegación del panel: Métricas usa el encabezado compartido, aparece el botón Cerrar sesión en todas las secciones y la sección activa se resalta en naranja con aria-current. Verificado con sesión admin en 1280px y 390px: prefijos (comercios/nuevo), filtros y pestañas de la url conservan el resaltado, sin cambio de tamaño, sin doble encabezado ni tarjeta duplicada de Gift Box; cerrar sesión lleva al acceso. Carga sin pedidos fallidos.
+
+
+
 - [x] Agregar vistas PDF y formulario de ejemplo a Presentación: verificados 360/390px y escritorio con sesión admin, descarga con cambios sin guardar, variantes Digital/Física y envío deshabilitado. Dos pruebas y compilación OK; formulario público probado con respuestas simuladas sin tocar pedidos. Alternativa iPhone verificada por emulación; dispositivo real no verificado.
 
 - [x] Ampliar búsqueda local con raíces, sinónimos y tolerancia de una letra; ordenar por nombre, rubro/colección y detalles, conservar destinos y límites. Quince pruebas aprobadas; búsqueda real de churro, rubro/categoría/localidad, navegación y limpieza verificadas; compilación OK. Heladria→heladería validado con prueba, sin resultados en el catálogo actual.

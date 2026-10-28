@@ -1,11 +1,10 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -13,7 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   getMetricasMes,
   getReporteComercio,
@@ -42,7 +48,6 @@ export const Route = createFileRoute("/admin/panel")({
 
 function AdminPanel() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string | null>(null);
   const [verificando, setVerificando] = useState(true);
   const [mes, setMes] = useState(() => mesISO(new Date()));
   const [metricas, setMetricas] = useState<MetricaComercio[] | null>(null);
@@ -50,47 +55,6 @@ function AdminPanel() {
   const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [exportando, setExportando] = useState<string | null>(null);
-  const [giftBoxVisible, setGiftBoxVisible] = useState<boolean | null>(null);
-  const [guardandoGiftBox, setGuardandoGiftBox] = useState(false);
-
-  useEffect(() => {
-    if (verificando || error) return;
-    let activo = true;
-    (async () => {
-      const { data } = await supabase
-        .from("configuracion_global")
-        .select("gift_box_visible")
-        .limit(1)
-        .maybeSingle();
-      if (activo) setGiftBoxVisible(data?.gift_box_visible ?? false);
-    })();
-    return () => {
-      activo = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verificando, error]);
-
-  async function onToggleGiftBox(valor: boolean) {
-    setGuardandoGiftBox(true);
-    setAviso(null);
-    const { data: fila } = await supabase.from("configuracion_global").select("id").limit(1).maybeSingle();
-    if (!fila) {
-      setError("No encontramos la configuración general.");
-      setGuardandoGiftBox(false);
-      return;
-    }
-    const { error: errUpd } = await supabase
-      .from("configuracion_global")
-      .update({ gift_box_visible: valor })
-      .eq("id", fila.id);
-    if (errUpd) {
-      setError("No pudimos guardar el cambio de Gift Box.");
-    } else {
-      setGiftBoxVisible(valor);
-      setAviso(valor ? "Gift Box ahora es visible en la app." : "Gift Box quedó oculta en la app.");
-    }
-    setGuardandoGiftBox(false);
-  }
 
   useEffect(() => {
     let activo = true;
@@ -108,7 +72,6 @@ function AdminPanel() {
         setVerificando(false);
         return;
       }
-      setEmail(data.user.email ?? null);
       setVerificando(false);
     })();
     return () => {
@@ -169,11 +132,6 @@ function AdminPanel() {
     }
   }
 
-  async function cerrarSesion() {
-    await supabase.auth.signOut();
-    navigate({ to: "/admin/login", replace: true });
-  }
-
   if (verificando) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background">
@@ -186,63 +144,14 @@ function AdminPanel() {
   const totalInteracciones = (metricas ?? []).reduce((acc, m) => acc + m.totalInteracciones, 0);
 
   return (
-    <main className="min-h-screen bg-background">
-      <header className="border-b bg-ink text-ink-foreground">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-5">
-          <div>
-            <p className="font-display text-2xl font-bold">Cruzia · Panel</p>
-            {email && <p className="text-xs opacity-80">{email}</p>}
-          </div>
-          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/comercios">Comercios</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/cupones">Promociones</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/gift-box">Gift Box</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/">Ver la app</Link>
-            </Button>
-            <Button variant="secondary" size="sm" onClick={cerrarSesion}>
-              Cerrar sesión
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Gift Box</CardTitle>
-            <CardDescription>
-              Mientras esté oculta, la sección no aparece en el menú ni en la app, y quien entre por
-              la dirección directa vuelve al inicio.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <Switch
-                id="gift-box-visible"
-                checked={giftBoxVisible ?? false}
-                disabled={giftBoxVisible === null || guardandoGiftBox}
-                onCheckedChange={(v) => void onToggleGiftBox(v)}
-              />
-              <Label htmlFor="gift-box-visible">
-                {giftBoxVisible ? "Visible para el público" : "Oculta"}
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
-
+    <AdminShell titulo="Métricas">
+      <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Métricas por comercio</CardTitle>
             <CardDescription>
-              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de Cruzia,
-              listo para reenviar por WhatsApp.
+              Elegí el período. Cada comercio puede descargar su reporte en PDF con la marca de
+              Cruzia, listo para reenviar por WhatsApp.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -259,7 +168,12 @@ function AdminPanel() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="w-full sm:w-auto" variant="outline" onClick={onRecalcular} disabled={cargando}>
+              <Button
+                className="w-full sm:w-auto"
+                variant="outline"
+                onClick={onRecalcular}
+                disabled={cargando}
+              >
                 {cargando ? "Procesando…" : "Recalcular este mes"}
               </Button>
               <span className="text-sm text-muted-foreground">
@@ -295,9 +209,13 @@ function AdminPanel() {
                   <TableBody>
                     {metricas.map((m) => (
                       <TableRow key={m.comercioId}>
-                        <TableCell className="sticky left-0 z-10 bg-card font-medium">{m.comercio}</TableCell>
+                        <TableCell className="sticky left-0 z-10 bg-card font-medium">
+                          {m.comercio}
+                        </TableCell>
                         <TableCell>
-                          <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>{m.plan}</Badge>
+                          <Badge variant={m.prioridadPlan <= 2 ? "default" : "outline"}>
+                            {m.plan}
+                          </Badge>
                         </TableCell>
                         <TableCell>{m.localidad ?? "—"}</TableCell>
                         <TableCell className="text-right">{m.totalRedenciones}</TableCell>
@@ -321,6 +239,6 @@ function AdminPanel() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </AdminShell>
   );
 }
