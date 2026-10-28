@@ -1,11 +1,25 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
+/**
+ * Secciones del panel. El resaltado se calcula por prefijo de ruta (fuzzy), así
+ * /admin/comercios/$comercioId y /admin/comercios/nuevo marcan "Comercios", y los
+ * filtros o pestañas de la url no apagan el resaltado.
+ */
+const SECCIONES = [
+  { to: "/admin/panel", etiqueta: "Métricas" },
+  { to: "/admin/comercios", etiqueta: "Comercios" },
+  { to: "/admin/cupones", etiqueta: "Promociones" },
+  { to: "/admin/eventos", etiqueta: "Eventos" },
+  { to: "/admin/gift-box", etiqueta: "Gift Box" },
+] as const;
+
 export function AdminShell({ titulo, children }: { titulo: string; children: ReactNode }) {
   const navigate = useNavigate();
+  const matchRoute = useMatchRoute();
   const [estado, setEstado] = useState<"verificando" | "ok" | "sin-permiso">("verificando");
   const [email, setEmail] = useState<string | null>(null);
 
@@ -27,6 +41,11 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
       activo = false;
     };
   }, [navigate]);
+
+  async function cerrarSesion() {
+    await supabase.auth.signOut();
+    navigate({ to: "/admin/login", replace: true });
+  }
 
   if (estado === "verificando") {
     return (
@@ -53,23 +72,32 @@ export function AdminShell({ titulo, children }: { titulo: string; children: Rea
             {email && <p className="text-xs opacity-80">{email}</p>}
           </div>
           <nav className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap">
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/panel">Métricas</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/comercios">Comercios</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/cupones">Promociones</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/eventos">Eventos</Link>
-            </Button>
-            <Button variant="secondary" size="sm" asChild>
-              <Link to="/admin/gift-box">Gift Box</Link>
-            </Button>
+            {SECCIONES.map((seccion) => {
+              const activa = !!matchRoute({
+                to: seccion.to,
+                fuzzy: true,
+                includeSearch: false,
+              });
+              return (
+                <Button
+                  key={seccion.to}
+                  variant="secondary"
+                  size="sm"
+                  asChild
+                  aria-current={activa ? "page" : undefined}
+                  className={
+                    activa ? "bg-primary text-primary-foreground hover:bg-primary-hover" : undefined
+                  }
+                >
+                  <Link to={seccion.to}>{seccion.etiqueta}</Link>
+                </Button>
+              );
+            })}
             <Button variant="secondary" size="sm" asChild>
               <Link to="/">Ver la app</Link>
+            </Button>
+            <Button variant="secondary" size="sm" onClick={cerrarSesion}>
+              Cerrar sesión
             </Button>
           </nav>
         </div>
