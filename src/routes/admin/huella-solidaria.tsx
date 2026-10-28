@@ -13,7 +13,7 @@ import { optimizarImagen } from "@/lib/imagen";
 
 export const Route = createFileRoute("/admin/huella-solidaria")({
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({ vista: typeof search.vista === "string" ? search.vista : "actual" }),
+  validateSearch: (search: Record<string, unknown>) => ({ vista: typeof search["vista"] === "string" ? search["vista"] : "actual" }),
   head: () => ({ meta: [
     { title: "Huella Solidaria | Panel Cruzia" },
     { name: "description", content: "Gestión de causas, aportes y postulaciones de Huella Solidaria en Cruzia." },
@@ -59,7 +59,7 @@ function HuellaAdmin() {
     try {
       await accion();
       await cargar();
-      await queryClient.invalidateQueries({ queryKey: ["huella-solidaria"] });
+      await queryClient.invalidateQueries({ queryKey: ["huella-solidaria-fases"] });
       setAviso(mensaje);
       return true;
     } catch (e) {

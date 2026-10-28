@@ -37,7 +37,11 @@ export function HuellaFormulario({ inicial, ocupado, onGuardar }: {
       const fotos = [...prev.fotos];
       const destino = indice + direccion;
       if (destino < 0 || destino >= fotos.length) return prev;
-      [fotos[indice], fotos[destino]] = [fotos[destino], fotos[indice]];
+      const origen = fotos[indice];
+      const siguiente = fotos[destino];
+      if (origen === undefined || siguiente === undefined) return prev;
+      fotos[indice] = siguiente;
+      fotos[destino] = origen;
       return { ...prev, fotos };
     });
   }
