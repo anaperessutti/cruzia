@@ -34,3 +34,4 @@
 - Gift presentations read orders only through token-scoped `giftbox_regalo_info`; web, admin and PDF share the payload.
 - Reuse GiftboxFormulario for public and admin examples; preview mode cannot send. PDF previews use the real generator and revoke dialog-owned blob URLs.
 - Keep the admin panel chrome in the shared `AdminShell` (one header, prefix-matched active section, sign-out) so section routes never rebuild their own header.
+- Keep Huella Solidaria CRUD in its browser admin helper and reuse one phase form; a partial unique database index enforces one current cause even across concurrent saves, without changing phase columns.

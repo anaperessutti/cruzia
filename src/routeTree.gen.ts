@@ -23,6 +23,7 @@ import { Route as AdminConfirmadoRouteImport } from './routes/admin/confirmado'
 import { Route as AdminCuponesRouteImport } from './routes/admin/cupones'
 import { Route as AdminEventosRouteImport } from './routes/admin/eventos'
 import { Route as AdminGiftBoxRouteImport } from './routes/admin/gift-box'
+import { Route as AdminHuellaSolidariaRouteImport } from './routes/admin/huella-solidaria'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPanelRouteImport } from './routes/admin/panel'
 import { Route as AdminSetupRouteImport } from './routes/admin/setup'
@@ -104,6 +105,11 @@ const AdminGiftBoxRoute = AdminGiftBoxRouteImport.update({
   path: '/admin/gift-box',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminHuellaSolidariaRoute = AdminHuellaSolidariaRouteImport.update({
+  id: '/admin/huella-solidaria',
+  path: '/admin/huella-solidaria',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
   '/admin/gift-box': typeof AdminGiftBoxRoute
+  '/admin/huella-solidaria': typeof AdminHuellaSolidariaRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
   '/admin/gift-box': typeof AdminGiftBoxRoute
+  '/admin/huella-solidaria': typeof AdminHuellaSolidariaRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/admin/cupones': typeof AdminCuponesRoute
   '/admin/eventos': typeof AdminEventosRoute
   '/admin/gift-box': typeof AdminGiftBoxRoute
+  '/admin/huella-solidaria': typeof AdminHuellaSolidariaRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/panel': typeof AdminPanelRoute
   '/admin/setup': typeof AdminSetupRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/admin/cupones'
     | '/admin/eventos'
     | '/admin/gift-box'
+    | '/admin/huella-solidaria'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/admin/cupones'
     | '/admin/eventos'
     | '/admin/gift-box'
+    | '/admin/huella-solidaria'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/admin/cupones'
     | '/admin/eventos'
     | '/admin/gift-box'
+    | '/admin/huella-solidaria'
     | '/admin/login'
     | '/admin/panel'
     | '/admin/setup'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   AdminCuponesRoute: typeof AdminCuponesRoute
   AdminEventosRoute: typeof AdminEventosRoute
   AdminGiftBoxRoute: typeof AdminGiftBoxRoute
+  AdminHuellaSolidariaRoute: typeof AdminHuellaSolidariaRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPanelRoute: typeof AdminPanelRoute
   AdminSetupRoute: typeof AdminSetupRoute
@@ -443,6 +456,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGiftBoxRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/huella-solidaria': {
+      id: '/admin/huella-solidaria'
+      path: '/admin/huella-solidaria'
+      fullPath: '/admin/huella-solidaria'
+      preLoaderRoute: typeof AdminHuellaSolidariaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/admin/login'
@@ -531,6 +551,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminCuponesRoute: AdminCuponesRoute,
   AdminEventosRoute: AdminEventosRoute,
   AdminGiftBoxRoute: AdminGiftBoxRoute,
+  AdminHuellaSolidariaRoute: AdminHuellaSolidariaRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPanelRoute: AdminPanelRoute,
   AdminSetupRoute: AdminSetupRoute,
