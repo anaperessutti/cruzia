@@ -19,6 +19,7 @@ class HuellaReglas(unittest.TestCase):
         key = os.environ.get("VITE_SUPABASE_PUBLISHABLE_KEY") or config["VITE_SUPABASE_PUBLISHABLE_KEY"]
         session = json.loads((Path.home() / ".cache/lovable-auth/session.json").read_text())["session"]
         cls.headers = {"apikey": key, "Authorization": "Bearer " + session["access_token"], "Prefer": "return=representation"}
+        cls.public_headers = {"apikey": key}
 
     def crear(self, tipo):
         r = requests.post(self.url, headers=self.headers, json={"titulo": "Prueba temporal Huella", "fecha": "2026-10-28", "tipo": tipo, "publicado": False, "fotos": ["foto-a", "foto-b"]}, timeout=20)
@@ -50,10 +51,10 @@ class HuellaReglas(unittest.TestCase):
     def test_consulta_publica_solo_muestra_publicadas(self):
         row = self.crear("historial")
         params = {"id": "eq." + row["id"], "publicado": "eq.true"}
-        self.assertEqual(requests.get(self.url, headers=self.headers, params=params, timeout=20).json(), [])
+        self.assertEqual(requests.get(self.url, headers=self.public_headers, params=params, timeout=20).json(), [])
         r = requests.patch(self.url, headers=self.headers, params={"id": "eq." + row["id"]}, json={"publicado": True}, timeout=20)
         self.assertEqual(r.status_code, 200)
-        rows = requests.get(self.url, headers=self.headers, params=params, timeout=20).json()
+        rows = requests.get(self.url, headers=self.public_headers, params=params, timeout=20).json()
         self.assertEqual([r["id"] for r in rows], [row["id"]])
 
 
