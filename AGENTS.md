@@ -14,7 +14,7 @@
 - Keep Top Slider eyebrow typography and the recommended plan glow in dedicated semantic utilities/tokens, so targeted visual adjustments do not alter global text roles or other card shadows.
 - Public images from the private storage bucket must go through `optimizarImagen` (src/lib/imagen.ts): the render endpoint serves compressed WebP without re-signing links.
 - Motion text components combine classes with clsx, not default tailwind-merge: custom typography utilities must coexist with text color utilities without being discarded.
-- Shared one-shot reveal containers must keep a stable React className across route/theme changes; apply theme-dependent spacing through ancestor selectors so React does not erase observer-added visibility classes.
+- Keep one-shot reveal className stable across route/theme changes; theme spacing belongs on ancestors to preserve observer-added classes.
 - SplitWords preserves explicit editorial line breaks through its optional preservarSaltos prop while retaining one continuous word-stagger index; hero presentations reuse Secuencia rather than introducing separate motion logic.
 - Public directory entries share one passive frame-batched global scroll listener for adaptive velocity and missed-card recovery; anticipate only pending Home rows and headers, never scan individual cards during fast scroll. CardImage readiness is decode-gated and never gates the neutral card entrance; preserve static progressive-blur effects.
 - Section pages retain motion.tsx primitives unless explicitly requested; Home carousels use useFilaReveal and hr- CSS with separately observed header/card-strip markers, importing only shared motion timing and speed helpers, because independent visibility must not depend on another block or another card's photo readiness. Preserve the CSS-only first row and existing diagnostics.
@@ -23,7 +23,7 @@
 - Public safe-area spacing uses shared CSS inset tokens and additive layout classes with viewport-fit=cover; use a large-viewport-sized fixed background with lower safety coverage so browser toolbar changes cannot resize its painted layers.
 - Use observeStableResize for public motion/carousel resize work: ignore small height-only toolbar changes and batch meaningful updates in a frame to avoid first-scroll layout churn.
 - Top Slider masks and blurred copies stay outside image transforms; animate only the sharp internal image and release its compositing hint when the transition ends to avoid repainting static effects.
-- Shared motion blocks enter independently through their own observers; Secuencia starts two frames after mounting, with optional pagina styling and no cross-block scheduling, so late data and filters cannot wait for another block.
+- Motion blocks observe independently; Secuencia starts two frames after mount with optional pagina styling, never cross-block scheduling.
 - Use usePathnameRenderizado for shared chrome and keyed route content; resolvedLocation keeps them aligned with committed content, and only the router owns scroll restoration.
 - Mount idle public-route preloading inside the public provider, not the document shell; save-data connections skip preloading and mounting does not navigate or apply route filters.
 - Card progressive blur uses exactly two elements; keep neutral card backgrounds grain-free and final carousel cards on their dedicated non-backdrop-filter surface to reduce drawing cost independently of motion.
