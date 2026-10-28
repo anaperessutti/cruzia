@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { RegaloVista } from "@/components/public/regalo-vista";
+import { GiftboxFormulario } from "@/components/public/giftbox-formulario";
+import { GiftboxPdfPreview } from "@/components/admin/giftbox-pdf-preview";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { FileText, Gift, ClipboardList } from "lucide-react";
 import { subirImagen } from "@/lib/admin-cms";
 import { getPresentacion, REGALO_EJEMPLO, type Presentacion } from "@/lib/regalo";
 
@@ -23,7 +26,8 @@ export function PresentacionGiftbox() {
   const [subiendo, setSubiendo] = useState<CampoImagen | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
-  const [vista, setVista] = useState(false);
+  const [vista, setVista] = useState<"web" | "pdf" | "formulario" | null>(null);
+  const [formato, setFormato] = useState<"digital" | "fisico">("digital");
 
   useEffect(() => {
     void getPresentacion().then(setP);
@@ -106,11 +110,15 @@ export function PresentacionGiftbox() {
           <Button disabled={guardando || subiendo !== null} onClick={() => void guardar()}>
             {guardando ? "Guardando…" : "Guardar presentación"}
           </Button>
-          <Button variant="outline" onClick={() => setVista(true)}>Vista previa con datos de ejemplo</Button>
           {aviso && <span className="text-sm text-muted-foreground">{aviso}</span>}
         </div>
+        <div className="flex flex-wrap gap-2 sm:col-span-2">
+          <Button variant="outline" onClick={() => setVista("web")}><Gift className="size-4" />Ver regalo (web)</Button>
+          <Button variant="outline" onClick={() => setVista("pdf")}><FileText className="size-4" />Ver PDF</Button>
+          <Button variant="outline" onClick={() => { setFormato("digital"); setVista("formulario"); }}><ClipboardList className="size-4" />Ver formulario</Button>
+        </div>
       </CardContent>
-      <Dialog open={vista} onOpenChange={setVista}>
+      <Dialog open={vista === "web"} onOpenChange={(open) => { if (!open) setVista(null); }}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto p-0">
           <DialogHeader className="sr-only">
             <DialogTitle>Vista previa del regalo</DialogTitle>
@@ -119,6 +127,28 @@ export function PresentacionGiftbox() {
           <div className="theme-gift rounded-lg [&_.pt-28]:pt-6">
             <RegaloVista info={REGALO_EJEMPLO} presentacion={p} />
           </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={vista === "pdf"} onOpenChange={(open) => { if (!open) setVista(null); }}>
+        <DialogContent className="max-h-[90dvh] min-w-0 max-w-4xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Vista previa del PDF</DialogTitle>
+            <DialogDescription>Datos de ejemplo con los materiales actuales, aunque no estén guardados.</DialogDescription>
+          </DialogHeader>
+          {vista === "pdf" && <GiftboxPdfPreview presentacion={p} />}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={vista === "formulario"} onOpenChange={(open) => { if (!open) setVista(null); }}>
+        <DialogContent className="max-h-[90dvh] max-w-[390px] overflow-y-auto p-0">
+          <DialogHeader className="px-5 pb-0 pt-6 text-left">
+            <DialogTitle>Vista previa del formulario</DialogTitle>
+            <DialogDescription>Datos de ejemplo. No se modifica ningún pedido.</DialogDescription>
+          </DialogHeader>
+          <div role="group" aria-label="Formato del ejemplo" className="flex gap-2 px-5">
+            <Button variant={formato === "digital" ? "default" : "outline"} aria-pressed={formato === "digital"} onClick={() => setFormato("digital")}>Digital</Button>
+            <Button variant={formato === "fisico" ? "default" : "outline"} aria-pressed={formato === "fisico"} onClick={() => setFormato("fisico")}>Física</Button>
+          </div>
+          {vista === "formulario" && <GiftboxFormulario vistaPrevia info={{ estado: "ok", nombre: "Ana", experiencias: [REGALO_EJEMPLO.experiencias[0]?.titulo ?? "Cena para dos frente al mar", "Masaje relajante"], formato }} />}
         </DialogContent>
       </Dialog>
     </Card>
