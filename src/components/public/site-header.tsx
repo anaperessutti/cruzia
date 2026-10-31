@@ -76,17 +76,17 @@ export function SiteHeader() {
           : cn("border-transparent bg-transparent", claro ? "text-primary-foreground" : "text-foreground"),
       )}
     >
-      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-1")}>
+      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-0")}>
         <Link to="/" aria-label="Cruzia — Inicio" className="shrink-0">
           <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
 
         {conFiltros ? <div className="flex min-w-0 flex-1 justify-center"><StickyFilters /></div> : null}
-        <div className="flex shrink-0 items-center gap-1">
-          <SearchDialog />
+        <div className={cn("flex shrink-0 items-center gap-1", conFiltros && "max-sm:gap-0")}>
+          <SearchDialog className={conFiltros ? "max-sm:size-10" : undefined} />
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
           <Sheet open={abierto} onOpenChange={setAbierto}>
-            <SheetTrigger asChild><Button variant="ghost" size="icon" className="rounded-full hover:bg-transparent hover:opacity-70" aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
+            <SheetTrigger asChild><Button variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "max-sm:size-10")} aria-label="Abrir menú"><Menu /></Button></SheetTrigger>
             <SheetContent className={cn("menu-panel flex !h-[100svh] w-[88%] flex-col overflow-y-auto rounded-l-[28px] border-0 p-6 shadow-none sm:!max-w-none sm:w-[420px] data-[state=closed]:fade-out-0 data-[state=closed]:!duration-200 data-[state=open]:fade-in-0 data-[state=open]:!duration-300", gift ? "menu-gift !bg-[rgba(47,51,52,.45)] ![background-image:none] text-primary-foreground" : "text-foreground")}>
               <SheetHeader className="relative z-10 pb-4 text-left">
                 <SheetTitle><Logo variant="isotype" tone={gift ? "dark" : "light"} height={42} decorative /><span className="sr-only">Menú</span></SheetTitle>
