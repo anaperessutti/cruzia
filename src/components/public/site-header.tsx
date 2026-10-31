@@ -76,12 +76,12 @@ export function SiteHeader() {
           : cn("border-transparent bg-transparent", claro ? "text-primary-foreground" : "text-foreground"),
       )}
     >
-      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-0")}>
+      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-0 max-[417px]:px-3 max-[409px]:px-2.5")}>
         <Link to="/" aria-label="Cruzia — Inicio" className="shrink-0">
           <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
 
-        {conFiltros ? <div className="flex min-w-0 flex-1 justify-center"><StickyFilters /></div> : null}
+        {conFiltros ? <div className="flex min-w-0 flex-1 justify-center max-sm:mx-2"><StickyFilters /></div> : null}
         <div className={cn("flex shrink-0 items-center gap-1", conFiltros && "max-sm:gap-0")}>
           <SearchDialog className={conFiltros ? "max-sm:size-10" : undefined} />
           <Button asChild variant="ghost" size="icon" className={cn("rounded-full hover:bg-transparent hover:opacity-70", conFiltros && "hidden sm:inline-flex")}><a href="https://instagram.com/cruzia.ar" target="_blank" rel="noreferrer" aria-label="Instagram de Cruzia"><Instagram /></a></Button>
