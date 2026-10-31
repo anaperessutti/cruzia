@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { coincide, normalizar } from "@/lib/busqueda";
 import { usePublicDirectory } from "./public-directory-provider";
 
-export function SearchDialog() {
+export function SearchDialog({ className }: { className?: string }) {
   const { data, setLocalidadIds, setColeccionIds } = usePublicDirectory();
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
@@ -104,7 +104,7 @@ export function SearchDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Buscar">
+        <Button variant="ghost" size="icon" aria-label="Buscar" className={className}>
           <Search />
         </Button>
       </DialogTrigger>

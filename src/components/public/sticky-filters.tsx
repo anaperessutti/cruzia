@@ -24,7 +24,7 @@ export function StickyFilters() {
 
   return (
     <div className="min-w-0 text-foreground">
-      <div className="glass flex items-center gap-0 overflow-x-auto rounded-full p-0.5 sm:gap-0.5 sm:p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="glass flex shrink-0 items-center gap-0 overflow-x-auto rounded-full p-0.5 sm:gap-0.5 sm:p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <Popover>
           <PopoverTrigger asChild><Button variant="ghost" aria-label={localityLabel} className="h-9 shrink-0 gap-1 rounded-full px-1 font-normal hover:bg-card/60 sm:gap-1.5 sm:px-3"><MapPin className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{localityLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="w-[min(22rem,calc(100vw-2rem))] p-2">
@@ -53,7 +53,7 @@ export function StickyFilters() {
             </div>
           </PopoverContent>
         </Popover>
-        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-0.5 rounded-full px-0.5 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-[#DF3B25]" aria-label="Solo cupones" /><span className="hidden text-[12px] font-medium text-[#1F1E1E] min-[390px]:inline">Solo cupón</span></label>
+        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-0.5 rounded-full px-0.5 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-[#DF3B25]" aria-label="Solo cupones" /><span className="inline text-[12px] font-medium text-[#1F1E1E] max-[339px]:hidden">Solo cupón</span></label>
       </div>
     </div>
   );
