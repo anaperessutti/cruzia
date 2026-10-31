@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { coincide, normalizar } from "@/lib/busqueda";
 import { usePublicDirectory } from "./public-directory-provider";
 
-export function SearchDialog({ className }: { className?: string }) {
+export function SearchDialog({ className }: { className?: string | undefined }) {
   const { data, setLocalidadIds, setColeccionIds } = usePublicDirectory();
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
