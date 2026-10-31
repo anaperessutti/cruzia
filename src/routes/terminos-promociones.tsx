@@ -1,4 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { InfoPage } from "@/components/public/info-page";
-export const Route = createFileRoute("/terminos-promociones")({ head: () => ({ meta: [{ title: "Términos de Promociones | Cruzia" }, { name: "description", content: "Términos y condiciones de promociones y cupones de Cruzia." }, { property: "og:title", content: "Términos de Promociones | Cruzia" }, { property: "og:description", content: "Condiciones aplicables a beneficios y cupones Cruzia." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: Page });
-function Page() { return <InfoPage eyebrow="Información legal" title="Términos de Promociones" intro="Estamos preparando las condiciones generales para promociones y cupones."><section className="mx-auto max-w-3xl px-4 py-16 sm:px-6"><p className="leading-7 text-muted-foreground">Esta página se encuentra en preparación y será actualizada antes del lanzamiento público.</p></section></InfoPage>; }
+import { LegalDocument } from "@/components/public/legal-document";
+import { TERMINOS } from "@/lib/legal-content";
+
+export const Route = createFileRoute("/terminos-promociones")({
+  head: () => ({
+    meta: [
+      { title: "Términos y Condiciones | Cruzia" },
+      {
+        name: "description",
+        content: "Términos y condiciones de uso de Cruzia, sus promociones y sus cupones.",
+      },
+      { property: "og:title", content: "Términos y Condiciones | Cruzia" },
+      {
+        property: "og:description",
+        content: "Condiciones de uso del sitio y de los beneficios Cruzia.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Page,
+});
+
+function Page() {
+  return (
+    <InfoPage
+      eyebrow="Información legal"
+      title="Términos y Condiciones"
+      intro="Las reglas para usar Cruzia, sus promociones y sus cupones."
+    >
+      <LegalDocument documento={TERMINOS} />
+    </InfoPage>
+  );
+}

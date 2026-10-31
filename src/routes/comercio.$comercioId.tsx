@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { optimizarImagen } from "@/lib/imagen";
 import { useEffect, useRef } from "react";
-import { Clock, Crown, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
+import { Clock, Instagram, MapPin, MessageCircle, Ticket } from "lucide-react";
 
 import { CuponCard } from "@/components/public/cupon-card";
 import { FadeOrganic } from "@/components/public/fade-organic";
@@ -89,7 +89,6 @@ function FichaComercio() {
   }
 
   const conPromocion = plan?.tiene_modulo_promocion ?? false;
-  const exclusivo = plan?.aparece_en_hero_banner ?? false;
   const redes = (comercio.redes_sociales ?? {}) as Record<string, string>;
   const mapQuery = comercio.lat != null && comercio.lng != null
     ? `${comercio.lat},${comercio.lng}`
@@ -102,7 +101,6 @@ function FichaComercio() {
         {comercio.galeria[0] ? <FadeOrganic src={comercio.galeria[0]} alt={`Foto de ${comercio.nombre}`} prioridad /> : <div className="frost-neutral frost-grain absolute inset-0 [mask-image:radial-gradient(ellipse_125%_95%_at_38%_8%,#000_40%,transparent_94%)]" />}
         <div aria-hidden="true" className="veil-radial absolute inset-0" />
         <div className="text-shadow-soft relative mx-auto flex h-full max-w-5xl flex-col justify-end px-5 pb-[46%] sm:px-6 sm:pb-[22%]">
-          {exclusivo && plan ? <span className="mb-4 inline-flex w-fit items-center gap-1 rounded-full bg-card px-3 py-1 text-pill text-foreground [text-shadow:none]"><Crown className="size-3 fill-current" /> {plan.nombre}</span> : null}
           <h1 className="font-display text-[2.6rem] font-bold leading-[1.02] tracking-[-0.035em] sm:text-6xl">{comercio.nombre}</h1>
           {localidad ? <p className="mt-3 flex items-center gap-1.5 text-sm text-primary-foreground/90"><MapPin className="size-4" /> {localidad.nombre}{comercio.direccion ? ` · ${comercio.direccion}` : ""}</p> : null}
         </div>

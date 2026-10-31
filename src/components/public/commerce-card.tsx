@@ -50,13 +50,7 @@ export const CommerceCard = memo(function CommerceCard({
       pildoras={rubro ? [rubro.nombre] : []}
       ubicacion={localidad?.nombre}
       etiquetaSuperior={destacado && cupon ? venceEn(cupon.vigencia_fin) : null}
-      insignia={
-        nivel === "premium" ? (
-          <InsigniaTarjeta premium>Premium</InsigniaTarjeta>
-        ) : nivel === "pro" ? (
-          <InsigniaTarjeta>⭐ Cupón</InsigniaTarjeta>
-        ) : undefined
-      }
+      insignia={destacado ? <InsigniaTarjeta>⭐ Cupón</InsigniaTarjeta> : undefined}
       boton={destacado ? "Obtener Cupón" : null}
       className={className}
       compacta={compacta}
