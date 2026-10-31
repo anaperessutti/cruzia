@@ -26,7 +26,7 @@ export function StickyFilters() {
     <div className="min-w-0 text-foreground">
       <div className="glass flex shrink-0 items-center gap-1 overflow-x-auto rounded-full p-0.5 sm:gap-0.5 sm:p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <Popover>
-          <PopoverTrigger asChild><Button variant="ghost" aria-label={localityLabel} className="h-9 shrink-0 gap-1 rounded-full px-2 font-normal hover:bg-card/60 max-[374px]:px-1.5 sm:gap-1.5 sm:px-3"><MapPin className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{localityLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
+          <PopoverTrigger asChild><Button variant="ghost" aria-label={localityLabel} className="h-9 shrink-0 gap-1 rounded-full px-2 font-normal hover:bg-card/60 max-[375px]:px-1.5 sm:gap-1.5 sm:px-3"><MapPin className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{localityLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="w-[min(22rem,calc(100vw-2rem))] p-2">
             <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Localidades</p>{filters.localidadIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setLocalidadIds([])}>Ver todas</Button> : null}</div>
             <Button variant="ghost" size="sm" className="mb-1 w-full justify-start gap-2" onClick={detectLocation} disabled={geoStatus === "solicitando"}>
@@ -42,7 +42,7 @@ export function StickyFilters() {
           </PopoverContent>
         </Popover>
         <Popover>
-          <PopoverTrigger asChild><Button variant="ghost" aria-label={coleccionLabel} className="h-9 shrink-0 gap-1 rounded-full px-2 font-normal hover:bg-card/60 max-[374px]:px-1.5 sm:gap-1.5 sm:px-3"><Tag className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{coleccionLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
+          <PopoverTrigger asChild><Button variant="ghost" aria-label={coleccionLabel} className="h-9 shrink-0 gap-1 rounded-full px-2 font-normal hover:bg-card/60 max-[375px]:px-1.5 sm:gap-1.5 sm:px-3"><Tag className="size-4" /><span className="hidden max-w-[9rem] truncate md:inline">{coleccionLabel}</span><ChevronDown className="hidden text-muted-foreground sm:block" /></Button></PopoverTrigger>
           <PopoverContent align="start" className="max-h-80 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto p-2">
             <div className="flex items-center justify-between px-2 py-2"><p className="font-display font-semibold">Categorías</p>{filters.coleccionIds.length > 0 ? <Button variant="ghost" size="sm" onClick={() => setColeccionIds([])}>Ver todas</Button> : null}</div>
             <div className="max-h-72 space-y-1 overflow-y-auto">
@@ -53,7 +53,7 @@ export function StickyFilters() {
             </div>
           </PopoverContent>
         </Popover>
-        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full px-1.5 text-sm max-[374px]:px-1 sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-primary" aria-label="Solo cupones" /><span className="inline text-[12px] font-medium text-foreground max-[404px]:hidden">Solo cupón</span></label>
+        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full px-1.5 text-sm max-[375px]:px-1 sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-primary" aria-label="Solo cupones" /><span className="inline text-[12px] font-medium text-foreground max-[405px]:hidden">Solo cupón</span></label>
       </div>
     </div>
   );

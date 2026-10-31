@@ -76,7 +76,7 @@ export function SiteHeader() {
           : cn("border-transparent bg-transparent", claro ? "text-primary-foreground" : "text-foreground"),
       )}
     >
-      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-0 max-[426px]:px-3 max-[418px]:px-2.5")}>
+      <div className={cn("mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:h-20 sm:px-6 lg:px-8", conFiltros && "max-sm:gap-0 max-[427px]:px-3 max-[419px]:px-2.5")}>
         <Link to="/" aria-label="Cruzia — Inicio" className="shrink-0">
           <Logo variant="wordmark" tone={tono} height={28} decorative />
         </Link>
