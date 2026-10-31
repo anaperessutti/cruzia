@@ -53,7 +53,7 @@ export function StickyFilters() {
             </div>
           </PopoverContent>
         </Popover>
-        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-0.5 rounded-full px-0.5 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-[#DF3B25] max-sm:h-4 max-sm:w-7 max-sm:[className="data-[state=checked]:bg-[#DF3B25]">span]:h-3 max-sm:[className="data-[state=checked]:bg-[#DF3B25]">span]:w-3 max-sm:[className="data-[state=checked]:bg-[#DF3B25]">span]:data-[state=checked]:translate-x-3" aria-label="Solo cupones" /><span className="inline text-[12px] font-medium text-[#1F1E1E] max-[339px]:hidden">Solo cupón</span></label>
+        <label className="flex h-9 shrink-0 cursor-pointer items-center gap-0 rounded-full px-0 text-sm sm:gap-2 sm:px-2"><Switch checked={filters.soloCupon} onCheckedChange={setSoloCupon} className="data-[state=checked]:bg-[#DF3B25] max-sm:h-4 max-sm:w-7 max-sm:[&>span]:h-3 max-sm:[&>span]:w-3 max-sm:[&>span]:data-[state=checked]:translate-x-3" aria-label="Solo cupones" /><span className="inline text-[12px] font-medium text-[#1F1E1E] max-[339px]:hidden">Solo cupón</span></label>
       </div>
     </div>
   );
